@@ -24,5 +24,12 @@ namespace The_Ezio_Trilogy_Launcher
         {
             InitializeComponent();
         }
+
+        private async void Exit_Click(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine("Exiting");
+            await Task.Delay(10);
+            Environment.Exit(0);
+        }
     }
 }

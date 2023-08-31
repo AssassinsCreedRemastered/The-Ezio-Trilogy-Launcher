@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "The Ezio Trilogy Launcher": {
+      "commandName": "Project",
+      "commandLineArgs": "-console"
+    }
+  }
+}

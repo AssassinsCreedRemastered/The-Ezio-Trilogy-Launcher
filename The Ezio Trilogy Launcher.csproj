@@ -6,6 +6,20 @@
     <RootNamespace>The_Ezio_Trilogy_Launcher</RootNamespace>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <UseWindowsForms>True</UseWindowsForms>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Launcher Background.png" />
+    <None Remove="Windows\Exit.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\Icons\Exit.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Pages\" />
+  </ItemGroup>
 
 </Project>
