@@ -11,11 +11,13 @@
 
   <ItemGroup>
     <None Remove="Launcher Background.png" />
+    <None Remove="Windows\Background.png" />
     <None Remove="Windows\Exit.png" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="Assets\Icons\Exit.png" />
+    <Resource Include="Assets\Background.png" />
   </ItemGroup>
 
   <ItemGroup>
