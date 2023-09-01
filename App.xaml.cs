@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Serilog;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -19,6 +20,16 @@ namespace The_Ezio_Trilogy_Launcher
         public static extern void AllocConsole();
         [DllImport("Kernel32")]
         public static extern void FreeConsole();
+        public App()
+        {
+            InitializeComponent();
+            // Activating Logging Tool
+            Log.Logger = new LoggerConfiguration()
+            .WriteTo.Console(
+                outputTemplate: "{Timestamp:dd-MM-yyyy HH:mm:ss}|{Level}|{Message}{NewLine}{Exception}")
+            //.WriteTo.File("Installer Logs.txt", rollingInterval: RollingInterval.Day)
+            .CreateLogger();
+        }
 
         // At startup it checks for launch arguments
         private void Application_Startup(object sender, StartupEventArgs e)
@@ -35,6 +46,12 @@ namespace The_Ezio_Trilogy_Launcher
                         break;
                 }
             }
+            Serilog.Log.Logger = Log.Logger;
+        }
+
+        private void Application_Exit(object sender, ExitEventArgs e)
+        {
+            Log.CloseAndFlush();
         }
     }
 }

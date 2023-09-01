@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Serilog;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -27,9 +28,24 @@ namespace The_Ezio_Trilogy_Launcher
 
         private async void Exit_Click(object sender, RoutedEventArgs e)
         {
-            Console.WriteLine("Exiting");
+            Log.Information("Exiting");
             await Task.Delay(10);
             Environment.Exit(0);
+        }
+
+        private void OpenACII_Click(object sender, RoutedEventArgs e)
+        {
+            Log.Information("Opening Assassin's Creed 2 Launcher");
+        }
+
+        private void OpenACB_Click(object sender, RoutedEventArgs e)
+        {
+            Log.Information("Opening Assassin's Creed Brotherhood Launcher");
+        }
+
+        private void OpenACR_Click(object sender, RoutedEventArgs e)
+        {
+            Log.Information("Opening Assassin's Creed Revelations Launcher");
         }
     }
 }

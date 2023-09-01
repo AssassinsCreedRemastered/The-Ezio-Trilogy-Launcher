@@ -11,6 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\Font\Assassin%24.ttf" />
     <None Remove="Launcher Background.png" />
     <None Remove="Windows\Background.png" />
     <None Remove="Windows\Exit.png" />
@@ -21,12 +22,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Assets\Font\Assassin$.ttf" />
     <Resource Include="Assets\Icons\Exit.png" />
     <Resource Include="Assets\Background.png" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Pages\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Serilog" Version="3.0.1" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
   </ItemGroup>
 
 </Project>
