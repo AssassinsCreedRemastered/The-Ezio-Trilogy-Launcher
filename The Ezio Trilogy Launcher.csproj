@@ -11,7 +11,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\AC2 Background.jpg" />
     <None Remove="Assets\Font\Assassin%24.ttf" />
+    <None Remove="Assets\Icons\Back.png" />
+    <None Remove="Assets\Icons\Credits.png" />
+    <None Remove="Assets\Icons\Play.png" />
+    <None Remove="Assets\Icons\Settings.png" />
+    <None Remove="Assets\Icons\Update.png" />
     <None Remove="Launcher Background.png" />
     <None Remove="Windows\Background.png" />
     <None Remove="Windows\Exit.png" />
@@ -22,19 +28,22 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Assets\AC2 Background.jpg" />
     <Resource Include="Assets\Font\Assassin$.ttf" />
+    <Resource Include="Assets\Icons\Back.png" />
+    <Resource Include="Assets\Icons\Credits.png" />
     <Resource Include="Assets\Icons\Exit.png" />
     <Resource Include="Assets\Background.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Pages\" />
+    <Resource Include="Assets\Icons\Play.png" />
+    <Resource Include="Assets\Icons\Settings.png" />
+    <Resource Include="Assets\Icons\Update.png" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Serilog" Version="3.0.1" />
     <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+    <PackageReference Include="System.Management" Version="7.0.2" />
   </ItemGroup>
 
 </Project>
