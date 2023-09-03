@@ -14,7 +14,7 @@
                         <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="10"
+                            CornerRadius="10,0,10,0"
                             Margin="{TemplateBinding Margin}">
                             <ContentPresenter />
                         </Border>
@@ -77,7 +77,7 @@
                 </Button>
                 
                 <!--Credits Button-->
-                <Button x:Name="Credits" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,-0.248" BorderThickness="0,0,0,0" Background="{x:Null}" BorderBrush="{x:Null}" IsDefault="True" Margin="10,10,10,10" Cursor="Hand">
+                <Button x:Name="Credits" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,-0.248" BorderThickness="0,0,0,0" Background="{x:Null}" BorderBrush="{x:Null}" IsDefault="True" Margin="10,10,10,10" Cursor="Hand" Click="Credits_Click">
                     <Button.Content>
                         <StackPanel>
                             <Image Source="/Assets/Icons/Credits.png" Stretch="UniformToFill"/>
@@ -97,7 +97,7 @@
                 </Button>
                 
                 <!--Settings Button-->
-                <Button x:Name="Settings" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,-0.248" BorderThickness="0,0,0,0" Background="{x:Null}" BorderBrush="{x:Null}" IsDefault="True" Margin="10,10,10,10" Cursor="Hand">
+                <Button x:Name="Settings" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,-0.248" BorderThickness="0,0,0,0" Background="{x:Null}" BorderBrush="{x:Null}" IsDefault="True" Margin="10,10,10,10" Cursor="Hand" Click="Settings_Click">
                     <Button.Content>
                         <StackPanel>
                             <Image Source="/Assets/Icons/Settings.png" Stretch="UniformToFill"/>
@@ -118,7 +118,7 @@
             </StackPanel>
             
             <!--Update Button-->
-            <Button x:Name="Update" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Bottom" RenderTransformOrigin="0.5,-0.248" BorderThickness="4,0,0,0" Background="{x:Null}" BorderBrush="{x:Null}" Margin="5,10,10,10" Cursor="Hand" >
+            <Button x:Name="Update" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Bottom" RenderTransformOrigin="0.5,-0.248" BorderThickness="4,0,0,0" Background="{x:Null}" BorderBrush="{x:Null}" Margin="5,10,10,10" Cursor="Hand" Click="Update_Click">
                 <Button.Content>
                     <StackPanel>
                         <Image Source="/Assets/Icons/Update.png" Stretch="UniformToFill"/>

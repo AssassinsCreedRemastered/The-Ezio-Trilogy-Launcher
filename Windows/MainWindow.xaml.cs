@@ -23,47 +23,24 @@ namespace The_Ezio_Trilogy_Launcher
     /// </summary>
     public partial class MainWindow : Window
     {
-        public static int NumberOfCores { get; set; }
-        public static int NumberOfThreads { get; set; }
-
         public MainWindow()
         {
             InitializeComponent();
-            FindNumberOfCores();
         }
 
-        // Finding Core Count of current PC
-        // Needed for a tweak to hopefully fix the stutters via Affinity
-        private async void FindNumberOfCores()
+        private void Credits_Click(object sender, RoutedEventArgs e)
         {
+            Log.Information("Opening Main Credits tab");
             try
             {
-                Log.Information("Trying to find number of Cores and Threads of this PC");
-                // Create a query to get information about the processor.
-                ObjectQuery query = new ObjectQuery("SELECT * FROM Win32_Processor");
-
-                // Create a ManagementObjectSearcher to execute the query.
-                ManagementObjectSearcher searcher = new ManagementObjectSearcher(query);
-
-                // Get the collection of management objects.
-                ManagementObjectCollection queryCollection = searcher.Get();
-
-                foreach (ManagementObject m in queryCollection)
-                {
-#pragma warning disable CS8604 // Possible null reference argument.
-                    NumberOfCores = int.Parse(m["NumberOfCores"].ToString());
-#pragma warning disable CS8604 // Possible null reference argument.
-                    NumberOfThreads = int.Parse(m["NumberOfLogicalProcessors"].ToString());
-#pragma warning restore CS8604 // Possible null reference argument.
-
-                    Log.Information($"Number of Cores: {NumberOfCores}");
-                    Log.Information($"Number of Threads: {NumberOfThreads}");
-                }
-                await Task.Delay(10);
+                MainCredits mainCredits = new MainCredits();
+                mainCredits.ShowDialog();
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Error:");
+                Log.Information(ex, "");
+                MessageBox.Show(ex.Message);
+                return;
             }
         }
 
@@ -79,14 +56,21 @@ namespace The_Ezio_Trilogy_Launcher
             Log.Information("Opening Assassin's Creed 2 Launcher");
             try
             {
-                AssassinsCreed2 ac2 = new AssassinsCreed2();
-                this.Visibility = Visibility.Hidden;
-                ac2.ShowDialog();
-                this.Visibility = Visibility.Visible;
+                if (App.AC2Path != null)
+                {
+                    AssassinsCreed2 ac2 = new AssassinsCreed2();
+                    this.Visibility = Visibility.Hidden;
+                    ac2.ShowDialog();
+                    this.Visibility = Visibility.Visible;
+                } else
+                {
+                    MessageBox.Show("Assassin's Creed 2 Remaster is not installed.");
+                }
             }
             catch (Exception ex)
             {
                 Log.Error(ex, "Error:");
+                MessageBox.Show(ex.Message);
                 return;
             }
         }
@@ -94,11 +78,45 @@ namespace The_Ezio_Trilogy_Launcher
         private void OpenACB_Click(object sender, RoutedEventArgs e)
         {
             Log.Information("Opening Assassin's Creed Brotherhood Launcher");
+            try
+            {
+                if (App.ACBPath != null)
+                {
+                    
+                }
+                else
+                {
+                    MessageBox.Show("Assassin's Creed Brotherhood Remaster is not installed.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Error:");
+                MessageBox.Show(ex.Message);
+                return;
+            }
         }
 
         private void OpenACR_Click(object sender, RoutedEventArgs e)
         {
             Log.Information("Opening Assassin's Creed Revelations Launcher");
+            try
+            {
+                if (App.ACRPath != null)
+                {
+
+                }
+                else
+                {
+                    MessageBox.Show("Assassin's Creed Revelations Remaster is not installed.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Error:");
+                MessageBox.Show(ex.Message);
+                return;
+            }
         }
     }
 }

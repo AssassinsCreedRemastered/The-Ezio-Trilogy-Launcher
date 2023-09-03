@@ -7,12 +7,11 @@
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>True</UseWindowsForms>
-    <ApplicationIcon>icon.ico</ApplicationIcon>
+    <ApplicationIcon>Assets\icon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Assets\AC2 Background.jpg" />
-    <None Remove="Assets\Font\Assassin%24.ttf" />
     <None Remove="Assets\Icons\Back.png" />
     <None Remove="Assets\Icons\Credits.png" />
     <None Remove="Assets\Icons\Play.png" />
@@ -24,12 +23,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="icon.ico" />
+    <Content Include="Assets\icon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Assets\ListofSupportedResolutions.txt" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="Assets\AC2 Background.jpg" />
-    <Resource Include="Assets\Font\Assassin$.ttf" />
     <Resource Include="Assets\Icons\Back.png" />
     <Resource Include="Assets\Icons\Credits.png" />
     <Resource Include="Assets\Icons\Exit.png" />
