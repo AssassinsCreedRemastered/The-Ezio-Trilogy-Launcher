@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace The_Ezio_Trilogy_Launcher
 {
-    class Resolution
+    public class Resolution
     {
         public string? Res { get; set; }
         public double Width { get; set; }

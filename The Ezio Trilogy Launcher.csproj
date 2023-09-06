@@ -17,6 +17,7 @@
     <None Remove="Assets\Icons\Play.png" />
     <None Remove="Assets\Icons\Settings.png" />
     <None Remove="Assets\Icons\Update.png" />
+    <None Remove="Assets\ListOfSupportedRefreshRates.txt" />
     <None Remove="Launcher Background.png" />
     <None Remove="Windows\Background.png" />
     <None Remove="Windows\Exit.png" />
@@ -27,6 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Assets\ListOfSupportedRefreshRates.txt" />
     <EmbeddedResource Include="Assets\ListofSupportedResolutions.txt" />
   </ItemGroup>
 

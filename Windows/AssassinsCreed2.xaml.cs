@@ -21,6 +21,9 @@ using System.Windows.Forms;
 using Microsoft.Win32;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Windows.Markup;
+using System.Windows.Navigation;
+using The_Ezio_Trilogy_Launcher.Windows.AC2_Pages;
 
 namespace The_Ezio_Trilogy_Launcher.Windows
 {
@@ -36,7 +39,11 @@ namespace The_Ezio_Trilogy_Launcher.Windows
 		[DllImport("kernel32.dll")]
 		public static extern IntPtr SetProcessAffinityMask(IntPtr hProcess, IntPtr dwProcessAffinityMask);
 
+		// Path to the installation folder
 		private string? path { get; set; }
+
+		// Cache for all of the pages
+		private Dictionary<string, Page> pageCache = new Dictionary<string, Page>();
 
 		public AssassinsCreed2()
 		{
@@ -44,9 +51,61 @@ namespace The_Ezio_Trilogy_Launcher.Windows
 			path = App.AC2Path;
 		}
 
-		// Sets Process Affinity based on the amount of cores
-		// According to PCGamingWiki it can help with Stutters and Tearing
-		private async Task SetProcessAffinity(int gameProcessID)
+		private void NavigateToPage(string PageName)
+		{
+			Log.Information($"Trying to navigate to {PageName}");
+			switch (PageName)
+			{
+				case "Credits":
+					
+                    if (!pageCache.ContainsKey(PageName))
+                    {
+						
+                        Log.Information("Page is not cached. Loading it and caching it for future use.");
+                        AC2_Pages.Credits page = new AC2_Pages.Credits();
+                        pageCache[PageName] = page;
+                        PageViewer.Content = pageCache[PageName];
+                    }
+                    else
+                    {
+                        Log.Information("Page is already cached. Loading it");
+                        PageViewer.Content = pageCache[PageName];
+                    }
+                    break;
+				case "Settings":
+                    if (!pageCache.ContainsKey(PageName))
+                    {
+                        Log.Information("Page is not cached. Loading it and caching it for future use.");
+                        AC2_Pages.Settings page = new AC2_Pages.Settings();
+                        pageCache[PageName] = page;
+                        PageViewer.Content = page;
+                    }
+                    else
+                    {
+                        Log.Information("Page is already cached. Loading it");
+                        PageViewer.Content = pageCache[PageName];
+                    }
+                    break;
+				default:
+                    if (!pageCache.ContainsKey(PageName))
+                    {
+                        Log.Information("Page is not cached. Loading it and caching it for future use.");
+                        AC2_Pages.Default_Page page = new AC2_Pages.Default_Page();
+                        pageCache[PageName] = page;
+                        PageViewer.Content = page;
+                    }
+					else
+					{
+                        Log.Information("Page is already cached. Loading it");
+                        PageViewer.Content = pageCache[PageName];
+					}
+                    break;
+			}
+		}
+
+        // Sets Process Affinity based on the amount of cores
+        // According to PCGamingWiki it can help with Stutters and Tearing
+        private async Task SetProcessAffinity(int gameProcessID)
 		{
 			try
 			{
@@ -58,7 +117,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows
 				{
 					case bool when App.NumberOfCores >= 8 && App.NumberOfThreads >= 16:
 						Log.Information("8 Cores/16 Threads or greater affinity");
-						processAfinity.ProcessorAffinity = new IntPtr(0xFFFF);
+						processAfinity.ProcessorAffinity = new IntPtr(0xFFFe);
 						break;
 					case bool when App.NumberOfCores == 6 && App.NumberOfThreads == 12:
 						Log.Information("6 Cores/12 Threads affinity");
@@ -181,17 +240,20 @@ namespace The_Ezio_Trilogy_Launcher.Windows
 
 		private void Credits_Click(object sender, RoutedEventArgs e)
 		{
-			PageViewer.Navigate(new Uri("Windows/AC2 Pages/Credits.xaml", UriKind.Relative));
+			//NavigateToPage(new Uri("Windows/AC2 Pages/Credits.xaml", UriKind.Relative));
+			NavigateToPage("Credits");
 		}
 
 		private void Settings_Click(object sender, RoutedEventArgs e)
 		{
-            PageViewer.Navigate(new Uri("Windows/AC2 Pages/Settings.xaml", UriKind.Relative));
+            //PageViewer.Navigate(new Uri("Windows/AC2 Pages/Settings.xaml", UriKind.Relative));
+            //NavigateToPage(new Uri("Windows/AC2 Pages/Settings.xaml", UriKind.Relative));
+            NavigateToPage("Settings");
         }
 
 		private void Update_Click(object sender, RoutedEventArgs e)
 		{
-
-		}
+            NavigateToPage("Update");
+        }
 	}
 }

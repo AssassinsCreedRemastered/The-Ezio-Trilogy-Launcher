@@ -11,6 +11,8 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
+using System.Windows.Media;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace The_Ezio_Trilogy_Launcher
 {
@@ -25,6 +27,44 @@ namespace The_Ezio_Trilogy_Launcher
         [DllImport("Kernel32")]
         public static extern void FreeConsole();
 
+        // Used to detect refresh Rate
+        [DllImport("user32.dll")]
+        private static extern int EnumDisplaySettings(string deviceName, int modeNum, ref DEVMODE devMode);
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct DEVMODE
+        {
+            private const int CCHDEVICENAME = 32;
+            private const int CCHFORMNAME = 32;
+
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = CCHDEVICENAME)]
+            public string dmDeviceName;
+            public short dmSpecVersion;
+            public short dmDriverVersion;
+            public short dmSize;
+            public short dmDriverExtra;
+            public int dmFields;
+            public int dmPositionX;
+            public int dmPositionY;
+            public int dmDisplayOrientation;
+            public int dmDisplayFixedOutput;
+            public short dmColor;
+            public short dmDuplex;
+            public short dmYResolution;
+            public short dmTTOption;
+            public short dmCollate;
+
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = CCHFORMNAME)]
+            public string dmFormName;
+
+            public short dmLogPixels;
+            public int dmBitsPerPel;
+            public int dmPelsWidth;
+            public int dmPelsHeight;
+            public int dmDisplayFlags;
+            public int dmDisplayFrequency;
+        }
+
         private bool start = true;
 
         // Number of Cores and Threads this PC has. Needed to set Affinity for the process
@@ -37,7 +77,12 @@ namespace The_Ezio_Trilogy_Launcher
         public static string? ACRPath { get; set; }
 
         // Supported Resolutions by this Monitor
-        List<Resolution> compatibleResolutions = new List<Resolution>();
+        public static List<Resolution> compatibleResolutions = new List<Resolution>();
+
+        public static List<int> compatibleRefreshRates = new List<int>();
+
+        // Monitor's Refresh Rate
+        public static double RefreshRate { get; set; }
 
         public App()
         {
@@ -134,6 +179,7 @@ namespace The_Ezio_Trilogy_Launcher
                         resolutionHeight = screen.Bounds.Height;
                     };
                 }
+                Log.Information($"Monitors Resolution: {resolutionWidth}x{resolutionHeight}");
                 using (StreamReader sr = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("The_Ezio_Trilogy_Launcher.Assets.ListofSupportedResolutions.txt")))
                 {
                     string line = sr.ReadLine();
@@ -160,12 +206,44 @@ namespace The_Ezio_Trilogy_Launcher
                         line = sr.ReadLine();
                     }
                 }
-                Log.Information("Compatible Resolutions:");
-                foreach (Resolution res in compatibleResolutions)
-                {
-                    Log.Information(res.Res);
-                }
                 await Task.Delay(1);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "");
+            }
+        }
+
+        // Detecting Refresh Rate of the monitor
+        private async Task FindRefreshRate()
+        {
+            try
+            {
+                RefreshRate = 0;
+                DEVMODE dm = new DEVMODE();
+                dm.dmSize = (short)Marshal.SizeOf(typeof(DEVMODE));
+                if (EnumDisplaySettings(null, -1, ref dm) != 0)
+                {
+                    RefreshRate = dm.dmDisplayFrequency;
+                }
+                using (StreamReader sr = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("The_Ezio_Trilogy_Launcher.Assets.ListOfSupportedRefreshRates.txt")))
+                {
+                    string line = sr.ReadLine();
+                    while (line != null)
+                    {
+                        if (RefreshRate > double.Parse(line))
+                        {
+                            compatibleRefreshRates.Add(int.Parse(line));
+                        }
+                        else if (RefreshRate == double.Parse(line))
+                        {
+                            compatibleRefreshRates.Add(int.Parse(line));
+                            break;
+                        }
+                        line = sr.ReadLine();
+                    }
+                }
+                Log.Information($"Monitor's Refresh Rate: {RefreshRate}");
             }
             catch (Exception ex)
             {
@@ -194,6 +272,7 @@ namespace The_Ezio_Trilogy_Launcher
                 await FindGameInstallations();
                 await FindNumberOfCores();
                 await FindSupportedResolutions();
+                await FindRefreshRate();
             }
         }
 

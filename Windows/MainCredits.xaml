@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:The_Ezio_Trilogy_Launcher.Windows"
         mc:Ignorable="d"
-        Title="MainCredits" Height="200" Width="400" Background="Transparent" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowStyle="None">
+        Title="The Ezio Trilogy Remastered (Community Edition) - Main Credits" Height="200" Width="400" Background="Transparent" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowStyle="None">
     <Border Background="#FFDADADA"
             BorderBrush="Gray"
             BorderThickness="1"
@@ -31,7 +31,7 @@
                 </Button.Template>
             </Button>
             <StackPanel Grid.ColumnSpan="2" Margin="3,3,3,3">
-                <Label Content="Credits" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Center" FontSize="24" Foreground="#FF0A0A0A"/>
+                <Label Content="Credits" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Center" FontSize="36" FontFamily="Assassin$" FontWeight="Bold" Foreground="#FF0A0A0A"/>
                 <Button x:Name="Font" Content="Assassin Font" HorizontalAlignment="Center" VerticalAlignment="Top" BorderThickness="0,0,0,0" Background="{x:Null}" FontSize="14" BorderBrush="{x:Null}" Width="370" Height="27" Foreground="#FF0A0A0A" Cursor="Hand" Click="Font_Click">
                     <Button.Template>
                         <ControlTemplate TargetType="Button">
