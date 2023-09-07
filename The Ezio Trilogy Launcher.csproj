@@ -12,10 +12,16 @@
 
   <ItemGroup>
     <None Remove="Assets\AC2 Background.jpg" />
+    <None Remove="Assets\Icons\Add.png" />
     <None Remove="Assets\Icons\Back.png" />
     <None Remove="Assets\Icons\Credits.png" />
+    <None Remove="Assets\Icons\Down.png" />
+    <None Remove="Assets\Icons\Mods.png" />
+    <None Remove="Assets\Icons\Ok.png" />
     <None Remove="Assets\Icons\Play.png" />
+    <None Remove="Assets\Icons\Remove.png" />
     <None Remove="Assets\Icons\Settings.png" />
+    <None Remove="Assets\Icons\Up.png" />
     <None Remove="Assets\Icons\Update.png" />
     <None Remove="Assets\ListOfSupportedRefreshRates.txt" />
     <None Remove="Launcher Background.png" />
@@ -34,12 +40,18 @@
 
   <ItemGroup>
     <Resource Include="Assets\AC2 Background.jpg" />
+    <Resource Include="Assets\Icons\Add.png" />
     <Resource Include="Assets\Icons\Back.png" />
     <Resource Include="Assets\Icons\Credits.png" />
+    <Resource Include="Assets\Icons\Down.png" />
     <Resource Include="Assets\Icons\Exit.png" />
     <Resource Include="Assets\Background.png" />
+    <Resource Include="Assets\Icons\Mods.png" />
+    <Resource Include="Assets\Icons\Ok.png" />
     <Resource Include="Assets\Icons\Play.png" />
+    <Resource Include="Assets\Icons\Remove.png" />
     <Resource Include="Assets\Icons\Settings.png" />
+    <Resource Include="Assets\Icons\Up.png" />
     <Resource Include="Assets\Icons\Update.png" />
   </ItemGroup>
 

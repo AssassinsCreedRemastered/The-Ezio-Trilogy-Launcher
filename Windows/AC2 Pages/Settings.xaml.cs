@@ -98,6 +98,13 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
                 CharacterQualitySelector.Items.Add("High");
                 CharacterQualitySelector.SelectedIndex = CharacterQualitySelector.Items.Count - 1;
                 Log.Information("Loading all of the Character Quality options into Character Quality Selector done.");
+                Log.Information("Loading all of the keyboard layout options into the selector.");
+                KeyboardLayoutSelector.Items.Add("KeyboardMouse2");
+                KeyboardLayoutSelector.Items.Add("KeyboardMouse5");
+                KeyboardLayoutSelector.Items.Add("Keyboard");
+                KeyboardLayoutSelector.Items.Add("KeyboardAlt");
+                KeyboardLayoutSelector.SelectedIndex = 0;
+                Log.Information("Loading all of the keyboard layout options into the selector done.");
                 await Task.Delay(10);
             }
             catch (Exception ex)

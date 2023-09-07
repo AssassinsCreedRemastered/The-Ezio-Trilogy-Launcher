@@ -86,6 +86,20 @@ namespace The_Ezio_Trilogy_Launcher.Windows
                         PageViewer.Content = pageCache[PageName];
                     }
                     break;
+				case "Mods":
+                    if (!pageCache.ContainsKey(PageName))
+                    {
+                        Log.Information("Page is not cached. Loading it and caching it for future use.");
+                        AC2_Pages.Mods page = new AC2_Pages.Mods();
+                        pageCache[PageName] = page;
+                        PageViewer.Content = page;
+                    }
+                    else
+                    {
+                        Log.Information("Page is already cached. Loading it");
+                        PageViewer.Content = pageCache[PageName];
+                    }
+                    break;
 				default:
                     if (!pageCache.ContainsKey(PageName))
                     {
@@ -255,5 +269,10 @@ namespace The_Ezio_Trilogy_Launcher.Windows
 		{
             NavigateToPage("Update");
         }
-	}
+
+        private void uMod_Click(object sender, RoutedEventArgs e)
+        {
+			NavigateToPage("Mods");
+        }
+    }
 }
