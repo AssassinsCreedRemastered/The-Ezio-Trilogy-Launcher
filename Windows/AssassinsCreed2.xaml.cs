@@ -124,38 +124,67 @@ namespace The_Ezio_Trilogy_Launcher.Windows
 			try
 			{
 				Log.Information("Grabbing game process by ID to change affinity.");
-				Process processAfinity = Process.GetProcessById(gameProcessID);
-				Log.Information($"Process found: {processAfinity}");
+				Process[] processes = Process.GetProcessesByName("AssassinsCreedIIGame");
+				while (processes.Length <= 0)
+				{
+                    processes = Process.GetProcessesByName("AssassinsCreedIIGame");
+					await Task.Delay(1000);
+				}
+				Log.Information($"Game process found.");
 				int affinity;
 				switch (true)
 				{
 					case bool when App.NumberOfCores >= 8 && App.NumberOfThreads >= 16:
-						Log.Information("8 Cores/16 Threads or greater affinity");
-						processAfinity.ProcessorAffinity = new IntPtr(0xFFFe);
+						Log.Information("8 Cores/16 Threads or greater affinity");;
+						foreach (Process gameProcess in processes)
+						{
+                            Log.Information($"Game Process: {gameProcess.ProcessName}, ID: {gameProcess.Id}");
+                            gameProcess.ProcessorAffinity = new IntPtr(0xFFFF);
+                        }
 						break;
 					case bool when App.NumberOfCores == 6 && App.NumberOfThreads == 12:
 						Log.Information("6 Cores/12 Threads affinity");
-						processAfinity.ProcessorAffinity = new IntPtr(0x7F);
-						break;
+                        foreach (Process gameProcess in processes)
+                        {
+                            Log.Information($"Game Process: {gameProcess.ProcessName}, ID: {gameProcess.Id}");
+							gameProcess.ProcessorAffinity = new IntPtr(0x7F);
+                        }
+                        break;
 					case bool when App.NumberOfCores == 6 && App.NumberOfThreads == 6:
 						Log.Information("6 Cores/6 Threads affinity");
-						processAfinity.ProcessorAffinity = new IntPtr(0x3F);
-						break;
+                        foreach (Process gameProcess in processes)
+                        {
+                            Log.Information($"Game Process: {gameProcess.ProcessName}, ID: {gameProcess.Id}");
+                            gameProcess.ProcessorAffinity = new IntPtr(0x3F);
+                        }
+                        break;
 					case bool when App.NumberOfCores == 8 && App.NumberOfThreads == 8:
 					case bool when App.NumberOfCores == 4 && App.NumberOfThreads == 8:
 						Log.Information("4 Cores/8 Threads or 8 Cores/8 Threads affinity");
-						processAfinity.ProcessorAffinity = new IntPtr(0xFF);
-						break;
+                        foreach (Process gameProcess in processes)
+                        {
+                            Log.Information($"Game Process: {gameProcess.ProcessName}, ID: {gameProcess.Id}");
+                            gameProcess.ProcessorAffinity = new IntPtr(0xFF);
+                        }
+                        break;
 					case bool when App.NumberOfCores == 4 && App.NumberOfThreads == 4:
 						Log.Information("4 Cores/4 Threads affinity");
-						processAfinity.ProcessorAffinity = new IntPtr(0x0F);
-						break;
+                        foreach (Process gameProcess in processes)
+                        {
+                            Log.Information($"Game Process: {gameProcess.ProcessName}, ID: {gameProcess.Id}");
+                            gameProcess.ProcessorAffinity = new IntPtr(0x0F);
+                        }
+                        break;
 					default:
 						Log.Information("Default preset");
 						affinity = (1 << App.NumberOfThreads) - 1;
 						Log.Information($"Affinity Bitmask: 0x{affinity.ToString("X")}");
-						processAfinity.ProcessorAffinity = new IntPtr(affinity);
-						break;
+                        foreach (Process gameProcess in processes)
+                        {
+                            Log.Information($"Game Process: {gameProcess.ProcessName}, ID: {gameProcess.Id}");
+                            gameProcess.ProcessorAffinity = new IntPtr(affinity);
+                        }
+                        break;
 				}
 				await Task.Delay(10);
 			}
@@ -208,11 +237,11 @@ namespace The_Ezio_Trilogy_Launcher.Windows
 				gameProcess.PriorityClass = ProcessPriorityClass.High;
 				await SetProcessAffinity(gameProcess.Id);
 				Log.Information("Game started");
-				string[] gameSpecificProcesses = { "UbisoftGameLauncher", "Steam", "AssassinsCreedIIGame" };
-				int closedGameSpecificProcesses = 0;
+				string[] gameSpecificProcesses = { "UbisoftGameLauncher", "Steam", "AssassinsCreedIIGame"};
                 Log.Information($"Waiting for game to be closed.");
                 while (true)
                 {
+                    int closedGameSpecificProcesses = 0;
                     foreach (string GameProcess in gameSpecificProcesses)
                     {
                         Process[] process = Process.GetProcessesByName(GameProcess);
@@ -220,14 +249,18 @@ namespace The_Ezio_Trilogy_Launcher.Windows
                         {
 							closedGameSpecificProcesses++;
                         }
+						if (GameProcess == "AssassinsCreedIIGame" && process.Length <= 0)
+						{
+							break;
+						}
                     }
-                    if (closedGameSpecificProcesses == 3)
+                    if (closedGameSpecificProcesses == 2)
                     {
-                        break;
-                    }
-                    else
-                    {
-                        closedGameSpecificProcesses = 0;
+                        Process[] process = Process.GetProcessesByName("AssassinsCreedIIGame");
+						if (process.Length <= 0)
+						{
+                            break;
+                        }
                     }
                     await Task.Delay(1000);
                 }
