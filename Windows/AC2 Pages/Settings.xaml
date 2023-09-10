@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:The_Ezio_Trilogy_Launcher.Windows.AC2_Pages"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      d:DesignHeight="1356.998" d:DesignWidth="800"
       Title="Settings">
     <Page.Resources>
         <SolidColorBrush x:Key="ComboBox.Static.Background" Color="White" />

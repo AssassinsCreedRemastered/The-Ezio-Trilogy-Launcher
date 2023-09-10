@@ -91,7 +91,7 @@ namespace The_Ezio_Trilogy_Launcher
             Log.Logger = new LoggerConfiguration()
             .WriteTo.Console(
                 outputTemplate: "{Timestamp:dd-MM-yyyy HH:mm:ss}|{Level}|{Message}{NewLine}{Exception}")
-            //.WriteTo.File("Installer Logs.txt", rollingInterval: RollingInterval.Day)
+            .WriteTo.File("Logs.txt", rollingInterval: RollingInterval.Day)
             .CreateLogger();
         }
 

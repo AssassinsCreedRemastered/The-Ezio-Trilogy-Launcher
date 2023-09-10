@@ -509,6 +509,91 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
             }
         }
 
+        // Saving EaglePatch Settings
+        private async Task SaveEaglePatchSettings()
+        {
+            try
+            {
+                Log.Information("Saving EaglePatch Settings");
+                string[] EaglePatchConfigFile = File.ReadAllLines(App.AC2Path + @"\scripts\EaglePatchAC2.ini");
+                using (StreamWriter sw = new StreamWriter(App.AC2Path + @"\scripts\EaglePatchAC2.ini"))
+                {
+                    foreach (string line in EaglePatchConfigFile)
+                    {
+                        switch (line)
+                        {
+                            case string x when line.StartsWith("ImproveDrawDistance"):
+                                Log.Information("Checking if ImproveDrawDistance is enabled");
+                                if (ImproveDrawDistance.IsChecked == true)
+                                {
+                                    Log.Information("ImproveDrawDistance is enabled");
+                                    sw.Write("ImproveDrawDistance=1\r\n");
+                                }
+                                else
+                                {
+                                    Log.Information("ImproveDrawDistance is disabled");
+                                    sw.Write("ImproveDrawDistance=0\r\n");
+                                }
+                                break;
+                            case string x when line.StartsWith("ImproveShadowMapResolution"):
+                                Log.Information("Checking if ImproveShadowMapResolution is enabled");
+                                if (ImproveShadowMapResolution.IsChecked == true)
+                                {
+                                    Log.Information("ImproveShadowMapResolution is enabled");
+                                    sw.Write("ImproveShadowMapResolution=1\r\n");
+                                }
+                                else
+                                {
+                                    Log.Information("ImproveShadowMapResolution is disabled");
+                                    sw.Write("ImproveShadowMapResolution=0\r\n");
+                                }
+                                break;
+                            case string x when line.StartsWith("KeyboardLayout"):
+                                Log.Information($"KeyboardLayout selected: {KeyboardLayoutSelector.SelectedItem.ToString()}");
+                                sw.Write("KeyboardLayout=" + KeyboardLayoutSelector.SelectedIndex + "\r\n");
+                                break;
+                            case string x when line.StartsWith("PS3Controls"):
+                                Log.Information("Checking if PS3Controls is enabled");
+                                if (PS3Controls.IsChecked == true)
+                                {
+                                    Log.Information("PS3Controls is enabled");
+                                    sw.Write("PS3Controls=1\r\n");
+                                }
+                                else
+                                {
+                                    Log.Information("PS3Controls is disabled");
+                                    sw.Write("PS3Controls=0\r\n");
+                                }
+                                break;
+                            case string x when line.StartsWith("SkipIntroVideos"):
+                                Log.Information("Checking if SkipIntroVideos is enabled");
+                                if (SkipIntroVideos.IsChecked == true)
+                                {
+                                    Log.Information("SkipIntroVideos is enabled");
+                                    sw.Write("SkipIntroVideos=1\r\n");
+                                }
+                                else
+                                {
+                                    Log.Information("SkipIntroVideos is disabled");
+                                    sw.Write("SkipIntroVideos=0\r\n");
+                                }
+                                break;
+                            default:
+                                sw.Write(line + "\r\n");
+                                break;
+                        }
+                    }
+                }
+                await Task.Delay(1);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "");
+                System.Windows.MessageBox.Show(ex.Message);
+                return;
+            }
+        }
+
         // Enables/Disables EaglePatch and ReShade
         private async Task SaveModLoaderSettings()
         {
@@ -584,6 +669,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
                 if (result == MessageBoxResult.Yes)
                 {
                     await SaveGameSettings();
+                    await SaveEaglePatchSettings();
                     await SaveModLoaderSettings();
                     Log.Information("Saving done");
                     System.Windows.MessageBox.Show("Saving done.");
@@ -596,6 +682,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
             else
             {
                 await SaveGameSettings();
+                await SaveEaglePatchSettings();
                 await SaveModLoaderSettings();
                 Log.Information("Saving done");
                 System.Windows.MessageBox.Show("Saving done.");
