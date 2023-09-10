@@ -52,6 +52,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows
 		{
 			InitializeComponent();
 			path = App.AC2Path;
+            ReaduModStatus();
 		}
 
 		private void NavigateToPage(string PageName)
@@ -198,6 +199,40 @@ namespace The_Ezio_Trilogy_Launcher.Windows
 			}
 		}
 
+        private void ReaduModStatus()
+        {
+            try
+            {
+                Log.Information("Checking if uMod is enabled");
+                if (System.IO.File.Exists(App.AC2Path + @"\uMod\Status.txt"))
+                {
+                    string[] statusFile = File.ReadAllLines(App.AC2Path + @"\uMod\Status.txt");
+                    foreach (string status in statusFile)
+                    {
+                        if (status.StartsWith("Enabled"))
+                        {
+                            string[] splitLine = status.Split('=');
+                            if (int.Parse(splitLine[1]) == 1)
+                            {
+                                Log.Information("uMod is enabled");
+                                uModStatus = true;
+                            }
+                            else
+                            {
+                                Log.Information("uMod is disabled");
+                                uModStatus = false;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Information(ex, "");
+                System.Windows.MessageBox.Show(ex.Message);
+            }
+        }
+
 		// Window Dragging
 		private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{
@@ -242,7 +277,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows
                     gameProcess.PriorityClass = ProcessPriorityClass.High;
                     await SetProcessAffinity(gameProcess.Id);
                     Log.Information("Game started");
-                    string[] gameSpecificProcesses = { "UbisoftGameLauncher", "Steam", "AssassinsCreedIIGame" };
+                    string[] gameSpecificProcesses = { "UbisoftGameLauncher", "Steam" };
                     Log.Information($"Waiting for game to be closed.");
                     while (true)
                     {
@@ -253,10 +288,6 @@ namespace The_Ezio_Trilogy_Launcher.Windows
                             if (process.Length <= 0)
                             {
                                 closedGameSpecificProcesses++;
-                            }
-                            if (GameProcess == "AssassinsCreedIIGame" && process.Length <= 0)
-                            {
-                                break;
                             }
                         }
                         if (closedGameSpecificProcesses == 2)
@@ -301,7 +332,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows
                     gameProcess.PriorityClass = ProcessPriorityClass.High;
                     await SetProcessAffinity(gameProcess.Id);
                     Log.Information("Game started");
-                    string[] gameSpecificProcesses = { "UbisoftGameLauncher", "Steam", "AssassinsCreedIIGame" };
+                    string[] gameSpecificProcesses = { "UbisoftGameLauncher", "Steam" };
                     Log.Information($"Waiting for game to be closed.");
                     while (true)
                     {
@@ -312,10 +343,6 @@ namespace The_Ezio_Trilogy_Launcher.Windows
                             if (process.Length <= 0)
                             {
                                 closedGameSpecificProcesses++;
-                            }
-                            if (GameProcess == "AssassinsCreedIIGame" && process.Length <= 0)
-                            {
-                                break;
                             }
                         }
                         if (closedGameSpecificProcesses == 2)
