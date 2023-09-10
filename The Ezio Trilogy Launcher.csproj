@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <None Remove="Assets\AC2 Background.jpg" />
+    <None Remove="Assets\AC2Offsets.txt" />
     <None Remove="Assets\Icons\Add.png" />
     <None Remove="Assets\Icons\Back.png" />
     <None Remove="Assets\Icons\Credits.png" />
@@ -36,6 +37,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Assets\ListOfSupportedRefreshRates.txt" />
     <EmbeddedResource Include="Assets\ListofSupportedResolutions.txt" />
+    <EmbeddedResource Include="Assets\AC2Offsets.txt" />
   </ItemGroup>
 
   <ItemGroup>
