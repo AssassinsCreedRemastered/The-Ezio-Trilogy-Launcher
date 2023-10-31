@@ -71,15 +71,6 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
             });
         }
 
-        private void RecognizableFeathers_Click(object sender, RoutedEventArgs e)
-        {
-            Process.Start(new ProcessStartInfo
-            {
-                FileName = "https://www.nexusmods.com/assassinscreedii/mods/14",
-                UseShellExecute = true,
-            });
-        }
-
         private void ReShade_Click(object sender, RoutedEventArgs e)
         {
             Process.Start(new ProcessStartInfo

@@ -1,5 +1,4 @@
-﻿using Microsoft.Win32;
-using Serilog;
+﻿using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -16,8 +15,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.Win32;
 
-namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
+namespace The_Ezio_Trilogy_Launcher.Windows.ACB_Pages
 {
     /// <summary>
     /// Interaction logic for Mods.xaml
@@ -25,9 +25,9 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
     public partial class Mods : Page
     {
         // Global vars
-        private ObservableCollection<string> EnabledMods = new ObservableCollection<string>{};
-        private ObservableCollection<string> DisabledMods = new ObservableCollection<string>{};
-        private Dictionary<string,string> InstalledMods = new Dictionary<string,string>();
+        private ObservableCollection<string> EnabledMods = new ObservableCollection<string> { };
+        private ObservableCollection<string> DisabledMods = new ObservableCollection<string> { };
+        private Dictionary<string, string> InstalledMods = new Dictionary<string, string>();
         private Dictionary<string, string> InstalledEnabledMods = new Dictionary<string, string>();
         private Dictionary<string, string> InstalledDisabledMods = new Dictionary<string, string>();
         private bool isSelectionEnabledModsChangingProgrammatically = false;
@@ -48,8 +48,8 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
             {
                 Log.Information("Loading all of the installed uMod mods.");
                 // First grabs all folders inside of Mods then reads all of the files inside those folders
-                string[] directories = Directory.GetDirectories(App.AC2Path + @"\Mods\");
-                foreach (string dir in directories) 
+                string[] directories = Directory.GetDirectories(App.ACBPath + @"\Mods\");
+                foreach (string dir in directories)
                 {
                     string[] mods = Directory.GetFiles(dir);
                     foreach (string mod in mods)
@@ -59,10 +59,10 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
                     }
                 }
                 // Check to see if template even exists and mods that are already enabled are put into Dictionary EnabledMods
-                if (System.IO.File.Exists(App.AC2Path + @"\uMod\templates\ac2.txt"))
+                if (System.IO.File.Exists(App.ACBPath + @"\uMod\templates\ACBSP.txt"))
                 {
-                    string[] uModConfig = File.ReadAllLines(App.AC2Path + @"\uMod\templates\ac2.txt");
-                    foreach(string line in uModConfig)
+                    string[] uModConfig = File.ReadAllLines(App.ACBPath + @"\uMod\templates\ACBSP.txt");
+                    foreach (string line in uModConfig)
                     {
                         if (line.StartsWith("Add_true:"))
                         {
@@ -98,9 +98,9 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
         {
             try
             {
-                if (System.IO.File.Exists(App.AC2Path + @"\uMod\templates\ac2.txt"))
+                if (System.IO.File.Exists(App.ACBPath + @"\uMod\templates\ACBSP.txt"))
                 {
-                    using (StreamWriter sw = new StreamWriter(App.AC2Path + @"\uMod\templates\ac2.txt"))
+                    using (StreamWriter sw = new StreamWriter(App.ACBPath + @"\uMod\templates\ACBSP.txt"))
                     {
                         sw.Write("SaveAllTextures:0\n");
                         sw.Write("SaveSingleTexture:0\n");
@@ -117,7 +117,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "");
+                Log.Information(ex, "");
                 MessageBox.Show(ex.Message);
                 return;
             }
@@ -130,7 +130,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
             {
                 OpenFileDialog FileDialog = new OpenFileDialog();
                 FileDialog.Filter = "uMod File|*.tpf";
-                FileDialog.Title = "Select a .tpf mod compatible with Assassin's Creed 2";
+                FileDialog.Title = "Select a .tpf mod compatible with Assassin's Creed Brotherhood";
                 string modPath;
                 if (FileDialog.ShowDialog() == true)
                 {
@@ -144,15 +144,16 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
                 }
                 if (System.IO.File.Exists(modPath))
                 {
-                    if (!System.IO.File.Exists(App.AC2Path + $@"\Mods\Custom Mods\{System.IO.Path.GetFileName(modPath)}"))
+                    if (!System.IO.File.Exists(App.ACBPath + $@"\Mods\Custom Mods\{System.IO.Path.GetFileName(modPath)}"))
                     {
-                        System.IO.File.Move(modPath, App.AC2Path + $@"\Mods\Custom Mods\{System.IO.Path.GetFileName(modPath)}");
+                        System.IO.File.Move(modPath, App.ACBPath + $@"\Mods\Custom Mods\{System.IO.Path.GetFileName(modPath)}");
                         EnabledMods.Add(System.IO.Path.GetFileName(modPath));
-                        InstalledEnabledMods.Add(System.IO.Path.GetFileName(modPath), App.AC2Path + $@"\Mods\Custom Mods\{System.IO.Path.GetFileName(modPath)}");
-                    } else
+                        InstalledEnabledMods.Add(System.IO.Path.GetFileName(modPath), App.ACBPath + $@"\Mods\Custom Mods\{System.IO.Path.GetFileName(modPath)}");
+                    }
+                    else
                     {
                         EnabledMods.Add(System.IO.Path.GetFileName(modPath));
-                        InstalledEnabledMods.Add(System.IO.Path.GetFileName(modPath), App.AC2Path + $@"\Mods\Custom Mods\{System.IO.Path.GetFileName(modPath)}");
+                        InstalledEnabledMods.Add(System.IO.Path.GetFileName(modPath), App.ACBPath + $@"\Mods\Custom Mods\{System.IO.Path.GetFileName(modPath)}");
                     }
                 }
                 Log.Information(modPath);
@@ -160,7 +161,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
+                Log.Information(ex, "");
                 MessageBox.Show(ex.Message);
                 return;
             }
@@ -199,7 +200,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "");
+                Log.Information(ex, "");
                 MessageBox.Show(ex.Message);
                 return;
             }
@@ -236,8 +237,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
             }
         }
 
-        // Moves selected mod up 1 spot
-        private void MoveSelectedModUp_Click(object sender, RoutedEventArgs e)
+        private async void MoveSelectedModUp_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -263,6 +263,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
                         DisabledModsList.SelectedIndex = selectedIndex - 1;
                     }
                 }
+                await Task.Delay(1);
             }
             catch (Exception ex)
             {
@@ -272,8 +273,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
             }
         }
 
-        // Moves selected item down 1 spot
-        private void MoveSelectedModDown_Click(object sender, RoutedEventArgs e)
+        private async void MoveSelectedModDown_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -299,6 +299,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
                         DisabledModsList.SelectedIndex = selectedIndex + 1;
                     }
                 }
+                await Task.Delay(1);
             }
             catch (Exception ex)
             {
@@ -308,7 +309,48 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
             }
         }
 
-        // This is needed to have only 1 mod selected
+        private async void EnableSelectedMod_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (DisabledModsList.SelectedIndex > -1)
+                {
+                    EnabledMods.Add(DisabledModsList.SelectedItem.ToString());
+                    InstalledEnabledMods.Add(DisabledModsList.SelectedItem.ToString(), InstalledDisabledMods[DisabledModsList.SelectedItem.ToString()]);
+                    InstalledDisabledMods.Remove(DisabledModsList.SelectedItem.ToString());
+                    DisabledMods.Remove(DisabledModsList.SelectedItem.ToString());
+                }
+                await Task.Delay(1);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "");
+                MessageBox.Show(ex.Message);
+                return;
+            }
+        }
+
+        private async void DisableSelectedMod_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (EnabledModsList.SelectedIndex > -1)
+                {
+                    DisabledMods.Add(EnabledModsList.SelectedItem.ToString());
+                    InstalledDisabledMods.Add(EnabledModsList.SelectedItem.ToString(), InstalledEnabledMods[EnabledModsList.SelectedItem.ToString()]);
+                    InstalledEnabledMods.Remove(EnabledModsList.SelectedItem.ToString());
+                    EnabledMods.Remove(EnabledModsList.SelectedItem.ToString());
+                }
+                await Task.Delay(1);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "");
+                MessageBox.Show(ex.Message);
+                return;
+            }
+        }
+
         private void EnabledModsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (!isSelectionEnabledModsChangingProgrammatically)
@@ -326,48 +368,6 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
                 isSelectionEnabledModsChangingProgrammatically = true;
                 EnabledModsList.SelectedIndex = -1;
                 isSelectionEnabledModsChangingProgrammatically = false;
-            }
-        }
-
-        // Moves selected mod into enabled mod list
-        private void EnableSelectedMod_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                if (DisabledModsList.SelectedIndex > -1)
-                {
-                    EnabledMods.Add(DisabledModsList.SelectedItem.ToString());
-                    InstalledEnabledMods.Add(DisabledModsList.SelectedItem.ToString(), InstalledDisabledMods[DisabledModsList.SelectedItem.ToString()]);
-                    InstalledDisabledMods.Remove(DisabledModsList.SelectedItem.ToString());
-                    DisabledMods.Remove(DisabledModsList.SelectedItem.ToString());
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex, "");
-                MessageBox.Show(ex.Message);
-                return;
-            }
-        }
-
-        // Moves selected mod into disabled mod list
-        private void DisableSelectedMod_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                if (EnabledModsList.SelectedIndex > -1)
-                {
-                    DisabledMods.Add(EnabledModsList.SelectedItem.ToString());
-                    InstalledDisabledMods.Add(EnabledModsList.SelectedItem.ToString(), InstalledEnabledMods[EnabledModsList.SelectedItem.ToString()]);
-                    InstalledEnabledMods.Remove(EnabledModsList.SelectedItem.ToString());
-                    EnabledMods.Remove(EnabledModsList.SelectedItem.ToString());
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex, "");
-                MessageBox.Show(ex.Message);
-                return;
             }
         }
     }

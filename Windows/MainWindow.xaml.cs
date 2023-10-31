@@ -82,7 +82,10 @@ namespace The_Ezio_Trilogy_Launcher
             {
                 if (App.ACBPath != null)
                 {
-                    
+                    AssassinsCreedBrotherhood acb = new AssassinsCreedBrotherhood();
+                    this.Visibility = Visibility.Hidden;
+                    acb.ShowDialog();
+                    this.Visibility = Visibility.Visible;
                 }
                 else
                 {

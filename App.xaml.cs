@@ -29,7 +29,7 @@ namespace The_Ezio_Trilogy_Launcher
 
         // Used to detect refresh Rate
         [DllImport("user32.dll")]
-        private static extern int EnumDisplaySettings(string deviceName, int modeNum, ref DEVMODE devMode);
+        private static extern int EnumDisplaySettings(string? deviceName, int modeNum, ref DEVMODE devMode);
 
         [StructLayout(LayoutKind.Sequential)]
         private struct DEVMODE
@@ -87,11 +87,10 @@ namespace The_Ezio_Trilogy_Launcher
         public App()
         {
             InitializeComponent();
-            // Activating Logging Tool
             Log.Logger = new LoggerConfiguration()
             .WriteTo.Console(
                 outputTemplate: "{Timestamp:dd-MM-yyyy HH:mm:ss}|{Level}|{Message}{NewLine}{Exception}")
-            .WriteTo.File("Logs.txt", rollingInterval: RollingInterval.Day)
+            //.WriteTo.File("Logs.txt", rollingInterval: RollingInterval.Day)
             .CreateLogger();
         }
 
@@ -110,17 +109,26 @@ namespace The_Ezio_Trilogy_Launcher
                             FileInfo fileInfo = new FileInfo(path);
                             if (fileInfo.Name == "AC2Path.txt")
                             {
-                                Log.Information("AC2 is installed.");
+                                Log.Information("Assassin's Creed 2 is installed.");
                                 using (StreamReader sr = new StreamReader(Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments) + @"\Assassin's Creed - The Ezio Trilogy Remastered\" + fileInfo.Name))
                                 {
                                     AC2Path = sr.ReadLine();
-                                    Log.Information($"AC2 Installation Path: {AC2Path}");
+                                    Log.Information($"Assassin's Creed 2 Installation Path: {AC2Path}");
+                                }
+                            }
+                            else if (fileInfo.Name == "ACBPath.txt")
+                            {
+                                Log.Information("Assassin's Creed Brotherhood is installed.");
+                                using (StreamReader sr = new StreamReader(Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments) + @"\Assassin's Creed - The Ezio Trilogy Remastered\" + fileInfo.Name))
+                                {
+                                    ACBPath = sr.ReadLine();
+                                    Log.Information($"Assassin's Creed Brotherhood Installation Path: {ACBPath}");
                                 }
                             }
                         }
                     }
                 }
-                await Task.Delay(10);
+                await Task.Delay(1);
             }
             catch (Exception ex)
             {
@@ -155,7 +163,7 @@ namespace The_Ezio_Trilogy_Launcher
                     Log.Information($"Number of Cores: {NumberOfCores}");
                     Log.Information($"Number of Threads: {NumberOfThreads}");
                 }
-                await Task.Delay(10);
+                await Task.Delay(1);
             }
             catch (Exception ex)
             {
@@ -182,7 +190,7 @@ namespace The_Ezio_Trilogy_Launcher
                 Log.Information($"Monitors Resolution: {resolutionWidth}x{resolutionHeight}");
                 using (StreamReader sr = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("The_Ezio_Trilogy_Launcher.Assets.ListofSupportedResolutions.txt")))
                 {
-                    string line = sr.ReadLine();
+                    string? line = sr.ReadLine();
                     while (line != null)
                     {
                         string[] splitLine = line.Split('x');
@@ -228,7 +236,7 @@ namespace The_Ezio_Trilogy_Launcher
                 }
                 using (StreamReader sr = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("The_Ezio_Trilogy_Launcher.Assets.ListOfSupportedRefreshRates.txt")))
                 {
-                    string line = sr.ReadLine();
+                    string? line = sr.ReadLine();
                     while (line != null)
                     {
                         if (RefreshRate > double.Parse(line))
@@ -243,6 +251,7 @@ namespace The_Ezio_Trilogy_Launcher
                         line = sr.ReadLine();
                     }
                 }
+                await Task.Delay(1);
                 Log.Information($"Monitor's Refresh Rate: {RefreshRate}");
             }
             catch (Exception ex)
