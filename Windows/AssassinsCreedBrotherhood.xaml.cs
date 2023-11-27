@@ -232,7 +232,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows
         // Exits the Launcher back to the main window
         private async void Exit_Click(object sender, RoutedEventArgs e)
         {
-            Log.Information("Closing Assassin's Creed 2 Launcher");
+            Log.Information("Closing Assassin's Creed Brotherhood Launcher");
             await Task.Delay(1);
             this.Close();
         }
@@ -241,109 +241,74 @@ namespace The_Ezio_Trilogy_Launcher.Windows
         {
             try
             {
-                if (uModStatus)
+                Process[] Game = Process.GetProcessesByName("ACBSP");
+                if (Game.Length <= 0)
                 {
-                    // Create a new process start info
-                    ProcessStartInfo GameInfo = new ProcessStartInfo
-                    {
-                        FileName = App.ACBPath + @"\ACBSP.exe",
-                        UseShellExecute = false, // Required for setting affinity
-                        RedirectStandardOutput = false, // Set to true if you want to capture the output
-                        CreateNoWindow = true // Set to true to hide the console window
-                    };
-                    Process uModProcess = new Process();
-                    uModProcess.StartInfo.WorkingDirectory = App.ACBPath + @"\uMod";
-                    uModProcess.StartInfo.FileName = "uMod.exe";
-                    uModProcess.StartInfo.UseShellExecute = true;
-                    uModProcess.Start();
                     Process gameProcess = new Process();
-                    gameProcess.StartInfo = GameInfo;
-                    gameProcess.Start();
-                    Log.Information("Game is starting");
-                    Log.Information("Setting game affinity based on CPU Core/Thread Count");
-                    gameProcess.PriorityClass = ProcessPriorityClass.High;
-                    await SetProcessAffinity(gameProcess.Id);
-                    Log.Information("Game started");
-                    string[] gameSpecificProcesses = { "UbisoftGameLauncher", "Steam" };
-                    Log.Information($"Waiting for game to be closed.");
-                    while (true)
+                    gameProcess.StartInfo.WorkingDirectory = App.ACBPath;
+                    gameProcess.StartInfo.FileName = "ACBSP.exe";
+                    gameProcess.StartInfo.UseShellExecute = true;
+                    if (uModStatus)
                     {
-                        int closedGameSpecificProcesses = 0;
-                        foreach (string GameProcess in gameSpecificProcesses)
+                        Process uModProcess = new Process();
+                        uModProcess.StartInfo.WorkingDirectory = App.ACBPath + @"\uMod";
+                        uModProcess.StartInfo.FileName = "uMod.exe";
+                        uModProcess.StartInfo.UseShellExecute = true;
+                        uModProcess.Start();
+                        gameProcess.Start();
+                        Log.Information("Game is starting");
+                        Log.Information("Setting game affinity based on CPU Core/Thread Count");
+                        Game = Process.GetProcessesByName("ACBSP");
+                        while (Game.Length <= 0)
                         {
-                            Process[] process = Process.GetProcessesByName(GameProcess);
-                            if (process.Length <= 0)
+                            await Task.Delay(1000);
+                            Game = Process.GetProcessesByName("ACBSP");
+                        }
+                        foreach (Process process in Game)
+                        {
+                            process.PriorityClass = ProcessPriorityClass.High;
+                            await SetProcessAffinity(process.Id);
+                        }
+                        Log.Information("Game started");
+                        Log.Information($"Waiting for game to be closed.");
+                        while (Game.Length > 0)
+                        {
+                            await Task.Delay(1000);
+                            Game = Process.GetProcessesByName("ACBSP");
+                        }
+                        Log.Information("Game Closed");
+                        try
+                        {
+                            if (Process.GetProcessById(uModProcess.Id) != null)
                             {
-                                closedGameSpecificProcesses++;
+                                uModProcess.CloseMainWindow();
                             }
                         }
-                        if (closedGameSpecificProcesses >= 1)
+                        catch (Exception)
                         {
-                            Process[] process = Process.GetProcessesByName("ACBSP");
-                            if (process.Length <= 0)
-                            {
-                                break;
-                            }
+                            Log.Information("uMod is already closed.");
                         }
-                        await Task.Delay(1000);
+                        await Task.Delay(1);
                     }
-                    Log.Information("Game Closed");
-                    try
+                    else
                     {
-                        if (Process.GetProcessById(uModProcess.Id) != null)
+                        gameProcess.Start();
+                        Log.Information("Game is starting");
+                        Log.Information("Setting game affinity based on CPU Core/Thread Count");
+                        Game = Process.GetProcessesByName("ACBSP");
+                        while (Game.Length <= 0)
                         {
-                            uModProcess.CloseMainWindow();
+                            await Task.Delay(1000);
+                            Game = Process.GetProcessesByName("ACBSP");
                         }
-                    }
-                    catch (Exception)
-                    {
-                        Log.Information("uMod is already closed.");
-                    }
-                    await Task.Delay(1);
-                }
-                else
-                {
-                    // Create a new process start info
-                    ProcessStartInfo GameInfo = new ProcessStartInfo
-                    {
-                        FileName = App.ACBPath + @"\ACBSP.exe",
-                        UseShellExecute = false, // Required for setting affinity
-                        RedirectStandardOutput = false, // Set to true if you want to capture the output
-                        CreateNoWindow = true // Set to true to hide the console window
-                    };
-                    Process gameProcess = new Process();
-                    gameProcess.StartInfo = GameInfo;
-                    gameProcess.Start();
-                    Log.Information("Game is starting");
-                    Log.Information("Setting game affinity based on CPU Core/Thread Count");
-                    gameProcess.PriorityClass = ProcessPriorityClass.High;
-                    await SetProcessAffinity(gameProcess.Id);
-                    Log.Information("Game started");
-                    string[] gameSpecificProcesses = { "UbisoftGameLauncher", "Steam" };
-                    Log.Information($"Waiting for game to be closed.");
-                    while (true)
-                    {
-                        int closedGameSpecificProcesses = 0;
-                        foreach (string GameProcess in gameSpecificProcesses)
+                        foreach (Process process in Game)
                         {
-                            Process[] process = Process.GetProcessesByName(GameProcess);
-                            if (process.Length <= 0)
-                            {
-                                closedGameSpecificProcesses++;
-                            }
+                            process.PriorityClass = ProcessPriorityClass.High;
+                            await SetProcessAffinity(process.Id);
                         }
-                        if (closedGameSpecificProcesses >= 1)
-                        {
-                            Process[] process = Process.GetProcessesByName("ACBSP");
-                            if (process.Length <= 0)
-                            {
-                                break;
-                            }
-                        }
-                        await Task.Delay(1000);
+                        Log.Information("Game started");
+                        await Task.Delay(1);
                     }
-                    Log.Information("Game Closed");
-                    await Task.Delay(10);
                 }
             }
             catch (Exception ex)

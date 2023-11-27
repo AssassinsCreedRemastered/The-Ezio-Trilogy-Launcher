@@ -251,111 +251,82 @@ namespace The_Ezio_Trilogy_Launcher.Windows
 		{
 			try
 			{
-				if (uModStatus)
-				{
-                    // Create a new process start info
-                    ProcessStartInfo GameInfo = new ProcessStartInfo
-                    {
-                        FileName = App.AC2Path + @"\AssassinsCreedIIGame.exe",
-                        UseShellExecute = false, // Required for setting affinity
-                        RedirectStandardOutput = false, // Set to true if you want to capture the output
-                        CreateNoWindow = true // Set to true to hide the console window
-                    };
-                    Process uModProcess = new Process();
-                    uModProcess.StartInfo.WorkingDirectory = App.AC2Path + @"\uMod";
-                    uModProcess.StartInfo.FileName = "uMod.exe";
-                    uModProcess.StartInfo.UseShellExecute = true;
-                    uModProcess.Start();
+                Process[] GameRunning = Process.GetProcessesByName("AssassinsCreedIIGame");
+                if (GameRunning.Length <= 0)
+                {
+                    // Create a new Game Process
                     Process gameProcess = new Process();
-                    gameProcess.StartInfo = GameInfo;
-                    gameProcess.Start();
-                    Log.Information("Game is starting");
-                    Log.Information("Setting game affinity based on CPU Core/Thread Count");
-                    gameProcess.PriorityClass = ProcessPriorityClass.High;
-                    await SetProcessAffinity(gameProcess.Id);
-                    Log.Information("Game started");
-                    string[] gameSpecificProcesses = { "UbisoftGameLauncher", "Steam" };
-                    Log.Information($"Waiting for game to be closed.");
-                    while (true)
+                    gameProcess.StartInfo.WorkingDirectory = App.AC2Path;
+                    gameProcess.StartInfo.FileName = "AssassinsCreedIIGame.exe";
+                    gameProcess.StartInfo.UseShellExecute = true;
+                    if (uModStatus)
                     {
-                        int closedGameSpecificProcesses = 0;
-                        foreach (string GameProcess in gameSpecificProcesses)
+                        Process uModProcess = new Process();
+                        uModProcess.StartInfo.WorkingDirectory = App.AC2Path + @"\uMod";
+                        uModProcess.StartInfo.FileName = "uMod.exe";
+                        uModProcess.StartInfo.UseShellExecute = true;
+                        uModProcess.Start();
+                        gameProcess.Start();
+                        Log.Information("Game is starting");
+                        Log.Information("Setting game affinity based on CPU Core/Thread Count");
+                        Process[] Game = Process.GetProcessesByName("AssassinsCreedIIGame");
+                        while (Game.Length <= 0)
                         {
-                            Process[] process = Process.GetProcessesByName(GameProcess);
-                            if (process.Length <= 0)
+                            await Task.Delay(1000);
+                            Game = Process.GetProcessesByName("AssassinsCreedIIGame");
+                        }
+                        foreach (Process process in Game)
+                        {
+                            process.PriorityClass = ProcessPriorityClass.High;
+                            await SetProcessAffinity(process.Id);
+                        }
+                        Log.Information("Game started");
+                        Log.Information($"Waiting for game to be closed.");
+                        while (Game.Length > 0)
+                        {
+                            await Task.Delay(1000);
+                            Game = Process.GetProcessesByName("AssassinsCreedIIGame");
+                        }
+                        Log.Information("Game Closed");
+                        try
+                        {
+                            if (Process.GetProcessById(uModProcess.Id) != null)
                             {
-                                closedGameSpecificProcesses++;
+                                uModProcess.CloseMainWindow();
                             }
                         }
-                        if (closedGameSpecificProcesses >= 1)
+                        catch (Exception)
                         {
-                            Process[] process = Process.GetProcessesByName("AssassinsCreedIIGame");
-                            if (process.Length <= 0)
-                            {
-                                break;
-                            }
+                            Log.Information("uMod is already closed.");
                         }
-                        await Task.Delay(1000);
+                        await Task.Delay(1);
                     }
-                    Log.Information("Game Closed");
-                    try
+                    else
                     {
-                        if (Process.GetProcessById(uModProcess.Id) != null)
+                        gameProcess.Start();
+                        Log.Information("Game is starting");
+                        Log.Information("Setting game affinity based on CPU Core/Thread Count");
+                        Process[] Game = Process.GetProcessesByName("AssassinsCreedIIGame");
+                        while (Game.Length <= 0)
                         {
-                            uModProcess.CloseMainWindow();
+                            await Task.Delay(1000);
+                            Game = Process.GetProcessesByName("AssassinsCreedIIGame");
                         }
+                        foreach (Process process in Game)
+                        {
+                            process.PriorityClass = ProcessPriorityClass.High;
+                            await SetProcessAffinity(process.Id);
+                        }
+                        Log.Information("Game started");
+                        await Task.Delay(1);
                     }
-                    catch (Exception)
-                    {
-                        Log.Information("uMod is already closed.");
-                    }
-                    await Task.Delay(1);
-                } 
+                }
                 else
                 {
-                    // Create a new process start info
-                    ProcessStartInfo GameInfo = new ProcessStartInfo
-                    {
-                        FileName = App.AC2Path + @"\AssassinsCreedIIGame.exe",
-                        UseShellExecute = false, // Required for setting affinity
-                        RedirectStandardOutput = false, // Set to true if you want to capture the output
-                        CreateNoWindow = true // Set to true to hide the console window
-                    };
-                    Process gameProcess = new Process();
-                    gameProcess.StartInfo = GameInfo;
-                    gameProcess.Start();
-                    Log.Information("Game is starting");
-                    Log.Information("Setting game affinity based on CPU Core/Thread Count");
-                    gameProcess.PriorityClass = ProcessPriorityClass.High;
-                    await SetProcessAffinity(gameProcess.Id);
-                    Log.Information("Game started");
-                    string[] gameSpecificProcesses = { "UbisoftGameLauncher", "Steam" };
-                    Log.Information($"Waiting for game to be closed.");
-                    while (true)
-                    {
-                        int closedGameSpecificProcesses = 0;
-                        foreach (string GameProcess in gameSpecificProcesses)
-                        {
-                            Process[] process = Process.GetProcessesByName(GameProcess);
-                            if (process.Length <= 0)
-                            {
-                                closedGameSpecificProcesses++;
-                            }
-                        }
-                        if (closedGameSpecificProcesses == 2)
-                        {
-                            Process[] process = Process.GetProcessesByName("AssassinsCreedIIGame");
-                            if (process.Length <= 0)
-                            {
-                                break;
-                            }
-                        }
-                        await Task.Delay(1000);
-                    }
-                    Log.Information("Game Closed");
-                    await Task.Delay(10);
+                    Log.Information("Game is already running");
+                    System.Windows.MessageBox.Show("Game is already running.");
                 }
-			}
+            }
 			catch (Exception ex)
 			{
 				Log.Error(ex, "Error:");
