@@ -22,6 +22,12 @@ jobs:
         git config --global user.email "github-actions@example.com"
         git config --global user.name "GitHub Actions"
 
+    - name: Install jq
+      run: |
+        Invoke-WebRequest -Uri "https://github.com/stedolan/jq/releases/download/jq-1.6/jq-win64.exe" -OutFile jq.exe
+        Move-Item -Path .\jq.exe -Destination $env:USERPROFILE\bin\jq.exe
+        Write-Host "##vso[task.prependpath]$env:USERPROFILE\bin"
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v2
       with:
