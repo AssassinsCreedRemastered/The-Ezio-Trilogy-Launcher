@@ -51,9 +51,9 @@ jobs:
     - name: Check for Existing Release
       id: check_release
       run: |
-        RELEASE_TAG=$(git describe --tags --abbrev=0)
-        RELEASE_ID=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/${RELEASE_TAG}" | jq -r '.id // empty')
-        echo "::set-output name=release_id::${RELEASE_ID}"
+        $RELEASE_TAG = git describe --tags --abbrev=0
+        $RELEASE_ID = curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/${RELEASE_TAG}" | jq -r '.id // empty'
+        echo "::set-output name=release_id::$RELEASE_ID"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
