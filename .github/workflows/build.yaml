@@ -42,3 +42,31 @@ jobs:
       with:
         name: app
         path: app.zip
+
+    - name: Check for Existing Release
+      id: check_release
+      run: |
+        RELEASE_TAG=$(git describe --tags --abbrev=0)
+        RELEASE_ID=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/${RELEASE_TAG}" | jq -r '.id // empty')
+        echo "::set-output name=release_id::${RELEASE_ID}"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Create or Update Release
+      id: create_or_update_release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: ./app.zip
+        tag_name: ${{ github.ref }}
+        overwrite: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Set Release as Pre-release
+      if: steps.check_release.outputs.release_id
+      run: |
+        curl -X PATCH \
+          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          -H "Accept: application/vnd.github.v3+json" \
+          -d '{"prerelease":true}' \
+          "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/${{ steps.check_release.outputs.release_id }}"
