@@ -32,10 +32,15 @@ jobs:
       run: dotnet test
 
     - name: Publish
-      run: dotnet publish -c Release -o publish
+      run: dotnet publish -c Release -o publish --self-contained false
+
+    - name: Package
+      run: |
+        cd publish
+        zip -r ../app.zip .
 
     - name: Archive artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: publish
-        path: ./publish
+        name: app
+        path: app.zip
