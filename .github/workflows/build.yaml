@@ -1,0 +1,40 @@
+name: Build and Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: 8.x  # Adjust the version if needed
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build -c Release
+
+    - name: Test
+      run: dotnet test
+
+    - name: Publish
+      run: dotnet publish -c Release -o publish
+
+    - name: Archive artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: publish
+        path: ./publish
