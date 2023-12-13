@@ -56,13 +56,13 @@ jobs:
         echo "::set-output name=release_id::$RELEASE_ID"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+        
     - name: Create or Update Release
       id: create_or_update_release
       uses: softprops/action-gh-release@v1
       with:
         files: ./app.zip
-        tag_name: ${{ github.ref_endswith('refs/tags/') }}
+        tag_name: ${{ startsWith(github.ref, 'refs/tags/') && github.ref }}
         overwrite: true
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
