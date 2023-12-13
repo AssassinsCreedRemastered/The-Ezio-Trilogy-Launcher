@@ -35,9 +35,7 @@ jobs:
       run: dotnet publish -c Release -o publish --self-contained false
 
     - name: Package
-      run: |
-        cd publish
-        zip -r ../app.zip .
+      run: Compress-Archive -Path .\publish\* -DestinationPath .\app.zip
 
     - name: Archive artifacts
       uses: actions/upload-artifact@v2
