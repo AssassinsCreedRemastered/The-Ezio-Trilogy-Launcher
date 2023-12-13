@@ -77,9 +77,10 @@ jobs:
         path: .
 
     - name: Upload Artifact to Release
+      id: upload
       uses: actions/upload-release-asset@v1
       with:
-        upload_url: ${{ needs.create_release.outputs.upload_url }}
+        upload_url: ${{ github.event.release.upload_url }}
         asset_path: ./app.zip
         asset_name: app.zip
         asset_content_type: application/zip
