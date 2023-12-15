@@ -14,6 +14,7 @@
     <None Remove="Assets\AC2 Background.jpg" />
     <None Remove="Assets\AC2Offsets.txt" />
     <None Remove="Assets\ACB Background.jpg" />
+    <None Remove="Assets\Font\Assassin%24.ttf" />
     <None Remove="Assets\Icons\Add.png" />
     <None Remove="Assets\Icons\Back.png" />
     <None Remove="Assets\Icons\Credits.png" />
@@ -44,6 +45,7 @@
   <ItemGroup>
     <Resource Include="Assets\AC2 Background.jpg" />
     <Resource Include="Assets\ACB Background.jpg" />
+    <Resource Include="Assets\Font\Assassin$.ttf" />
     <Resource Include="Assets\Icons\Add.png" />
     <Resource Include="Assets\Icons\Back.png" />
     <Resource Include="Assets\Icons\Credits.png" />

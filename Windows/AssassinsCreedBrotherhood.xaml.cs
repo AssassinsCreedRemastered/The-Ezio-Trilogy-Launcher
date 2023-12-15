@@ -264,6 +264,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows
                             await Task.Delay(1000);
                             Game = Process.GetProcessesByName("ACBSP");
                         }
+                        await Task.Delay(1000);
                         foreach (Process process in Game)
                         {
                             process.PriorityClass = ProcessPriorityClass.High;

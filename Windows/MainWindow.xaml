@@ -5,7 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:The_Ezio_Trilogy_Launcher"
         mc:Ignorable="d"
-        Title="The Ezio Trilogy Remastered (Community Edition) - Main Menu" Width="1400" Height="620" Background="Transparent" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowStyle="None">
+        Title="The Ezio Trilogy Remastered (Community Edition) - Main Menu" Width="1400" Height="620" Background="Transparent" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowStyle="None" AllowsTransparency="True">
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="Loaded">
+            <BeginStoryboard>
+                <Storyboard>
+                    <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0.0" To="1.0" Duration="0:0:.5" />
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+    </Window.Triggers>
     <Border Background="#FFDADADA"
             BorderBrush="Gray"
             BorderThickness="1"
@@ -31,13 +40,8 @@
             <Border Grid.Column="0" Grid.RowSpan="2" BorderBrush="Red" BorderThickness="5" CornerRadius="8, 0, 0, 8"/>
             <Border Grid.Column="1" Grid.RowSpan="2" BorderBrush="Green" BorderThickness="5"/>
             <Border Grid.Column="3" Grid.RowSpan="2" BorderBrush="Blue" BorderThickness="5" CornerRadius="0, 8, 8, 0"/>-->
-            <!--Container for Credits and Exit button-->
-            <Grid Grid.Column="2" Width="100" HorizontalAlignment="Right">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                
+            <!--Container for Credits button-->
+            <Grid Grid.Column="0" HorizontalAlignment="Left" Width="50" Margin="5,0,0,0">
                 <!--Credits Button-->
                 <Button x:Name="Credits" Grid.Column="0" Grid.Row="0" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0,0,0,0" Cursor="Hand" Margin="0,0,0,0" HorizontalAlignment="Center" Height="40" Width="40" Click="Credits_Click">
                     <Button.Content>
@@ -54,9 +58,11 @@
                         </ControlTemplate>
                     </Button.Template>
                 </Button>
-
+            </Grid>
+            <!--Container for Credits and Exit button-->
+            <Grid Grid.Column="2" HorizontalAlignment="Right" Width="50" Margin="0,0,5,0">
                 <!--Exit Button-->
-                <Button x:Name="Exit" Grid.Column="2" Grid.Row="0" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0,0,0,0" Cursor="Hand" Margin="0,0,10,0" HorizontalAlignment="Right" Height="40" Width="40" Click="Exit_Click">
+                <Button x:Name="Exit" Grid.Row="0" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0,0,0,0" Cursor="Hand" Margin="0,0,10,0" HorizontalAlignment="Right" Height="40" Width="40" Click="Exit_Click">
                     <Button.Content>
                         <Image Source="/Assets/Icons/Exit.png"></Image>
                     </Button.Content>
@@ -76,7 +82,7 @@
             <!--Open AC2 Launcher-->
             <Button x:Name="OpenACII" Grid.Column="1" Grid.Row="1" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0,0,0,0" Cursor="Hand" Margin="0,406,0,0" HorizontalAlignment="Center" VerticalAlignment="Top" Height="112" Width="246" Click="OpenACII_Click">
                 <Button.Content>
-                    <TextBlock Text="      open" FontFamily="Assassin$" FontSize="48" Foreground="WhiteSmoke" FontWeight="Bold" Height="112" Width="246">
+                    <TextBlock Text="      open" FontFamily="pack://application:,,,/The Ezio Trilogy Launcher;component/Assets/Font/Assassin$.ttf#Assassin$" FontSize="48" Foreground="WhiteSmoke" FontWeight="Bold" Height="112" Width="246">
                         <TextBlock.Effect>
                             <DropShadowEffect RenderingBias="Quality" ShadowDepth="5"/>
                         </TextBlock.Effect>
@@ -97,7 +103,7 @@
             <!--Open ACB Launcher-->
             <Button x:Name="OpenACB" Grid.Row="1" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0,0,0,0" Cursor="Hand" Margin="0,395,0,0" HorizontalAlignment="Center" VerticalAlignment="Top" Height="140" Width="246" Click="OpenACB_Click">
                 <Button.Content>
-                    <TextBlock Text="      open" FontFamily="Assassin$" FontSize="48" Foreground="WhiteSmoke" FontWeight="Bold" Height="140" Width="246">
+                    <TextBlock Text="      open" FontFamily="pack://application:,,,/The Ezio Trilogy Launcher;component/Assets/Font/Assassin$.ttf#Assassin$" FontSize="48" Foreground="WhiteSmoke" FontWeight="Bold" Height="140" Width="246">
                         <TextBlock.Effect>
                             <DropShadowEffect RenderingBias="Quality" ShadowDepth="5"/>
                         </TextBlock.Effect>
@@ -118,7 +124,7 @@
             <!--Open ACR Launcher-->
             <Button x:Name="OpenACR" Grid.Column="2" Grid.Row="1" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0,0,0,0" Cursor="Hand" Margin="0,395,0,0" HorizontalAlignment="Center" VerticalAlignment="Top" Height="140" Width="246" Click="OpenACR_Click">
                 <Button.Content>
-                    <TextBlock Text="      open" FontFamily="Assassin$" FontSize="48" Foreground="WhiteSmoke" FontWeight="Bold" Height="140" Width="246">
+                    <TextBlock Text="      open" FontFamily="pack://application:,,,/The Ezio Trilogy Launcher;component/Assets/Font/Assassin$.ttf#Assassin$" FontSize="48" Foreground="WhiteSmoke" FontWeight="Bold" Height="140" Width="246">
                         <TextBlock.Effect>
                             <DropShadowEffect RenderingBias="Quality" ShadowDepth="5"/>
                         </TextBlock.Effect>

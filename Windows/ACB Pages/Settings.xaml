@@ -209,7 +209,7 @@
 
                 <!--Save Settings Button-->
                 <Button x:Name="Save" Grid.Column="1"  Margin="0,10,0,10" Content="Save Settings" FontSize="36" FontFamily="Bahnschrift SemiBold" Background="#7FD0D0D0" Foreground="Black" HorizontalAlignment="Center" HorizontalContentAlignment="Center"  Style="{StaticResource RoundButtonStyle}" Click="Save_Click"/>
-                <TextBlock Text="game settings" FontSize="64" FontFamily="Assassin$" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                <TextBlock Text="game settings" FontSize="64" FontFamily="pack://application:,,,/The Ezio Trilogy Launcher;component/Assets/Font/Assassin$.ttf#Assassin$" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
 
                 <!--Resolution ComboBox-->
                 <Border BorderBrush="Black" BorderThickness="1.5" Margin="5,2,5,2" CornerRadius="5">
@@ -344,7 +344,7 @@
                 </Border>
 
                 <!--Mod Settings-->
-                <TextBlock Text="mod settings" FontSize="64" FontFamily="Assassin$" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,10,0,0"/>
+                <TextBlock Text="mod settings" FontSize="64" FontFamily="pack://application:,,,/The Ezio Trilogy Launcher;component/Assets/Font/Assassin$.ttf#Assassin$" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,10,0,0"/>
 
                 <!--uMod-->
                 <Border BorderBrush="Black" BorderThickness="1.5" Margin="5,2,5,2" CornerRadius="5">
@@ -426,7 +426,6 @@
                         <Button x:Name="UnlockBonusContent" Grid.Column="1" Margin="110,10,60,10" Style="{StaticResource RoundButtonStyle}" Background="#80585858" Content="Click to unlock" FontFamily="Bahnschrift SemiBold" FontSize="18" Cursor="Hand" Click="UnlockBonusContent_Click"/>
                     </Grid>
                 </Border>
-
             </StackPanel>
         </ScrollViewer>
     </Grid>
