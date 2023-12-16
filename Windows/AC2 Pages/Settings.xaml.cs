@@ -34,7 +34,10 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
             ReadConfigurationFiles();
         }
 
-        // Fills all of the ComboBoxes
+        // Functions
+        /// <summary>
+        /// Fills all of the ComboBoxes
+        /// </summary>
         private async void FillComboBoxes()
         {
             try
@@ -55,7 +58,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
                 Log.Information("Loading all of the supported refresh rates into Refresh Rate ComboBox done.");
                 await FillComboBoxesWithFixedItems();
                 GC.Collect();
-                await Task.Delay(10);
+                await Task.Delay(1);
             }
             catch (Exception ex)
             {
@@ -64,6 +67,9 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
             }
         }
 
+        /// <summary>
+        /// Fills all of the ComboBoxes that have fixed items
+        /// </summary>
         private async Task FillComboBoxesWithFixedItems()
         {
             try
@@ -78,7 +84,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
                 EnviromentQualitySelector.Items.Add("Low");
                 EnviromentQualitySelector.Items.Add("Medium");
                 EnviromentQualitySelector.Items.Add("High");
-                EnviromentQualitySelector.Items.Add("Ultra");
+                EnviromentQualitySelector.Items.Add("Very High");
                 Log.Information("Loading all of the Enviroment Quality options into Enviroment Quality Selector done.");
                 Log.Information("Loading all of the Texture Quality options into Texture Quality Selector.");
                 TextureQualitySelector.Items.Add("Low");
@@ -107,7 +113,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
                 KeyboardLayoutSelector.Items.Add("KeyboardAlt");
                 Log.Information("Loading all of the keyboard layout options into the selector done.");
                 GC.Collect();
-                await Task.Delay(10);
+                await Task.Delay(1);
             }
             catch (Exception ex)
             {
@@ -115,7 +121,9 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
             }
         }
 
-        // Read configuration files
+        /// <summary>
+        /// Reads all of the configuration files
+        /// </summary>
         private async void ReadConfigurationFiles()
         {
             Log.Information("Reading configuration files");
@@ -124,7 +132,9 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
             await ReadEaglePatchConfig();
         }
 
-        // Read game configuration file
+        /// <summary>
+        /// Reads game configuration file
+        /// </summary>
         private async Task ReadGameConfig()
         {
             try
@@ -248,7 +258,9 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
             }
         }
 
-        // Check if ReShade, EaglePatch and uMod are enabled
+        /// <summary>
+        /// Checks if ReShade, EaglePatch and uMod are enabled
+        /// </summary>
         private async Task CheckTools()
         {
             try
@@ -318,7 +330,9 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
             }
         }
 
-        // Read EaglePatch configuration file
+        /// <summary>
+        /// Reads EaglePatch configuration file
+        /// </summary>
         private async Task ReadEaglePatchConfig()
         {
             try
@@ -405,7 +419,9 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
             }
         }
 
-        // Saving Game Settings
+        /// <summary>
+        /// Saves game settings
+        /// </summary>
         private async Task SaveGameSettings()
         {
             try
@@ -509,7 +525,9 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
             }
         }
 
-        // Saving EaglePatch Settings
+        /// <summary>
+        /// Saves EaglePatch settings
+        /// </summary>
         private async Task SaveEaglePatchSettings()
         {
             try
@@ -594,7 +612,9 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
             }
         }
 
-        // Enables/Disables EaglePatch and ReShade
+        /// <summary>
+        /// Enables/Disabled EaglePatch and ReShade, depending on the selected option
+        /// </summary>
         private async Task SaveModLoaderSettings()
         {
             try
@@ -659,7 +679,10 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
             }
         }
 
-        // Saving all of the settings
+        // Events
+        /// <summary>
+        /// Saves all of the settings when "Save" button is clicked
+        /// </summary>
         private async void Save_Click(object sender, RoutedEventArgs e)
         {
             Log.Information("Saving Settings");
@@ -689,7 +712,9 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
             }
         }
 
-        // Unlock Bonus Content
+        /// <summary>
+        /// Unlock Bonus Content when the "Unlock Bonus Content" button is clicked
+        /// </summary>
         private void UnlockBonusContent_Click(object sender, RoutedEventArgs e)
         {
             try

@@ -67,21 +67,41 @@ namespace The_Ezio_Trilogy_Launcher
 
         private bool start = true;
 
-        // Number of Cores and Threads this PC has. Needed to set Affinity for the process
+        /// <summary>
+        /// Stores how many Cores the CPU has
+        /// </summary>
         public static int NumberOfCores { get; set; }
+        /// <summary>
+        /// Stores how many Threads the CPU has
+        /// </summary>
         public static int NumberOfThreads { get; set; }
 
-        // Paths to game installations
+        /// <summary>
+        /// Path to Assassin's Creed 2 installation folder
+        /// </summary>
         public static string? AC2Path { get; set; }
+        /// <summary>
+        /// Path to Assassin's Creed:Brotherhood installation folder
+        /// </summary>
         public static string? ACBPath { get; set; }
+        /// <summary>
+        /// Path to Assassin's Creed:Revelations installation folder
+        /// </summary>
         public static string? ACRPath { get; set; }
 
-        // Supported Resolutions by this Monitor
+        /// <summary>
+        /// List of supported Resolutions by users Monitor
+        /// </summary>
         public static List<Resolution> compatibleResolutions = new List<Resolution>();
 
+        /// <summary>
+        /// List of supported Refresh Rates by users Monitor
+        /// </summary>
         public static List<int> compatibleRefreshRates = new List<int>();
 
-        // Monitor's Refresh Rate
+        /// <summary>
+        /// Monitor's Refresh Rate
+        /// </summary>
         public static double RefreshRate { get; set; }
 
         public App()
@@ -94,7 +114,9 @@ namespace The_Ezio_Trilogy_Launcher
             .CreateLogger();
         }
 
-        // Grabbing all of the game installations
+        /// <summary>
+        /// Grabs all of the game installations paths
+        /// </summary>
         private async Task FindGameInstallations()
         {
             try
@@ -136,8 +158,9 @@ namespace The_Ezio_Trilogy_Launcher
             }
         }
 
-        // Finding Core Count of current PC
-        // Needed for a tweak to hopefully fix the stutters via Affinity
+        /// <summary>
+        /// Finds Core Count of the CPU. Needed for a tweak to fix the stutters via Affinity
+        /// </summary>
         private async Task FindNumberOfCores()
         {
             try
@@ -154,12 +177,8 @@ namespace The_Ezio_Trilogy_Launcher
 
                 foreach (ManagementObject m in queryCollection)
                 {
-#pragma warning disable CS8604 // Possible null reference argument.
                     NumberOfCores = int.Parse(m["NumberOfCores"].ToString());
-#pragma warning disable CS8604 // Possible null reference argument.
                     NumberOfThreads = int.Parse(m["NumberOfLogicalProcessors"].ToString());
-#pragma warning restore CS8604 // Possible null reference argument.
-
                     Log.Information($"Number of Cores: {NumberOfCores}");
                     Log.Information($"Number of Threads: {NumberOfThreads}");
                 }
@@ -171,7 +190,9 @@ namespace The_Ezio_Trilogy_Launcher
             }
         }
 
-        // Finding all of the supported resolutions
+        /// <summary>
+        /// Finds all of the resolutions supported by the users monitor.
+        /// </summary>
         private async Task FindSupportedResolutions()
         {
             try
@@ -222,7 +243,9 @@ namespace The_Ezio_Trilogy_Launcher
             }
         }
 
-        // Detecting Refresh Rate of the monitor
+        /// <summary>
+        /// Detects the Refresh Rate of the monitor
+        /// </summary>
         private async Task FindRefreshRate()
         {
             try
@@ -260,7 +283,10 @@ namespace The_Ezio_Trilogy_Launcher
             }
         }
 
-        // At startup it checks for launch arguments
+        /// <summary>
+        /// At startup it launches the Logger for debugging and checks for Launch arguments.
+        /// </summary>
+        /// <param name="e">Holds all of the launch Arguemnts as e.Args</param>
         private async void Application_Startup(object sender, StartupEventArgs e)
         {
             if (start)

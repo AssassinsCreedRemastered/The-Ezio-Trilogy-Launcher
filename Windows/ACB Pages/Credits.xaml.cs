@@ -60,5 +60,14 @@ namespace The_Ezio_Trilogy_Launcher.Windows.ACB_Pages
                 UseShellExecute = true,
             });
         }
+
+        private void mcflypg_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "https://www.patreon.com/mcflypg",
+                UseShellExecute = true,
+            });
+        }
     }
 }

@@ -28,10 +28,14 @@ namespace The_Ezio_Trilogy_Launcher.Windows
         [DllImport("kernel32.dll")]
         public static extern IntPtr SetProcessAffinityMask(IntPtr hProcess, IntPtr dwProcessAffinityMask);
 
-        // Cache for all of the pages
+        /// <summary>
+        /// Holds all of the pages cached
+        /// </summary>
         private Dictionary<string, Page> pageCache = new Dictionary<string, Page>();
 
-        // This is to check if uMod is enabled or disabled
+        /// <summary>
+        /// Used to check if uMod is enabled or not
+        /// </summary>
         public static bool uModStatus { get; set; }
 
         public AssassinsCreedBrotherhood()
@@ -40,7 +44,10 @@ namespace The_Ezio_Trilogy_Launcher.Windows
             ReaduModStatus();
         }
 
-        // Used to navigate pages and cache them
+        /// <summary>
+        /// Holds all of the pages cached
+        /// <param name="PageName">Name of the Page.</param>
+        /// </summary>
         private void NavigateToPage(string PageName)
         {
             Log.Information($"Trying to navigate to {PageName}");
@@ -107,9 +114,11 @@ namespace The_Ezio_Trilogy_Launcher.Windows
             }
         }
 
-        // Sets Process Affinity based on the amount of cores
-        // According to PCGamingWiki it can help with Stutters and Tearing
-        private async Task SetProcessAffinity(int gameProcessID)
+        /// <summary>
+        /// Sets Process Affinity based on the amount of cores. Can help with stutters and tearing.
+        /// <param name="gameProcessID">ID of the game process needed so we can change it's CPU affinity</param>
+        /// </summary>
+        private async Task SetProcessAffinity()
         {
             try
             {
@@ -176,7 +185,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows
                         }
                         break;
                 }
-                await Task.Delay(10);
+                await Task.Delay(1);
             }
             catch (Exception ex)
             {
@@ -185,7 +194,9 @@ namespace The_Ezio_Trilogy_Launcher.Windows
             }
         }
 
-        // Checks if uMod is enabled
+        /// <summary>
+        /// Checks if uMod is enabled or disabled
+        /// </summary>
         private void ReaduModStatus()
         {
             try
@@ -220,7 +231,9 @@ namespace The_Ezio_Trilogy_Launcher.Windows
             }
         }
 
-        // Window Dragging
+        /// <summary>
+        /// This is used for Window Dragging. Needed when disabling Window stuff in XAML
+        /// </summary>
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ButtonState == MouseButtonState.Pressed)
@@ -229,7 +242,9 @@ namespace The_Ezio_Trilogy_Launcher.Windows
             }
         }
 
-        // Exits the Launcher back to the main window
+        /// <summary>
+        /// Exits the Launcher back to the main launcher
+        /// </summary>
         private async void Exit_Click(object sender, RoutedEventArgs e)
         {
             Log.Information("Closing Assassin's Creed Brotherhood Launcher");
@@ -237,6 +252,9 @@ namespace The_Ezio_Trilogy_Launcher.Windows
             this.Close();
         }
 
+        /// <summary>
+        /// Starts the game
+        /// </summary>
         private async void Play_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -268,10 +286,10 @@ namespace The_Ezio_Trilogy_Launcher.Windows
                         foreach (Process process in Game)
                         {
                             process.PriorityClass = ProcessPriorityClass.High;
-                            await SetProcessAffinity(process.Id);
+                            await SetProcessAffinity();
                         }
                         Log.Information("Game started");
-                        Log.Information($"Waiting for game to be closed.");
+                        Log.Information("Waiting for game to be closed.");
                         while (Game.Length > 0)
                         {
                             await Task.Delay(1000);
@@ -293,6 +311,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows
                     }
                     else
                     {
+                        Log.Information("Game started");
                         gameProcess.Start();
                         Log.Information("Game is starting");
                         Log.Information("Setting game affinity based on CPU Core/Thread Count");
@@ -305,9 +324,11 @@ namespace The_Ezio_Trilogy_Launcher.Windows
                         foreach (Process process in Game)
                         {
                             process.PriorityClass = ProcessPriorityClass.High;
-                            await SetProcessAffinity(process.Id);
+                            await SetProcessAffinity();
                         }
-                        Log.Information("Game started");
+                        Log.Information("Waiting for game to be closed.");
+                        gameProcess.WaitForExit();
+                        Log.Information("Game closed");
                         await Task.Delay(1);
                     }
                 }
@@ -319,11 +340,41 @@ namespace The_Ezio_Trilogy_Launcher.Windows
             }
         }
 
+        /// <summary>
+        /// Navigates to the Credits WPF page in the Frame
+        /// </summary>
         private void Credits_Click(object sender, RoutedEventArgs e)
         {
             NavigateToPage("Credits");
         }
 
+        /// <summary>
+        /// Navigates to the Settings WPF page in the Frame if there is AC2 configuration file
+        /// </summary>
+        private void Settings_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (System.IO.File.Exists(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)), @"Saved Games\Assassin's Creed Brotherhood\ACBrotherhood.ini")))
+                {
+                    
+                    NavigateToPage("Settings");
+                }
+                else
+                {
+                    MessageBox.Show("Configuration file missing\nPlease launch the game once.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Error:");
+                return;
+            }
+        }
+
+        /// <summary>
+        /// Navigates to the uMod WPF Page in the Frame if uMod is enabled
+        /// </summary>
         private void uMod_Click(object sender, RoutedEventArgs e)
         {
             if (uModStatus)
@@ -334,11 +385,6 @@ namespace The_Ezio_Trilogy_Launcher.Windows
             {
                 MessageBox.Show("uMod is disabled. Please Enable it.");
             }
-        }
-
-        private void Settings_Click(object sender, RoutedEventArgs e)
-        {
-            NavigateToPage("Settings");
         }
     }
 }
