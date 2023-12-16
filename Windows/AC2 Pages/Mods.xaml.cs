@@ -24,7 +24,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
     /// </summary>
     public partial class Mods : Page
     {
-        // Global vars
+        // Global variables
         private ObservableCollection<string> EnabledMods = new ObservableCollection<string>{};
         private ObservableCollection<string> DisabledMods = new ObservableCollection<string>{};
         private Dictionary<string,string> InstalledMods = new Dictionary<string,string>();
@@ -41,7 +41,9 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
             ReaduModConfig();
         }
 
-        // Grabs all of the uMod mods inside of Mods folder and reads uMod configuration file
+        /// <summary>
+        /// Grabs all of the uMod mods inside of Mods folder and reads uMod configuration file
+        /// </summary>
         private void ReaduModConfig()
         {
             try
@@ -93,7 +95,9 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
             }
         }
 
-        // Saves all of the settings
+        /// <summary>
+        /// Saves all of the enabled mods into a .txt file
+        /// </summary>
         private async void SaveSettings_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -123,7 +127,9 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
             }
         }
 
-        // Adding mods
+        /// <summary>
+        /// Adds the mod
+        /// </summary>
         private async void AddMod_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -166,7 +172,9 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
             }
         }
 
-        // Removing mods
+        /// <summary>
+        /// Removes/Disabled the mod
+        /// </summary>
         private async void RemoveSelectedMod_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -205,6 +213,9 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
             }
         }
 
+        /// <summary>
+        /// Task that removes the mod based on if it was already included or installed by the user using the Launcher
+        /// </summary>
         private async Task RemoveMod(string folderName, string modPath)
         {
             try
@@ -236,7 +247,9 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
             }
         }
 
-        // Moves selected mod up 1 spot
+        /// <summary>
+        /// Moves selected mod up 1 spot
+        /// </summary>
         private void MoveSelectedModUp_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -272,7 +285,9 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
             }
         }
 
-        // Moves selected item down 1 spot
+        /// <summary>
+        /// Moves selected mod down 1 spot
+        /// </summary>
         private void MoveSelectedModDown_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -308,7 +323,9 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
             }
         }
 
-        // This is needed to have only 1 mod selected
+        /// <summary>
+        /// Blocks from having more than 1 mod selected
+        /// </summary>
         private void EnabledModsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (!isSelectionEnabledModsChangingProgrammatically)
@@ -319,6 +336,9 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
             }
         }
 
+        /// <summary>
+        /// Blocks from having more than 1 mod selected
+        /// </summary>
         private void DisabledModsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (!isSelectionDisabledModsChangingProgrammatically)
@@ -329,7 +349,9 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
             }
         }
 
-        // Moves selected mod into enabled mod list
+        /// <summary>
+        /// Moves selected mod into enabled mod list
+        /// </summary>
         private void EnableSelectedMod_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -350,7 +372,9 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
             }
         }
 
-        // Moves selected mod into disabled mod list
+        /// <summary>
+        /// Moves selected mod into disabled mod list
+        /// </summary>
         private void DisableSelectedMod_Click(object sender, RoutedEventArgs e)
         {
             try

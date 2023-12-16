@@ -33,17 +33,15 @@ namespace The_Ezio_Trilogy_Launcher.Windows
 
 	public partial class AssassinsCreed2 : Window
 	{
-		[DllImport("kernel32.dll")]
-		public static extern IntPtr GetCurrentProcess();
+        /// <summary>
+        /// Holds all of the pages cached
+        /// </summary>
+        private Dictionary<string, Page> pageCache = new Dictionary<string, Page>();
 
-		[DllImport("kernel32.dll")]
-		public static extern IntPtr SetProcessAffinityMask(IntPtr hProcess, IntPtr dwProcessAffinityMask);
-
-		// Cache for all of the pages
-		private Dictionary<string, Page> pageCache = new Dictionary<string, Page>();
-
-		// This is to check if uMod is enabled or disabled
-		public static bool uModStatus { get; set; }
+        /// <summary>
+        /// Used to check if uMod is enabled or not
+        /// </summary>
+        public static bool uModStatus { get; set; }
 
 		public AssassinsCreed2()
 		{
@@ -51,8 +49,11 @@ namespace The_Ezio_Trilogy_Launcher.Windows
             ReaduModStatus();
 		}
 
-        // Used to navigate pages and cache them
-		private void NavigateToPage(string PageName)
+        /// <summary>
+        /// Holds all of the pages cached
+        /// <param name="PageName">Name of the Page.</param>
+        /// </summary>
+        private void NavigateToPage(string PageName)
 		{
 			Log.Information($"Trying to navigate to {PageName}");
 			switch (PageName)
@@ -61,7 +62,6 @@ namespace The_Ezio_Trilogy_Launcher.Windows
 					
                     if (!pageCache.ContainsKey(PageName))
                     {
-						
                         Log.Information("Page is not cached. Loading it and caching it for future use.");
                         AC2_Pages.Credits page = new AC2_Pages.Credits();
                         pageCache[PageName] = page;
@@ -118,9 +118,11 @@ namespace The_Ezio_Trilogy_Launcher.Windows
 			}
 		}
 
-        // Sets Process Affinity based on the amount of cores
-        // According to PCGamingWiki it can help with Stutters and Tearing
-        private async Task SetProcessAffinity(int gameProcessID)
+        /// <summary>
+        /// Sets Process Affinity based on the amount of cores. Can help with stutters and tearing.
+        /// <param name="gameProcessID">ID of the game process needed so we can change it's CPU affinity</param>
+        /// </summary>
+        private async Task SetProcessAffinity()
 		{
 			try
 			{
@@ -187,7 +189,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows
                         }
                         break;
 				}
-				await Task.Delay(10);
+				await Task.Delay(1);
 			}
 			catch (Exception ex)
 			{
@@ -196,6 +198,9 @@ namespace The_Ezio_Trilogy_Launcher.Windows
 			}
 		}
 
+        /// <summary>
+        /// Checks if uMod is enabled or disabled.
+        /// </summary>
         private void ReaduModStatus()
         {
             try
@@ -230,8 +235,10 @@ namespace The_Ezio_Trilogy_Launcher.Windows
             }
         }
 
-		// Window Dragging
-		private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        /// <summary>
+        /// This is used for Window Dragging. Needed when disabling Window stuff in XAML
+        /// </summary>
+        private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{
 			if (e.ButtonState == MouseButtonState.Pressed)
 			{
@@ -239,15 +246,19 @@ namespace The_Ezio_Trilogy_Launcher.Windows
 			}
 		}
 
-		// Exits the Launcher back to the main window
-		private void Exit_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Exits the Launcher back to the main launcher
+        /// </summary>
+        private void Exit_Click(object sender, RoutedEventArgs e)
 		{
 			Log.Information("Closing Assassin's Creed 2 Launcher");
 			this.Close();
 		}
 
-		// Starts the game
-		private async void Play_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Starts the game
+        /// </summary>
+        private async void Play_Click(object sender, RoutedEventArgs e)
 		{
 			try
 			{
@@ -279,7 +290,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows
                         foreach (Process process in Game)
                         {
                             process.PriorityClass = ProcessPriorityClass.High;
-                            await SetProcessAffinity(process.Id);
+                            await SetProcessAffinity();
                         }
                         Log.Information("Game started");
                         Log.Information($"Waiting for game to be closed.");
@@ -316,7 +327,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows
                         foreach (Process process in Game)
                         {
                             process.PriorityClass = ProcessPriorityClass.High;
-                            await SetProcessAffinity(process.Id);
+                            await SetProcessAffinity();
                         }
                         Log.Information("Game started");
                         await Task.Delay(1);
@@ -335,12 +346,18 @@ namespace The_Ezio_Trilogy_Launcher.Windows
 			}
 		}
 
-		private void Credits_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Navigates to the Credits WPF page in the Frame
+        /// </summary>
+        private void Credits_Click(object sender, RoutedEventArgs e)
 		{
 			NavigateToPage("Credits");
 		}
 
-		private void Settings_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Navigates to the Settings WPF page in the Frame if there is AC2 configuration file
+        /// </summary>
+        private void Settings_Click(object sender, RoutedEventArgs e)
 		{
 			if (System.IO.File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed 2\Assassin2.ini"))
 			{
@@ -355,6 +372,9 @@ namespace The_Ezio_Trilogy_Launcher.Windows
             }
         }
 
+        /// <summary>
+        /// Navigates to the uMod WPF Page in the Frame
+        /// </summary>
         private void uMod_Click(object sender, RoutedEventArgs e)
         {
 			NavigateToPage("Mods");

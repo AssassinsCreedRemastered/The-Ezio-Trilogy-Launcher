@@ -28,6 +28,11 @@ namespace The_Ezio_Trilogy_Launcher
             InitializeComponent();
         }
 
+        // Events/Buttons
+        /// <summary>
+        /// This is executed when the Credits button is clicked.
+        /// Opens "Credits" Window
+        /// </summary>
         private void Credits_Click(object sender, RoutedEventArgs e)
         {
             Log.Information("Opening Main Credits tab");
@@ -44,13 +49,20 @@ namespace The_Ezio_Trilogy_Launcher
             }
         }
 
+        /// <summary>
+        /// Executed when Exit button is clicked
+        /// Closes the launcher
+        /// </summary>
         private async void Exit_Click(object sender, RoutedEventArgs e)
         {
             Log.Information("Exiting");
-            await Task.Delay(10);
+            await Task.Delay(1);
             Environment.Exit(0);
         }
 
+        /// <summary>
+        /// Opens Assassin's Creed 2 launcher and hides the main launcher
+        /// </summary>
         private void OpenACII_Click(object sender, RoutedEventArgs e)
         {
             Log.Information("Opening Assassin's Creed 2 Launcher");
@@ -75,6 +87,9 @@ namespace The_Ezio_Trilogy_Launcher
             }
         }
 
+        /// <summary>
+        /// Opens Assassin's Creed: Brotherhood launcher and hides the main launcher
+        /// </summary>
         private void OpenACB_Click(object sender, RoutedEventArgs e)
         {
             Log.Information("Opening Assassin's Creed Brotherhood Launcher");
@@ -100,6 +115,9 @@ namespace The_Ezio_Trilogy_Launcher
             }
         }
 
+        /// <summary>
+        /// Opens Assassin's Creed: Revelations launcher and hides the main launcher
+        /// </summary>
         private void OpenACR_Click(object sender, RoutedEventArgs e)
         {
             Log.Information("Opening Assassin's Creed Revelations Launcher");

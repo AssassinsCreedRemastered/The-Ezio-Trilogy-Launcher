@@ -276,7 +276,7 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="Environment Quality" FontSize="24" FontFamily="Bahnschrift SemiBold" Foreground="WhiteSmoke" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                        <ComboBox x:Name="EnviromentQualitySelector" Style="{StaticResource CustomComboBoxStyle}" Grid.Column="1" Width="Auto" Margin="150,10,90,10" FontSize="18" HorizontalContentAlignment="Center" FontFamily="Bahnschrift SemiBold"/>
+                        <ComboBox x:Name="EnviromentQualitySelector" Style="{StaticResource CustomComboBoxStyle}" Grid.Column="1" Width="Auto" Margin="130,10,70,10" FontSize="18" HorizontalContentAlignment="Center" FontFamily="Bahnschrift SemiBold"/>
                     </Grid>
                 </Border>
                 
@@ -288,7 +288,7 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="Texture Quality" FontSize="24" FontFamily="Bahnschrift SemiBold" Foreground="WhiteSmoke" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                        <ComboBox x:Name="TextureQualitySelector" Style="{StaticResource CustomComboBoxStyle}" Grid.Column="1" Width="Auto" Margin="150,10,90,10" FontSize="18" HorizontalContentAlignment="Center" FontFamily="Bahnschrift SemiBold"/>
+                        <ComboBox x:Name="TextureQualitySelector" Style="{StaticResource CustomComboBoxStyle}" Grid.Column="1" Width="Auto" Margin="130,10,70,10" FontSize="18" HorizontalContentAlignment="Center" FontFamily="Bahnschrift SemiBold"/>
                     </Grid>
                 </Border>
                 
@@ -300,7 +300,7 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="Shadow Quality" FontSize="24" FontFamily="Bahnschrift SemiBold" Foreground="WhiteSmoke" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                        <ComboBox x:Name="ShadowQualitySelector" Style="{StaticResource CustomComboBoxStyle}" Grid.Column="1" Width="Auto" Margin="150,10,90,10" FontSize="18" HorizontalContentAlignment="Center" FontFamily="Bahnschrift SemiBold"/>
+                        <ComboBox x:Name="ShadowQualitySelector" Style="{StaticResource CustomComboBoxStyle}" Grid.Column="1" Width="Auto" Margin="130,10,70,10" FontSize="18" HorizontalContentAlignment="Center" FontFamily="Bahnschrift SemiBold"/>
                     </Grid>
                 </Border>
                 
@@ -312,7 +312,7 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="Reflection Quality" FontSize="24" FontFamily="Bahnschrift SemiBold" Foreground="WhiteSmoke" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                        <ComboBox x:Name="ReflectionQualitySelector" Style="{StaticResource CustomComboBoxStyle}" Grid.Column="1" Width="Auto" Margin="150,10,90,10" FontSize="18" HorizontalContentAlignment="Center" FontFamily="Bahnschrift SemiBold"/>
+                        <ComboBox x:Name="ReflectionQualitySelector" Style="{StaticResource CustomComboBoxStyle}" Grid.Column="1" Width="Auto" Margin="130,10,70,10" FontSize="18" HorizontalContentAlignment="Center" FontFamily="Bahnschrift SemiBold"/>
                     </Grid>
                 </Border>
                 
@@ -324,7 +324,7 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="Character Quality" FontSize="24" FontFamily="Bahnschrift SemiBold" Foreground="WhiteSmoke" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                        <ComboBox x:Name="CharacterQualitySelector" Style="{StaticResource CustomComboBoxStyle}" Grid.Column="1" Width="Auto" Margin="150,10,90,10" FontSize="18" HorizontalContentAlignment="Center" FontFamily="Bahnschrift SemiBold"/>
+                        <ComboBox x:Name="CharacterQualitySelector" Style="{StaticResource CustomComboBoxStyle}" Grid.Column="1" Width="Auto" Margin="130,10,70,10" FontSize="18" HorizontalContentAlignment="Center" FontFamily="Bahnschrift SemiBold"/>
                     </Grid>
                 </Border>
                 
