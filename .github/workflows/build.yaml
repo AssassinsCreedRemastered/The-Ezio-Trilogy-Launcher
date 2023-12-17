@@ -15,8 +15,8 @@ jobs:
 
     strategy:
       matrix:
-        targetplatform: [x64, x86]
-        ChannelName: [Dev, Release]
+        targetplatform: [x64]
+        ChannelName: [Release]
 
     steps:
     - name: Checkout Repository
@@ -60,10 +60,10 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ github.ref }}.${{ matrix.ChannelName }}.${{ matrix.targetplatform }}
-        release_name: ${{ github.ref }}.${{ matrix.ChannelName }}.${{ matrix.targetplatform }}
+        tag_name: prerelease
+        release_name: prerelease
         draft: false
-        prerelease: false
+        prerelease: true
 
     # Upload release asset:   https://github.com/actions/upload-release-asset
     - name: Update release asset
