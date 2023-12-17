@@ -22,12 +22,6 @@ namespace The_Ezio_Trilogy_Launcher.Windows
     /// </summary>
     public partial class AssassinsCreedBrotherhood : Window
     {
-        [DllImport("kernel32.dll")]
-        public static extern IntPtr GetCurrentProcess();
-
-        [DllImport("kernel32.dll")]
-        public static extern IntPtr SetProcessAffinityMask(IntPtr hProcess, IntPtr dwProcessAffinityMask);
-
         /// <summary>
         /// Holds all of the pages cached
         /// </summary>
