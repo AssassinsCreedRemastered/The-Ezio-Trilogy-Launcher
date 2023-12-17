@@ -4,15 +4,15 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - main
+      - dev
   pull_request:
     branches:
-      - main
+      - dev
 
 jobs:
   build:
     runs-on: windows-latest
-
+    
     strategy:
       matrix:
         targetplatform: [x64]
@@ -55,9 +55,3 @@ jobs:
         with:
           files: ./Launcher.zip
           tag_name: beta
-
-      - name: Archive artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: Launcher
-          path: Launcher.zip
