@@ -311,7 +311,6 @@ namespace The_Ezio_Trilogy_Launcher.Windows
                     }
                     else
                     {
-                        Log.Information("Game started");
                         gameProcess.Start();
                         Log.Information("Game is starting");
                         Log.Information("Setting game affinity based on CPU Core/Thread Count");
@@ -326,9 +325,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows
                             process.PriorityClass = ProcessPriorityClass.High;
                             await SetProcessAffinity();
                         }
-                        Log.Information("Waiting for game to be closed.");
-                        gameProcess.WaitForExit();
-                        Log.Information("Game closed");
+                        Log.Information("Game started");
                         await Task.Delay(1);
                     }
                 }
