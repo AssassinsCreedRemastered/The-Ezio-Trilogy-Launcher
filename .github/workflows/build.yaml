@@ -42,16 +42,16 @@ jobs:
       run: dotnet test
 
     - name: Publish
-      run: dotnet publish -c Release -o publish --self-contained false
+      run: dotnet publish -c Release -r win-x64 --self-contained false /p:PublishSingleFile=true -o publish
 
     - name: Package
-      run: Compress-Archive -Path .\publish\* -DestinationPath .\app.zip
+      run: Compress-Archive -Path .\publish\* -DestinationPath .\Launcher.zip
 
     - name: Archive artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: app
-        path: app.zip
+        name: Launcher
+        path: Launcher.zip
 
     # Create the release:  https://github.com/actions/create-release
     - name: Create release
@@ -60,8 +60,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: prerelease
-        release_name: prerelease
+        tag_name: beta
+        release_name: Prerelease
         draft: false
         prerelease: true
 
