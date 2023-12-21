@@ -9,7 +9,6 @@
       Title="Default_Page">
     <Border CornerRadius="10,0,10,0">
         <Border.Background>
-            <!--https://wall.alphacoders.com/big.php?i=865090-->
             <ImageBrush ImageSource="/Assets/ACR Background.jpg" Stretch="UniformToFill"/>
         </Border.Background>
         <Grid>

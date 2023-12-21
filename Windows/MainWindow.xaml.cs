@@ -31,6 +31,11 @@ namespace The_Ezio_Trilogy_Launcher
             InitializeComponent();
         }
 
+        // Functions
+        /// <summary>
+        /// Opens FileDialog and replaces the old path to the game
+        /// <param name="game">Game whose path needs to be updated</param>
+        /// </summary>
         private async Task MissingGame(string game)
         {
             try
