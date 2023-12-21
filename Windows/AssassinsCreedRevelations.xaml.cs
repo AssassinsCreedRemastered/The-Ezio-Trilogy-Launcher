@@ -1,9 +1,8 @@
 ﻿using Serilog;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+    using System.Diagnostics;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -18,26 +17,21 @@ using System.Windows.Shapes;
 namespace The_Ezio_Trilogy_Launcher.Windows
 {
     /// <summary>
-    /// Interaction logic for AssassinsCreedBrotherhood.xaml
+    /// Interaction logic for AssassinsCreedRevelations.xaml
     /// </summary>
-    public partial class AssassinsCreedBrotherhood : Window
+    public partial class AssassinsCreedRevelations : Window
     {
+        public AssassinsCreedRevelations()
+        {
+            InitializeComponent();
+        }
+
         /// <summary>
         /// Holds all of the pages cached
         /// </summary>
         private Dictionary<string, Page> pageCache = new Dictionary<string, Page>();
 
-        /// <summary>
-        /// Used to check if uMod is enabled or not
-        /// </summary>
-        public static bool uModStatus { get; set; }
-
-        public AssassinsCreedBrotherhood()
-        {
-            InitializeComponent();
-            ReaduModStatus();
-        }
-
+        // Functions
         /// <summary>
         /// Holds all of the pages cached
         /// <param name="PageName">Name of the Page.</param>
@@ -53,7 +47,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows
                     {
 
                         Log.Information("Page is not cached. Loading it and caching it for future use.");
-                        ACB_Pages.Credits page = new ACB_Pages.Credits();
+                        ACR_Pages.Credits page = new ACR_Pages.Credits();
                         pageCache[PageName] = page;
                         PageViewer.Content = pageCache[PageName];
                     }
@@ -67,21 +61,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows
                     if (!pageCache.ContainsKey(PageName))
                     {
                         Log.Information("Page is not cached. Loading it and caching it for future use.");
-                        ACB_Pages.Settings page = new ACB_Pages.Settings();
-                        pageCache[PageName] = page;
-                        PageViewer.Content = page;
-                    }
-                    else
-                    {
-                        Log.Information("Page is already cached. Loading it");
-                        PageViewer.Content = pageCache[PageName];
-                    }
-                    break;
-                case "Mods":
-                    if (!pageCache.ContainsKey(PageName))
-                    {
-                        Log.Information("Page is not cached. Loading it and caching it for future use.");
-                        ACB_Pages.Mods page = new ACB_Pages.Mods();
+                        ACR_Pages.Settings page = new ACR_Pages.Settings();
                         pageCache[PageName] = page;
                         PageViewer.Content = page;
                     }
@@ -95,7 +75,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows
                     if (!pageCache.ContainsKey(PageName))
                     {
                         Log.Information("Page is not cached. Loading it and caching it for future use.");
-                        ACB_Pages.Default_Page page = new ACB_Pages.Default_Page();
+                        ACR_Pages.Default_Page page = new ACR_Pages.Default_Page();
                         pageCache[PageName] = page;
                         PageViewer.Content = page;
                     }
@@ -117,10 +97,10 @@ namespace The_Ezio_Trilogy_Launcher.Windows
             try
             {
                 Log.Information("Grabbing game process by ID to change affinity.");
-                Process[] processes = Process.GetProcessesByName("ACBSP");
+                Process[] processes = Process.GetProcessesByName("ACRSP");
                 while (processes.Length <= 0)
                 {
-                    processes = Process.GetProcessesByName("ACBSP");
+                    processes = Process.GetProcessesByName("ACRSP");
                     await Task.Delay(1000);
                 }
                 Log.Information($"Game process found.");
@@ -189,43 +169,6 @@ namespace The_Ezio_Trilogy_Launcher.Windows
         }
 
         /// <summary>
-        /// Checks if uMod is enabled or disabled
-        /// </summary>
-        private void ReaduModStatus()
-        {
-            try
-            {
-                Log.Information("Checking if uMod is enabled");
-                if (System.IO.File.Exists(App.ACBPath + @"\uMod\Status.txt"))
-                {
-                    string[] statusFile = System.IO.File.ReadAllLines(App.ACBPath + @"\uMod\Status.txt");
-                    foreach (string status in statusFile)
-                    {
-                        if (status.StartsWith("Enabled"))
-                        {
-                            string[] splitLine = status.Split('=');
-                            if (int.Parse(splitLine[1]) == 1)
-                            {
-                                Log.Information("uMod is enabled");
-                                uModStatus = true;
-                            }
-                            else
-                            {
-                                Log.Information("uMod is disabled");
-                                uModStatus = false;
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Information(ex, "");
-                System.Windows.MessageBox.Show(ex.Message);
-            }
-        }
-
-        /// <summary>
         /// This is used for Window Dragging. Needed when disabling Window stuff in XAML
         /// </summary>
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -241,7 +184,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows
         /// </summary>
         private async void Exit_Click(object sender, RoutedEventArgs e)
         {
-            Log.Information("Closing Assassin's Creed Brotherhood Launcher");
+            Log.Information("Closing Assassin's Creed Revelations Launcher");
             await Task.Delay(1);
             this.Close();
         }
@@ -253,75 +196,29 @@ namespace The_Ezio_Trilogy_Launcher.Windows
         {
             try
             {
-                Process[] Game = Process.GetProcessesByName("ACBSP");
+                Process[] Game = Process.GetProcessesByName("ACRSP");
                 if (Game.Length <= 0)
                 {
                     Process gameProcess = new Process();
-                    gameProcess.StartInfo.WorkingDirectory = App.ACBPath;
-                    gameProcess.StartInfo.FileName = "ACBSP.exe";
+                    gameProcess.StartInfo.WorkingDirectory = App.ACRPath;
+                    gameProcess.StartInfo.FileName = "ACRSP.exe";
                     gameProcess.StartInfo.UseShellExecute = true;
-                    if (uModStatus)
+                    gameProcess.Start();
+                    Log.Information("Game is starting");
+                    Log.Information("Setting game affinity based on CPU Core/Thread Count");
+                    Game = Process.GetProcessesByName("ACRSP");
+                    while (Game.Length <= 0)
                     {
-                        Process uModProcess = new Process();
-                        uModProcess.StartInfo.WorkingDirectory = App.ACBPath + @"\uMod";
-                        uModProcess.StartInfo.FileName = "uMod.exe";
-                        uModProcess.StartInfo.UseShellExecute = true;
-                        uModProcess.Start();
-                        gameProcess.Start();
-                        Log.Information("Game is starting");
-                        Log.Information("Setting game affinity based on CPU Core/Thread Count");
-                        Game = Process.GetProcessesByName("ACBSP");
-                        while (Game.Length <= 0)
-                        {
-                            await Task.Delay(1000);
-                            Game = Process.GetProcessesByName("ACBSP");
-                        }
                         await Task.Delay(1000);
-                        foreach (Process process in Game)
-                        {
-                            process.PriorityClass = ProcessPriorityClass.High;
-                            await SetProcessAffinity();
-                        }
-                        Log.Information("Game started");
-                        Log.Information("Waiting for game to be closed.");
-                        while (Game.Length > 0)
-                        {
-                            await Task.Delay(1000);
-                            Game = Process.GetProcessesByName("ACBSP");
-                        }
-                        Log.Information("Game Closed");
-                        try
-                        {
-                            if (Process.GetProcessById(uModProcess.Id) != null)
-                            {
-                                uModProcess.CloseMainWindow();
-                            }
-                        }
-                        catch (Exception)
-                        {
-                            Log.Information("uMod is already closed.");
-                        }
-                        await Task.Delay(1);
+                        Game = Process.GetProcessesByName("ACRSP");
                     }
-                    else
+                    foreach (Process process in Game)
                     {
-                        gameProcess.Start();
-                        Log.Information("Game is starting");
-                        Log.Information("Setting game affinity based on CPU Core/Thread Count");
-                        Game = Process.GetProcessesByName("ACBSP");
-                        while (Game.Length <= 0)
-                        {
-                            await Task.Delay(1000);
-                            Game = Process.GetProcessesByName("ACBSP");
-                        }
-                        foreach (Process process in Game)
-                        {
-                            process.PriorityClass = ProcessPriorityClass.High;
-                            await SetProcessAffinity();
-                        }
-                        Log.Information("Game started");
-                        await Task.Delay(1);
+                        process.PriorityClass = ProcessPriorityClass.High;
+                        await SetProcessAffinity();
                     }
+                    Log.Information("Game started");
+                    await Task.Delay(1);
                 }
             }
             catch (Exception ex)
@@ -346,9 +243,8 @@ namespace The_Ezio_Trilogy_Launcher.Windows
         {
             try
             {
-                if (System.IO.File.Exists(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)), @"Saved Games\Assassin's Creed Brotherhood\ACBrotherhood.ini")))
+                if (System.IO.File.Exists(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"Assassin's Creed Revelations\ACRevelations.ini")))
                 {
-                    
                     NavigateToPage("Settings");
                 }
                 else
@@ -360,21 +256,6 @@ namespace The_Ezio_Trilogy_Launcher.Windows
             {
                 Log.Error(ex, "Error:");
                 return;
-            }
-        }
-
-        /// <summary>
-        /// Navigates to the uMod WPF Page in the Frame if uMod is enabled
-        /// </summary>
-        private void uMod_Click(object sender, RoutedEventArgs e)
-        {
-            if (uModStatus)
-            {
-                NavigateToPage("Mods");
-            }
-            else
-            {
-                MessageBox.Show("uMod is disabled. Please Enable it.");
             }
         }
     }

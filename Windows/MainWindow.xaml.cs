@@ -31,6 +31,11 @@ namespace The_Ezio_Trilogy_Launcher
             InitializeComponent();
         }
 
+        // Functions
+        /// <summary>
+        /// Opens FileDialog and replaces the old path to the game
+        /// <param name="game">Game whose path needs to be updated</param>
+        /// </summary>
         private async Task MissingGame(string game)
         {
             try
@@ -137,7 +142,7 @@ namespace The_Ezio_Trilogy_Launcher
                     }
                     else
                     {
-                        System.Windows.MessageBox.Show("Game not found.\nA window will now open asking you to reselect ACBSP.exe");
+                        System.Windows.MessageBox.Show("Assassin's Creed 2 not found.\nA window will now open asking you to reselect ACBSP.exe");
                         await MissingGame("AssassinsCreedIIGame");
                     }
                 } else
@@ -174,7 +179,7 @@ namespace The_Ezio_Trilogy_Launcher
                     }
                     else
                     {
-                        System.Windows.MessageBox.Show("Game not found.\nA window will now open asking you to reselect ACBSP.exe");
+                        System.Windows.MessageBox.Show("Assassin's Creed Brotherhood not found.\nA window will now open asking you to reselect ACBSP.exe");
                         await MissingGame("ACBSP");
                     }
                 }
@@ -194,18 +199,30 @@ namespace The_Ezio_Trilogy_Launcher
         /// <summary>
         /// Opens Assassin's Creed: Revelations launcher and hides the main launcher
         /// </summary>
-        private void OpenACR_Click(object sender, RoutedEventArgs e)
+        private async void OpenACR_Click(object sender, RoutedEventArgs e)
         {
             Log.Information("Opening Assassin's Creed Revelations Launcher");
             try
             {
                 if (App.ACRPath != null)
                 {
-
+                    if (System.IO.File.Exists(App.ACRPath + @"\ACRSP.exe"))
+                    {
+                        AssassinsCreedRevelations acr = new AssassinsCreedRevelations();
+                        this.Visibility = Visibility.Hidden;
+                        acr.ShowDialog();
+                        this.Visibility = Visibility.Visible;
+                    }
+                    else
+                    {
+                        System.Windows.MessageBox.Show("Assassin's Creed Revelations not found.\nA window will now open asking you to reselect ACBSP.exe");
+                        await MissingGame("ACRSP");
+                    }
                 }
                 else
                 {
                     MessageBox.Show("Assassin's Creed Revelations Remaster is not installed.");
+                    await MissingGame("ACRSP");
                 }
             }
             catch (Exception ex)

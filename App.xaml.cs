@@ -147,6 +147,15 @@ namespace The_Ezio_Trilogy_Launcher
                                     Log.Information($"Assassin's Creed Brotherhood Installation Path: {ACBPath}");
                                 }
                             }
+                            else if (fileInfo.Name == "ACRPath.txt")
+                            {
+                                Log.Information("Assassin's Creed Revelations is installed.");
+                                using (StreamReader sr = new StreamReader(Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments) + @"\Assassin's Creed - The Ezio Trilogy Remastered\" + fileInfo.Name))
+                                {
+                                    ACRPath = sr.ReadLine();
+                                    Log.Information($"Assassin's Creed Revelations Installation Path: {ACRPath}");
+                                }
+                            }
                         }
                     }
                 }
