@@ -179,6 +179,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows
                         }
                         break;
                 }
+                GC.Collect();
                 await Task.Delay(1);
             }
             catch (Exception ex)
@@ -217,6 +218,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows
                         }
                     }
                 }
+                GC.Collect();
             }
             catch (Exception ex)
             {
@@ -242,6 +244,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows
         private async void Exit_Click(object sender, RoutedEventArgs e)
         {
             Log.Information("Closing Assassin's Creed Brotherhood Launcher");
+            GC.Collect();
             await Task.Delay(1);
             this.Close();
         }
@@ -269,6 +272,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows
                         uModProcess.Start();
                         gameProcess.Start();
                         Log.Information("Game is starting");
+                        await Task.Delay(5000);
                         Log.Information("Setting game affinity based on CPU Core/Thread Count");
                         Game = Process.GetProcessesByName("ACBSP");
                         while (Game.Length <= 0)
@@ -276,10 +280,9 @@ namespace The_Ezio_Trilogy_Launcher.Windows
                             await Task.Delay(1000);
                             Game = Process.GetProcessesByName("ACBSP");
                         }
-                        await Task.Delay(1000);
                         foreach (Process process in Game)
                         {
-                            process.PriorityClass = ProcessPriorityClass.High;
+                            process.PriorityClass = ProcessPriorityClass.AboveNormal;
                             await SetProcessAffinity();
                         }
                         Log.Information("Game started");
@@ -316,13 +319,14 @@ namespace The_Ezio_Trilogy_Launcher.Windows
                         }
                         foreach (Process process in Game)
                         {
-                            process.PriorityClass = ProcessPriorityClass.High;
+                            process.PriorityClass = ProcessPriorityClass.AboveNormal;
                             await SetProcessAffinity();
                         }
                         Log.Information("Game started");
                         await Task.Delay(1);
                     }
                 }
+                GC.Collect();
             }
             catch (Exception ex)
             {

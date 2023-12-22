@@ -75,7 +75,7 @@
                         </ControlTemplate>
                     </Button.Template>
                 </Button>
-                
+
                 <!--Credits Button-->
                 <Button x:Name="Credits" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,-0.248" BorderThickness="0,0,0,0" Background="{x:Null}" BorderBrush="{x:Null}" IsDefault="True" Margin="10,10,10,10" Cursor="Hand" Click="Credits_Click">
                     <Button.Content>
@@ -135,28 +135,7 @@
                         </ControlTemplate>
                     </Button.Template>
                 </Button>
-
             </StackPanel>
-            
-            <!--Update Button
-            <Button x:Name="Update" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Bottom" RenderTransformOrigin="0.5,-0.248" BorderThickness="4,0,0,0" Background="{x:Null}" BorderBrush="{x:Null}" Margin="5,10,10,10" Cursor="Hand" Click="Update_Click">
-                <Button.Content>
-                    <StackPanel>
-                        <Image Source="/Assets/Icons/Update.png" Stretch="UniformToFill"/>
-                        <TextBlock Text="Update" FontSize="16" FontFamily="Bahnschrift SemiBold" HorizontalAlignment="Center" FontWeight="Bold" TextWrapping="Wrap" TextTrimming="WordEllipsis"/>
-                    </StackPanel>
-                </Button.Content>
-                <Button.Template>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}"
-                          BorderBrush="{TemplateBinding BorderBrush}"
-                          BorderThickness="{TemplateBinding BorderThickness}">
-                            <ContentPresenter HorizontalAlignment="Center"
-                                VerticalAlignment="Center" />
-                        </Border>
-                    </ControlTemplate>
-                </Button.Template>
-            </Button>-->
 
             <!--Frame where all of the pages go-->
             <Frame x:Name="PageViewer" Grid.Column="1" Grid.Row="1" NavigationUIVisibility="Hidden" Background="#F1F1F1F1" Style="{StaticResource RoundedFrame}" Source="/Windows/AC2 Pages/Default Page.xaml"/>

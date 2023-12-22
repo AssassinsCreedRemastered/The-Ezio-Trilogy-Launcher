@@ -469,6 +469,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows.ACR_Pages
                         Log.Information("systemdetection.dll is enabled");
                     }
                 }
+                GC.Collect();
                 await Task.Delay(1);
             }
             catch (Exception ex)
@@ -522,6 +523,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows.ACR_Pages
                     }
                     Log.Information("Startup videos are enabled");
                 }
+                GC.Collect();
                 await Task.Delay(1);
             }
             catch (Exception ex)

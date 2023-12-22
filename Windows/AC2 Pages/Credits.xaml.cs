@@ -26,15 +26,6 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
             InitializeComponent();
         }
 
-        private void uMod_Click(object sender, RoutedEventArgs e)
-        {
-            Process.Start(new ProcessStartInfo
-            {
-                FileName = "https://code.google.com/archive/p/texmod/",
-                UseShellExecute = true,
-            });
-        }
-
         private void OverhaulMod_Click(object sender, RoutedEventArgs e)
         {
             Process.Start(new ProcessStartInfo
@@ -58,24 +49,6 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
             Process.Start(new ProcessStartInfo
             {
                 FileName = "https://www.nexusmods.com/assassinscreedii/mods/11",
-                UseShellExecute = true,
-            });
-        }
-
-        private void PCButtons_Click(object sender, RoutedEventArgs e)
-        {
-            Process.Start(new ProcessStartInfo
-            {
-                FileName = "https://www.nexusmods.com/assassinscreedii/mods/13",
-                UseShellExecute = true,
-            });
-        }
-
-        private void ReShade_Click(object sender, RoutedEventArgs e)
-        {
-            Process.Start(new ProcessStartInfo
-            {
-                FileName = "https://reshade.me/",
                 UseShellExecute = true,
             });
         }

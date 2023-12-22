@@ -268,7 +268,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows.ACB_Pages
             try
             {
                 Log.Information("Checking if ReShade is enabled");
-                if (System.IO.File.Exists(App.ACBPath + @"\d3d9.dll"))
+                if (System.IO.File.Exists(App.ACBPath + @"\scripts\d3d9.asi"))
                 {
                     Log.Information("ReShade is enabled");
                     ReShade.IsChecked = true;
@@ -353,6 +353,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows.ACB_Pages
                     Log.Information("Startup videos are enabled.");
                 }
                 SkipIntroVideos.IsChecked = enabled;
+                GC.Collect();
                 await Task.Delay(1);
             }
             catch (Exception ex)
@@ -490,17 +491,17 @@ namespace The_Ezio_Trilogy_Launcher.Windows.ACB_Pages
             {
                 if (ReShade.IsChecked == true)
                 {
-                    if (System.IO.File.Exists(App.ACBPath + @"\d3d9.dll.disabled"))
+                    if (System.IO.File.Exists(App.ACBPath + @"\scripts\d3d9.asi.disabled"))
                     {
-                        System.IO.File.Move(App.ACBPath + @"\d3d9.dll.disabled", App.ACBPath + @"\d3d9.dll");
+                        System.IO.File.Move(App.ACBPath + @"\scripts\d3d9.asi.disabled", App.ACBPath + @"\scripts\d3d9.asi");
                         Log.Information("ReShade is enabled");
                     }
                 }
                 else
                 {
-                    if (System.IO.File.Exists(App.ACBPath + @"\d3d9.dll"))
+                    if (System.IO.File.Exists(App.ACBPath + @"\scripts\d3d9.asi"))
                     {
-                        System.IO.File.Move(App.ACBPath + @"\d3d9.dll", App.ACBPath + @"\d3d9.dll.disabled");
+                        System.IO.File.Move(App.ACBPath + @"\scripts\d3d9.asi", App.ACBPath + @"\scripts\d3d9.asi.disabled");
                         Log.Information("ReShade is disabled");
                     }
                 }
@@ -522,6 +523,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows.ACB_Pages
                     AssassinsCreedBrotherhood.uModStatus = false;
                     Log.Information("uMod is disabled");
                 }
+                GC.Collect();
                 await Task.Delay(1);
             }
             catch (Exception ex)
@@ -620,6 +622,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows.ACB_Pages
                     }
                 }
                 Log.Information("Download finished");
+                GC.Collect();
                 await Task.Delay(1);
             }
             catch (Exception ex)
@@ -663,6 +666,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows.ACB_Pages
                     Log.Information("Saving done");
                     System.Windows.MessageBox.Show("Saving done.");
                 }
+                GC.Collect();
             }
             catch (Exception ex)
             {
@@ -693,6 +697,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows.ACB_Pages
                     return;
                 }
                 Log.Information("Bonus content unlocked");
+                GC.Collect();
                 System.Windows.MessageBox.Show("Bonus content unlocked.");
             }
             catch (Exception ex)

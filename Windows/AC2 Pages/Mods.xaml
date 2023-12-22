@@ -29,17 +29,7 @@
         </Style>
     </Page.Resources>
     <Grid>
-        <!--Background Container
-        <Grid>
-            <Grid.Effect>
-                <BlurEffect Radius="5"/>
-            </Grid.Effect>
-            <Rectangle RadiusX="10" RadiusY="10">
-                <Rectangle.Fill>
-                    <ImageBrush ImageSource="/Assets/AC2 Background.jpg" Stretch="UniformToFill"/>
-                </Rectangle.Fill>
-            </Rectangle>
-        </Grid>-->
+        <!--Background Container-->
         <Border CornerRadius="10,0,10,0">
             <Border.Background>
                 <ImageBrush ImageSource="/Assets/AC2 Background.jpg" Stretch="UniformToFill"/>

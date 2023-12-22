@@ -25,29 +25,11 @@ namespace The_Ezio_Trilogy_Launcher.Windows.ACR_Pages
         {
             InitializeComponent();
         }
-
-        private void ReShade_Click(object sender, RoutedEventArgs e)
-        {
-            Process.Start(new ProcessStartInfo
-            {
-                FileName = "https://reshade.me/",
-                UseShellExecute = true,
-            });
-        }
         private void Background_Click(object sender, RoutedEventArgs e)
         {
             Process.Start(new ProcessStartInfo
             {
                 FileName = "https://wall.alphacoders.com/big.php?i=865090",
-                UseShellExecute = true,
-            });
-        }
-
-        private void mcflypg_Click(object sender, RoutedEventArgs e)
-        {
-            Process.Start(new ProcessStartInfo
-            {
-                FileName = "https://www.patreon.com/mcflypg",
                 UseShellExecute = true,
             });
         }

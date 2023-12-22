@@ -371,8 +371,6 @@
                             <TextBlock.ToolTip>
                                 <ToolTip>
                                     <TextBlock>
-                                        NOTE: This doesn't work with ReShade
-                                        <LineBreak/>
                                         Mod that allows texture injection into the game
                                     </TextBlock>
                                 </ToolTip>
@@ -392,8 +390,7 @@
                         <TextBlock Grid.Column="0" Text="ReShade" FontSize="24" FontFamily="Bahnschrift SemiBold" Foreground="WhiteSmoke" VerticalAlignment="Center" HorizontalAlignment="Center">
                             <TextBlock.ToolTip>
                                 <ToolTip>
-                                    <TextBlock>                        NOTE: This doesn't work with uMod
-                                        <LineBreak/>
+                                    <TextBlock>                    
                    Enables ReShade with a custom preset made by me
                                     </TextBlock>
                                 </ToolTip>

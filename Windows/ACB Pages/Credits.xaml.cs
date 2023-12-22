@@ -26,23 +26,6 @@ namespace The_Ezio_Trilogy_Launcher.Windows.ACB_Pages
             InitializeComponent();
         }
 
-        private void uMod_Click(object sender, RoutedEventArgs e)
-        {
-            Process.Start(new ProcessStartInfo
-            {
-                FileName = "https://code.google.com/archive/p/texmod/",
-                UseShellExecute = true,
-            });
-        }
-        private void ReShade_Click(object sender, RoutedEventArgs e)
-        {
-            Process.Start(new ProcessStartInfo
-            {
-                FileName = "https://reshade.me/",
-                UseShellExecute = true,
-            });
-        }
-
         private void PSButtons_Click(object sender, RoutedEventArgs e)
         {
             Process.Start(new ProcessStartInfo
@@ -57,15 +40,6 @@ namespace The_Ezio_Trilogy_Launcher.Windows.ACB_Pages
             Process.Start(new ProcessStartInfo
             {
                 FileName = "https://wall.alphacoders.com/big.php?i=274587",
-                UseShellExecute = true,
-            });
-        }
-
-        private void mcflypg_Click(object sender, RoutedEventArgs e)
-        {
-            Process.Start(new ProcessStartInfo
-            {
-                FileName = "https://www.patreon.com/mcflypg",
                 UseShellExecute = true,
             });
         }
