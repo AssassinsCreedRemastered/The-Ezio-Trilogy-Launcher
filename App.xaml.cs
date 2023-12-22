@@ -28,6 +28,8 @@ namespace The_Ezio_Trilogy_Launcher
         [DllImport("Kernel32")]
         public static extern void FreeConsole();
 
+        private bool logging = false;
+
         // Used to detect refresh Rate
         [DllImport("user32.dll")]
         private static extern int EnumDisplaySettings(string? deviceName, int modeNum, ref DEVMODE devMode);
@@ -111,12 +113,6 @@ namespace The_Ezio_Trilogy_Launcher
         public App()
         {
             InitializeComponent();
-            // Creating Logger Configuration
-            Log.Logger = new LoggerConfiguration()
-            .WriteTo.Console(
-                outputTemplate: "{Timestamp:dd-MM-yyyy HH:mm:ss}|{Level}|{Message}{NewLine}{Exception}")
-            .WriteTo.File("Logs.txt", rollingInterval: RollingInterval.Day)
-            .CreateLogger();
         }
 
         /// <summary>
@@ -386,10 +382,28 @@ namespace The_Ezio_Trilogy_Launcher
                     {
                         case "-console":
                             AllocConsole();
+                            logging = true;
                             break;
                         default:
                             break;
                     }
+                }
+                // Creating Logger Configuration
+                if (logging)
+                {
+                    Log.Logger = new LoggerConfiguration()
+                    .WriteTo.Console(
+                        outputTemplate: "{Timestamp:dd-MM-yyyy HH:mm:ss}|{Level}|{Message}{NewLine}{Exception}")
+                    .WriteTo.File("Logs.txt", rollingInterval: RollingInterval.Day)
+                    .CreateLogger();
+                }
+                else
+                {
+                    Log.Logger = new LoggerConfiguration()
+                    .WriteTo.Console(
+                        outputTemplate: "{Timestamp:dd-MM-yyyy HH:mm:ss}|{Level}|{Message}{NewLine}{Exception}")
+                    //.WriteTo.File("Logs.txt", rollingInterval: RollingInterval.Day)
+                    .CreateLogger();
                 }
                 await FindGameInstallations();
                 await FindNumberOfCores();

@@ -167,7 +167,7 @@ namespace The_Ezio_Trilogy_Launcher
                     if (result == MessageBoxResult.Yes)
                     {
                         Process updater = new Process();
-                        updater.StartInfo.FileName = "Assassin's Creed - The Ezio Trilogy Launcher Updater.exe";
+                        updater.StartInfo.FileName = "The Ezio Trilogy Launcher Updater.exe";
                         updater.StartInfo.WorkingDirectory = Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments) + @"\Assassin's Creed - The Ezio Trilogy Remastered\";
                         updater.StartInfo.UseShellExecute = true;
                         Log.Information("Starting the Launcher Updater");
