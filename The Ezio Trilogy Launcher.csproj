@@ -1,0 +1,73 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <RootNamespace>The_Ezio_Trilogy_Launcher</RootNamespace>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>True</UseWindowsForms>
+    <ApplicationIcon>Assets\icon.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Assets\AC2 Background.jpg" />
+    <None Remove="Assets\AC2Offsets.txt" />
+    <None Remove="Assets\ACB Background.jpg" />
+    <None Remove="Assets\ACR Background.jpg" />
+    <None Remove="Assets\Font\Assassin%24.ttf" />
+    <None Remove="Assets\Icons\Add.png" />
+    <None Remove="Assets\Icons\Back.png" />
+    <None Remove="Assets\Icons\Credits.png" />
+    <None Remove="Assets\Icons\Down.png" />
+    <None Remove="Assets\Icons\Mods.png" />
+    <None Remove="Assets\Icons\Ok.png" />
+    <None Remove="Assets\Icons\Play.png" />
+    <None Remove="Assets\Icons\Remove.png" />
+    <None Remove="Assets\Icons\Settings.png" />
+    <None Remove="Assets\Icons\Up.png" />
+    <None Remove="Assets\Icons\Update.png" />
+    <None Remove="Assets\ListOfSupportedRefreshRates.txt" />
+    <None Remove="Launcher Background.png" />
+    <None Remove="Windows\Background.png" />
+    <None Remove="Windows\Exit.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\icon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Assets\ListOfSupportedRefreshRates.txt" />
+    <EmbeddedResource Include="Assets\ListofSupportedResolutions.txt" />
+    <EmbeddedResource Include="Assets\AC2Offsets.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\AC2 Background.jpg" />
+    <Resource Include="Assets\ACB Background.jpg" />
+    <Resource Include="Assets\ACR Background.jpg" />
+    <Resource Include="Assets\Font\Assassin$.ttf" />
+    <Resource Include="Assets\Icons\Add.png" />
+    <Resource Include="Assets\Icons\Back.png" />
+    <Resource Include="Assets\Icons\Credits.png" />
+    <Resource Include="Assets\Icons\Down.png" />
+    <Resource Include="Assets\Icons\Exit.png" />
+    <Resource Include="Assets\Background.png" />
+    <Resource Include="Assets\Icons\Mods.png" />
+    <Resource Include="Assets\Icons\Ok.png" />
+    <Resource Include="Assets\Icons\Play.png" />
+    <Resource Include="Assets\Icons\Remove.png" />
+    <Resource Include="Assets\Icons\Settings.png" />
+    <Resource Include="Assets\Icons\Up.png" />
+    <Resource Include="Assets\Icons\Update.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Serilog" Version="3.0.1" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+    <PackageReference Include="System.Management" Version="7.0.2" />
+  </ItemGroup>
+
+</Project>

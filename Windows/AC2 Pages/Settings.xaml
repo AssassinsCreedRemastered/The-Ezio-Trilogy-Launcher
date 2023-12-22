@@ -1,0 +1,560 @@
+﻿<Page x:Class="The_Ezio_Trilogy_Launcher.Windows.AC2_Pages.Settings"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:The_Ezio_Trilogy_Launcher.Windows.AC2_Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="1361.345" d:DesignWidth="800"
+      Title="Settings">
+    <Page.Resources>
+        <SolidColorBrush x:Key="ComboBox.Static.Background" Color="White" />
+        <SolidColorBrush x:Key="ComboBox.Static.Border" Color="Gray" />
+        <SolidColorBrush x:Key="ComboBox.Static.Glyph" Color="WhiteSmoke" />
+        <Style x:Key="NoScrollViewerStyle" TargetType="{x:Type ScrollViewer}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ScrollViewer}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <ScrollContentPresenter Grid.Column="0" Grid.Row="0" ContentTemplate="{TemplateBinding ContentTemplate}" Margin="{TemplateBinding Padding}"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="RoundButtonStyle" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="1"
+                                CornerRadius="10">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="OnOffCheckboxStyle" TargetType="CheckBox">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="CheckBox">
+                        <Border x:Name="Background" CornerRadius="10" Background="#B27D7D7D">
+                            <ToggleButton x:Name="toggleButton"
+                                          IsChecked="{Binding IsChecked, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
+                                <ToggleButton.Style>
+                                    <Style TargetType="ToggleButton">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="ToggleButton">
+                                                    <TextBlock x:Name="toggleText"
+                                                               Text="OFF"
+                                                               FontSize="16"
+                                                               FontFamily="Bahnschrift SemiBold"
+                                                               HorizontalAlignment="Center"
+                                                               VerticalAlignment="Center"
+                                                               Foreground="White" />
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsChecked" Value="True">
+                                                            <Setter TargetName="toggleText" Property="Text" Value="ON" />
+                                                            <Setter TargetName="toggleText" Property="Foreground" Value="Black" />
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </ToggleButton.Style>
+                            </ToggleButton>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <!--
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Background" Property="Background" Value="#B27D7D7D">
+                                </Setter>
+                            </Trigger>-->
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <ControlTemplate x:Key="ComboBoxToggleButton" TargetType="ToggleButton">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="20"/>
+                </Grid.ColumnDefinitions>
+                <Border
+                    x:Name="ComboBoxBorder"
+                    Grid.ColumnSpan="2"
+                    Background="#B27D7D7D"
+                    BorderBrush="Gray"
+                    BorderThickness="1"
+                    CornerRadius="10" />
+                <Path
+            x:Name="Arrow"
+            Grid.Column="1"
+            Fill="{StaticResource ComboBox.Static.Glyph}"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Data="M 0 0 L 4 4 L 8 0 Z" />
+            </Grid>
+        </ControlTemplate>
+        <ControlTemplate x:Key="ComboBoxTextBox" TargetType="TextBox">
+            <Border x:Name="PART_ContentHost" Focusable="False" Background="{TemplateBinding Background}" />
+        </ControlTemplate>
+        <Style x:Key="CustomComboBoxStyle" TargetType="ComboBox">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <ToggleButton
+                            Name="ToggleButton"
+                            Template="{StaticResource ComboBoxToggleButton}"
+                            Focusable="false"
+                            IsChecked="{Binding Path=IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+                            ClickMode="Press">
+                            </ToggleButton>
+                            <ContentPresenter Name="ContentSite"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center"
+                                ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                Content="{TemplateBinding SelectionBoxItem}"
+                                ContentStringFormat="{TemplateBinding SelectionBoxItemStringFormat}"
+                                Margin="3,3,0,3"/>
+                            <TextBox x:Name="PART_EditableTextBox"
+                                Style="{x:Null}"
+                                Template="{StaticResource ComboBoxTextBox}"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Focusable="True"
+                                Background="Transparent"
+                                Visibility="Hidden"
+                                IsReadOnly="{TemplateBinding IsReadOnly}"/>
+                            <Popup Name="Popup"
+                                Placement="Bottom"
+                                IsOpen="{TemplateBinding IsDropDownOpen}"
+                                AllowsTransparency="True"
+                                Focusable="False"
+                                PopupAnimation="Slide">
+                                <Grid Name="DropDown"
+                                    SnapsToDevicePixels="True"
+                                    MinWidth="{TemplateBinding ActualWidth}"
+                                    MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                    <Border x:Name="DropDownBorder"
+                                        Background="#F2000000"
+                                        BorderThickness="1"
+                                            CornerRadius="10,10,10,10"
+                                        BorderBrush="Gray"/>
+                                    <ScrollViewer Margin="0,0,0,0" SnapsToDevicePixels="True" VerticalScrollBarVisibility="Hidden" Foreground="WhiteSmoke">
+                                        <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Contained" Cursor="Hand"/>
+                                    </ScrollViewer>
+                                </Grid>
+                            </Popup>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" TargetName="DropDownBorder" Value="0.5"/>
+                            </Trigger>
+
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="ItemContainerStyle">
+                <Setter.Value>
+                    <Style TargetType="ComboBoxItem">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ComboBoxItem">
+                                    <Border Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <!--Background Container-->
+        <Border CornerRadius="10,0,10,0" Grid.ColumnSpan="2">
+            <Border.Background>
+                <ImageBrush ImageSource="/Assets/AC2 Background.jpg" Stretch="UniformToFill"/>
+            </Border.Background>
+            <Border.Effect>
+                <BlurEffect Radius="5"/>
+            </Border.Effect>
+        </Border>
+
+        <!--Container for all of the Settings-->
+        <ScrollViewer Grid.ColumnSpan="2" Grid.RowSpan="2" Style="{StaticResource NoScrollViewerStyle}" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                
+                <!--Save Settings Button-->
+                <Button x:Name="Save" Grid.Column="1"  Margin="0,10,0,10" Content="Save Settings" FontSize="36" FontFamily="Bahnschrift SemiBold" Background="#7FD0D0D0" Foreground="Black" HorizontalAlignment="Center" HorizontalContentAlignment="Center"  Style="{StaticResource RoundButtonStyle}" Click="Save_Click"/>
+                <TextBlock Text="game settings" FontSize="64" FontFamily="pack://application:,,,/The Ezio Trilogy Launcher;component/Assets/Font/Assassin$.ttf#Assassin$" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+
+                <!--Resolution ComboBox-->
+                <Border BorderBrush="Black" BorderThickness="1.5" Margin="5,2,5,2" CornerRadius="5">
+                    <Grid Height="50" Background="#80585858">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="340"/>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Resolution" FontSize="24" FontFamily="Bahnschrift SemiBold" Foreground="WhiteSmoke" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock.ToolTip>
+                                <ToolTip Content="Resolution of the game."/>
+                            </TextBlock.ToolTip>
+                        </TextBlock>
+                        <ComboBox x:Name="ResolutionSelector" Style="{StaticResource CustomComboBoxStyle}" Grid.Column="1" Width="Auto" Margin="110,10,50,10" FontSize="18" HorizontalContentAlignment="Center" FontFamily="Bahnschrift SemiBold" />
+                    </Grid>
+                </Border>
+                
+                <!--Multisample AntiAliasing-->
+                <Border BorderBrush="Black" BorderThickness="1.5" Margin="5,2,5,2" CornerRadius="5">
+                    <Grid Height="50" Background="#80585858">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="340"/>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="MSAA" FontSize="24" FontFamily="Bahnschrift SemiBold" Foreground="WhiteSmoke" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock.ToolTip>
+                                <ToolTip Content="This controls Multisampling Antialiasing (AA)"/>
+                            </TextBlock.ToolTip>
+                        </TextBlock>
+                        <ComboBox x:Name="MSAASelector" Style="{StaticResource CustomComboBoxStyle}" Grid.Column="1" Width="Auto" Margin="160,10,100,10" FontSize="18" HorizontalContentAlignment="Center" FontFamily="Bahnschrift SemiBold"/>
+                    </Grid>
+                </Border>
+                
+                <!--Refresh Rates-->
+                <Border BorderBrush="Black" BorderThickness="1.5" Margin="5,2,5,2" CornerRadius="5">
+                    <Grid Height="50" Background="#80585858">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="340"/>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Refresh Rate" FontSize="24" FontFamily="Bahnschrift SemiBold" Foreground="WhiteSmoke" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        <ComboBox x:Name="RefreshRateSelector" Style="{StaticResource CustomComboBoxStyle}" Grid.Column="1" Width="Auto" Margin="160,10,100,10" FontSize="18" HorizontalContentAlignment="Center" FontFamily="Bahnschrift SemiBold" />
+                    </Grid>
+                </Border>
+
+                <!--Vertical Sync-->
+                <Border BorderBrush="Black" BorderThickness="1.5" Margin="5,2,5,2" CornerRadius="5">
+                    <Grid Height="50" Background="#80585858">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="340"/>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Vertical Sync" FontSize="24" FontFamily="Bahnschrift SemiBold" Foreground="WhiteSmoke" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        <CheckBox x:Name="VSync" Grid.Column="1" Margin="160,10,100,10" Style="{StaticResource OnOffCheckboxStyle}"/>
+                    </Grid>
+                </Border>
+                
+                <!--Enviroment Quality-->
+                <Border BorderBrush="Black" BorderThickness="1.5" Margin="5,2,5,2" CornerRadius="5">
+                    <Grid Height="50" Background="#80585858">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="340"/>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Environment Quality" FontSize="24" FontFamily="Bahnschrift SemiBold" Foreground="WhiteSmoke" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        <ComboBox x:Name="EnviromentQualitySelector" Style="{StaticResource CustomComboBoxStyle}" Grid.Column="1" Width="Auto" Margin="130,10,70,10" FontSize="18" HorizontalContentAlignment="Center" FontFamily="Bahnschrift SemiBold"/>
+                    </Grid>
+                </Border>
+                
+                <!--Texture Quality-->
+                <Border BorderBrush="Black" BorderThickness="1.5" Margin="5,2,5,2" CornerRadius="5">
+                    <Grid Height="50" Background="#80585858">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="340"/>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Texture Quality" FontSize="24" FontFamily="Bahnschrift SemiBold" Foreground="WhiteSmoke" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        <ComboBox x:Name="TextureQualitySelector" Style="{StaticResource CustomComboBoxStyle}" Grid.Column="1" Width="Auto" Margin="130,10,70,10" FontSize="18" HorizontalContentAlignment="Center" FontFamily="Bahnschrift SemiBold"/>
+                    </Grid>
+                </Border>
+                
+                <!--Shadow Quality-->
+                <Border BorderBrush="Black" BorderThickness="1.5" Margin="5,2,5,2" CornerRadius="5">
+                    <Grid Height="50" Background="#80585858">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="340"/>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Shadow Quality" FontSize="24" FontFamily="Bahnschrift SemiBold" Foreground="WhiteSmoke" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        <ComboBox x:Name="ShadowQualitySelector" Style="{StaticResource CustomComboBoxStyle}" Grid.Column="1" Width="Auto" Margin="130,10,70,10" FontSize="18" HorizontalContentAlignment="Center" FontFamily="Bahnschrift SemiBold"/>
+                    </Grid>
+                </Border>
+                
+                <!--Reflection Quality-->
+                <Border BorderBrush="Black" BorderThickness="1.5" Margin="5,2,5,2" CornerRadius="5">
+                    <Grid Height="50" Background="#80585858">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="340"/>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Reflection Quality" FontSize="24" FontFamily="Bahnschrift SemiBold" Foreground="WhiteSmoke" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        <ComboBox x:Name="ReflectionQualitySelector" Style="{StaticResource CustomComboBoxStyle}" Grid.Column="1" Width="Auto" Margin="130,10,70,10" FontSize="18" HorizontalContentAlignment="Center" FontFamily="Bahnschrift SemiBold"/>
+                    </Grid>
+                </Border>
+                
+                <!--Character Quality-->
+                <Border BorderBrush="Black" BorderThickness="1.5" Margin="5,2,5,2" CornerRadius="5">
+                    <Grid Height="50" Background="#80585858">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="340"/>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Character Quality" FontSize="24" FontFamily="Bahnschrift SemiBold" Foreground="WhiteSmoke" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        <ComboBox x:Name="CharacterQualitySelector" Style="{StaticResource CustomComboBoxStyle}" Grid.Column="1" Width="Auto" Margin="130,10,70,10" FontSize="18" HorizontalContentAlignment="Center" FontFamily="Bahnschrift SemiBold"/>
+                    </Grid>
+                </Border>
+                
+                <!--PostFX-->
+                <Border BorderBrush="Black" BorderThickness="1.5" Margin="5,2,5,2" CornerRadius="5">
+                    <Grid Height="50" Background="#80585858">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="340"/>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="PostFX" FontSize="24" FontFamily="Bahnschrift SemiBold" Foreground="WhiteSmoke" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock.ToolTip>
+                                <ToolTip Content="If you have ReShade Enabled, this setting should be turned off."/>
+                            </TextBlock.ToolTip>
+                        </TextBlock>
+                        <CheckBox x:Name="PostFX" Grid.Column="1" Margin="160,10,100,10" Style="{StaticResource OnOffCheckboxStyle}"/>
+                    </Grid>
+                </Border>
+
+                <!--Mod Settings-->
+                <TextBlock Text="mod settings" FontSize="64" FontFamily="pack://application:,,,/The Ezio Trilogy Launcher;component/Assets/Font/Assassin$.ttf#Assassin$" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,10,0,0"/>
+                
+                <!--uMod-->
+                <Border BorderBrush="Black" BorderThickness="1.5" Margin="5,2,5,2" CornerRadius="5">
+                    <Grid Height="50" Background="#80585858">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="340"/>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="uMod" FontSize="24" FontFamily="Bahnschrift SemiBold" Foreground="WhiteSmoke" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock.ToolTip>
+                                <ToolTip>
+                                    <TextBlock>
+                                        Mod that allows texture injection into the game
+                                    </TextBlock>
+                                </ToolTip>
+                            </TextBlock.ToolTip>
+                        </TextBlock>
+                        <CheckBox x:Name="uMod" Grid.Column="1" Margin="160,10,100,10" Style="{StaticResource OnOffCheckboxStyle}"/>
+                    </Grid>
+                </Border>
+                
+                <!--EaglePatch-->
+                <Border BorderBrush="Black" BorderThickness="1.5" Margin="5,2,5,2" CornerRadius="5">
+                    <Grid Height="50" Background="#80585858">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="340"/>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="EaglePatch" FontSize="24" FontFamily="Bahnschrift SemiBold" Foreground="WhiteSmoke" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock.ToolTip>
+                                <ToolTip>
+                                    <TextBlock>
+                                        ASI Plugin that fixes a number of issues in Assassin's Creed 2
+                                    </TextBlock>
+                                </ToolTip>
+                            </TextBlock.ToolTip>
+                        </TextBlock>
+                        <CheckBox x:Name="EaglePatch" Grid.Column="1" Margin="160,10,100,10" Style="{StaticResource OnOffCheckboxStyle}"/>
+                    </Grid>
+                </Border>
+                
+                <!--ReShade-->
+                <Border BorderBrush="Black" BorderThickness="1.5" Margin="5,2,5,2" CornerRadius="5">
+                    <Grid Height="50" Background="#80585858">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="340"/>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="ReShade" FontSize="24" FontFamily="Bahnschrift SemiBold" Foreground="WhiteSmoke" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock.ToolTip>
+                                <ToolTip>
+                                    <TextBlock>
+                                        NOTE: If you have ReShade enabled, it is recommended that you disable PostFX
+                                        <LineBreak/>
+                                        Enables ReShade with it's own presets
+                                        <LineBreak/>
+                                        Every Area has it's own Preset so use Hotkeys to change between them or just disable them
+                                        <LineBreak/>
+                                        Hotkeys:
+                                        <LineBreak/>
+                                        Home - Opens ReShade options
+                                        <LineBreak/>
+                                        Pause/Break - Toggles ReShade effects on/off
+                                        <LineBreak/>
+                                        + - Switch to shader before current one
+                                        <LineBreak/>
+                                        - - Switch to preset before current one
+                                    </TextBlock>
+                                </ToolTip>
+                            </TextBlock.ToolTip>
+                        </TextBlock>
+                        <CheckBox x:Name="ReShade" Grid.Column="1" Margin="160,10,100,10" Style="{StaticResource OnOffCheckboxStyle}"/>
+                    </Grid>
+                </Border>
+
+                <!--Unlock Bonus Content-->
+                <Border BorderBrush="Black" BorderThickness="1.5" Margin="5,2,5,2" CornerRadius="5">
+                    <Grid Height="50" Background="#80585858">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="340"/>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Unlock Bonus Content" FontSize="24" FontFamily="Bahnschrift SemiBold" Foreground="WhiteSmoke" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock.ToolTip>
+                                <ToolTip>
+                                    <TextBlock>
+                                        NOTE: This is experimental and it might break your saves, but I have backed them up in the same folder so you can always revert the changes
+                                        <LineBreak/>
+                                        Unlocks Bonus Content by editing save file responsible for settings and unlocking the content
+                                        <LineBreak/>
+                                        Content Unlocked:
+                                        <LineBreak/>
+                                        - Palazzo Medici Templair Lair
+                                        <LineBreak/>
+                                        - Santa Maria dei Frari Templar Lair
+                                        <LineBreak/>
+                                        - Arsenale di Venezia Templar Lair
+                                        <LineBreak/>
+                                        - Bonus outfit dye
+                                        <LineBreak/>
+                                        - Throwing knives capacity upgrade
+                                        <LineBreak/>
+                                        - Altaïr's outfit
+                                        <LineBreak/>
+                                        - Auditore Family Crypt
+                                        <LineBreak/>
+                                        - Maria Thorpe's Longsword
+                                        <LineBreak/>
+                                        - Fredrick's Hammer
+                                        <LineBreak/>
+                                        - Mace of the Bull
+                                        <LineBreak/>
+                                        - Dark Oracle's Bone Dagger
+                                        <LineBreak/>
+                                        - Twins' Rapier
+                                        <LineBreak/>
+                                        - Bouchart's Blade
+                                    </TextBlock>
+                                </ToolTip>
+                            </TextBlock.ToolTip>
+                        </TextBlock>
+                        <Button x:Name="UnlockBonusContent" Grid.Column="1" Margin="110,10,60,10" Style="{StaticResource RoundButtonStyle}" Background="#80585858" Content="Click to unlock" FontFamily="Bahnschrift SemiBold" FontSize="18" Cursor="Hand" Click="UnlockBonusContent_Click"/>
+                    </Grid>
+                </Border>
+
+                <!--EaglePatch Settings-->
+                <TextBlock Text="eaglepatch settings" FontSize="40" FontFamily="pack://application:,,,/The Ezio Trilogy Launcher;component/Assets/Font/Assassin$.ttf#Assassin$" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,10,0,0"/>
+                
+                <!--Improve Draw Distance-->
+                <Border BorderBrush="Black" BorderThickness="1.5" Margin="5,2,5,2" CornerRadius="5">
+                    <Grid Height="50" Background="#80585858">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="340"/>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Improve Draw Distance" FontSize="24" FontFamily="Bahnschrift SemiBold" Foreground="WhiteSmoke" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock.ToolTip>
+                                <ToolTip Content="Improves draw distance for buildings and maxes out draw distance of characters"/>
+                            </TextBlock.ToolTip>
+                        </TextBlock>
+                        <CheckBox x:Name="ImproveDrawDistance" Grid.Column="1" Margin="160,10,100,10" Style="{StaticResource OnOffCheckboxStyle}"/>
+                    </Grid>
+                </Border>
+
+                <!--Improve ShadowMap Resolution-->
+                <Border BorderBrush="Black" BorderThickness="1.5" Margin="5,2,5,2" CornerRadius="5">
+                    <Grid Height="50" Background="#80585858">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="340"/>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Improve ShadowMap Resolution" FontSize="23" FontFamily="Bahnschrift SemiBold" Foreground="WhiteSmoke" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock.ToolTip>
+                                <ToolTip Content="Improves shadow map resolution from 1024 to 4096 if shadows are maxed out in the settings"/>
+                            </TextBlock.ToolTip>
+                        </TextBlock>
+                        <CheckBox x:Name="ImproveShadowMapResolution" Grid.Column="1" Margin="160,10,100,10" Style="{StaticResource OnOffCheckboxStyle}"/>
+                    </Grid>
+                </Border>
+
+                <!--Keyboard Layout Selection-->
+                <Border BorderBrush="Black" BorderThickness="1.5" Margin="5,2,5,2" CornerRadius="5">
+                    <Grid Height="50" Background="#80585858">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="340"/>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Keyboard Layouts" FontSize="24" FontFamily="Bahnschrift SemiBold" Foreground="WhiteSmoke" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock.ToolTip>
+                                <ToolTip Content="With EaglePatch enabled, this is the only way of changing the layout because in game it doesn't work anymore"/>
+                            </TextBlock.ToolTip>
+                        </TextBlock>
+                        <ComboBox x:Name="KeyboardLayoutSelector" Style="{StaticResource CustomComboBoxStyle}" Grid.Column="1" Width="Auto" Margin="100,10,40,10" FontSize="18" HorizontalContentAlignment="Center" FontFamily="Bahnschrift SemiBold"/>
+                    </Grid>
+                </Border>
+
+                <!--Swap triggers to bumpers and bumpers to triggers-->
+                <Border BorderBrush="Black" BorderThickness="1.5" Margin="5,2,5,2" CornerRadius="5">
+                    <Grid Height="50" Background="#80585858">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="340"/>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="PS3 Controls" FontSize="24" FontFamily="Bahnschrift SemiBold" Foreground="WhiteSmoke" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock.ToolTip>
+                                <ToolTip Content="Swap triggers to bumpers and bumpers to triggers (e.g. R1 becomes run button)"/>
+                            </TextBlock.ToolTip>
+                        </TextBlock>
+                        <CheckBox x:Name="PS3Controls" Grid.Column="1" Margin="160,10,100,10" Style="{StaticResource OnOffCheckboxStyle}"/>
+                    </Grid>
+                </Border>
+
+                <!--Skip Intro Videos-->
+                <Border BorderBrush="Black" BorderThickness="1.5" Margin="5,2,5,2" CornerRadius="5">
+                    <Grid Height="50" Background="#80585858">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="340"/>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Skip Intro Videos" FontSize="24" FontFamily="Bahnschrift SemiBold" Foreground="WhiteSmoke" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock.ToolTip>
+                                <ToolTip Content="Skip videos on game's launch"/>
+                            </TextBlock.ToolTip>
+                        </TextBlock>
+                        <CheckBox x:Name="SkipIntroVideos" Grid.Column="1" Margin="160,10,100,10" Style="{StaticResource OnOffCheckboxStyle}"/>
+                    </Grid>
+                </Border>
+
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>
