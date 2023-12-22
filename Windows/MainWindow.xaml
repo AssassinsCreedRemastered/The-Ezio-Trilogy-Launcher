@@ -60,9 +60,29 @@
                 </Button>
             </Grid>
             <!--Container for Credits and Exit button-->
-            <Grid Grid.Column="2" HorizontalAlignment="Right" Width="50" Margin="0,0,5,0">
+            <Grid Grid.Column="2" HorizontalAlignment="Right" Width="100" Margin="0,0,5,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <!--Update Button-->
+                <Button x:Name="Update" Grid.Row="0" Grid.Column="0" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0,0,0,0" Cursor="Hand" Margin="0,0,5,0" HorizontalAlignment="Right" Height="40" Width="40" Click="Update_Click">
+                    <Button.Content>
+                        <Image Source="/Assets/Icons/Update.png"></Image>
+                    </Button.Content>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                                <ContentPresenter HorizontalAlignment="Center"
+                                  VerticalAlignment="Center" />
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
                 <!--Exit Button-->
-                <Button x:Name="Exit" Grid.Row="0" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0,0,0,0" Cursor="Hand" Margin="0,0,10,0" HorizontalAlignment="Right" Height="40" Width="40" Click="Exit_Click">
+                <Button x:Name="Exit" Grid.Row="0" Grid.Column="1" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0,0,0,0" Cursor="Hand" Margin="0,0,5,0" HorizontalAlignment="Right" Height="40" Width="40" Click="Exit_Click">
                     <Button.Content>
                         <Image Source="/Assets/Icons/Exit.png"></Image>
                     </Button.Content>

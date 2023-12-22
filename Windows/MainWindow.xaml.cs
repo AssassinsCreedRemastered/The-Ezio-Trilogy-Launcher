@@ -17,7 +17,9 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using The_Ezio_Trilogy_Launcher.Windows;
 using Microsoft.Win32;
-
+using System.Reflection;
+using System.Net;
+using System.Diagnostics;
 
 namespace The_Ezio_Trilogy_Launcher
 {
@@ -105,6 +107,87 @@ namespace The_Ezio_Trilogy_Launcher
             catch (Exception ex)
             {
                 Log.Information(ex, "");
+                MessageBox.Show(ex.Message);
+                return;
+            }
+        }
+
+        /// <summary>
+        /// Checks for updates and asks user to update if there are any new updates
+        /// </summary>
+        private async void Update_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Log.Information("Checking for updates");
+                string currentVersion = "";
+                string newestVersion = "";
+                using (StreamReader sr = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("The_Ezio_Trilogy_Launcher.Assets.Version.txt")))
+                {
+                    string? line = sr.ReadLine();
+                    while (line != null)
+                    {
+                        if (line != "")
+                        {
+                            Log.Information("Current Version: " + line);
+                            currentVersion = line;
+                        }
+                        line = sr.ReadLine();
+                    }
+                }
+                HttpWebRequest SourceText = (HttpWebRequest)WebRequest.Create("https://raw.githubusercontent.com/AssassinsCreedRemastered/The-Ezio-Trilogy-Launcher/Version/Version.txt");
+                SourceText.UserAgent = "Mozilla/5.0";
+                var response = SourceText.GetResponse();
+                var content = response.GetResponseStream();
+                using (var reader = new StreamReader(content))
+                {
+                    string fileContent = reader.ReadToEnd();
+                    string[] lines = fileContent.Split(new char[] { '\n' });
+                    foreach (string line in lines)
+                    {
+                        if (line != "")
+                        {
+                            Log.Information("Newest Version: " + line);
+                            newestVersion = line;
+                        }
+                    }
+                }
+                if (currentVersion == newestVersion)
+                {
+                    Log.Information("Newest version is already installed");
+                    MessageBox.Show("Newest version is already installed.");
+                    GC.Collect();
+                    await Task.Delay(1);
+                    return;
+                }
+                else
+                {
+                    Log.Information("New version found.");
+                    MessageBoxResult result = MessageBox.Show("New version of the launcher found. Do you want to update?", "Confirmation", MessageBoxButton.YesNo);
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        Process updater = new Process();
+                        updater.StartInfo.FileName = "Assassin's Creed - The Ezio Trilogy Launcher Updater.exe";
+                        updater.StartInfo.WorkingDirectory = Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments) + @"\Assassin's Creed - The Ezio Trilogy Remastered\";
+                        updater.StartInfo.UseShellExecute = true;
+                        Log.Information("Starting the Launcher Updater");
+                        updater.Start();
+                        Log.Information("Closing the Launcher to perform the update");
+                        Environment.Exit(0);
+                    }
+                    else
+                    {
+                        GC.Collect();
+                        await Task.Delay(1);
+                        return;
+                    }
+                }
+                GC.Collect();
+                await Task.Delay(1);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "");
                 MessageBox.Show(ex.Message);
                 return;
             }
@@ -222,7 +305,6 @@ namespace The_Ezio_Trilogy_Launcher
                 else
                 {
                     MessageBox.Show("Assassin's Creed Revelations Remaster is not installed.");
-                    await MissingGame("ACRSP");
                 }
             }
             catch (Exception ex)
