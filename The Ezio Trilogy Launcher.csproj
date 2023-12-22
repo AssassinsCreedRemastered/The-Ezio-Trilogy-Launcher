@@ -28,6 +28,7 @@
     <None Remove="Assets\Icons\Up.png" />
     <None Remove="Assets\Icons\Update.png" />
     <None Remove="Assets\ListOfSupportedRefreshRates.txt" />
+    <None Remove="Assets\Version.txt" />
     <None Remove="Launcher Background.png" />
     <None Remove="Windows\Background.png" />
     <None Remove="Windows\Exit.png" />
@@ -41,6 +42,7 @@
     <EmbeddedResource Include="Assets\ListOfSupportedRefreshRates.txt" />
     <EmbeddedResource Include="Assets\ListofSupportedResolutions.txt" />
     <EmbeddedResource Include="Assets\AC2Offsets.txt" />
+    <EmbeddedResource Include="Assets\Version.txt" />
   </ItemGroup>
 
   <ItemGroup>

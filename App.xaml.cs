@@ -3,16 +3,17 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Management;
+using System.Net;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Media;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace The_Ezio_Trilogy_Launcher
 {
@@ -308,6 +309,66 @@ namespace The_Ezio_Trilogy_Launcher
         }
 
         /// <summary>
+        /// Checks for updates on Launch
+        /// </summary>
+        private async Task CheckForUpdates()
+        {
+            try
+            {
+                Log.Information("Checking for updates");
+                string currentVersion = "";
+                string newestVersion = "";
+                using (StreamReader sr = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("The_Ezio_Trilogy_Launcher.Assets.Version.txt")))
+                {
+                    string? line = sr.ReadLine();
+                    while (line != null)
+                    {
+                        if (line != "")
+                        {
+                            Log.Information("Current Version: " + line);
+                            currentVersion = line;
+                        }
+                        line = sr.ReadLine();
+                    }
+                }
+                HttpWebRequest SourceText = (HttpWebRequest)WebRequest.Create("https://raw.githubusercontent.com/AssassinsCreedRemastered/The-Ezio-Trilogy-Launcher/Version/Version.txt");
+                SourceText.UserAgent = "Mozilla/5.0";
+                var response = SourceText.GetResponse();
+                var content = response.GetResponseStream();
+                using (var reader = new StreamReader(content))
+                {
+                    string fileContent = reader.ReadToEnd();
+                    string[] lines = fileContent.Split(new char[] { '\n' });
+                    foreach (string line in lines)
+                    {
+                        if (line != "")
+                        {
+                            Log.Information("Newest Version: " + line);
+                            newestVersion = line;
+                        }
+                    }
+                }
+                if (currentVersion == newestVersion)
+                {
+                    Log.Information("Newest version of the launcher is already installed");
+                    GC.Collect();
+                    await Task.Delay(1);
+                    return;
+                }
+                else
+                {
+                    Log.Information("New version found.");
+                    System.Windows.MessageBox.Show("New version of the launcher found. Click on the Update button to update the launcher.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "");
+                System.Windows.MessageBox.Show($"Error: {ex.Message}{Environment.NewLine}Possibly no internet connection");
+            }
+        }
+
+        /// <summary>
         /// At startup it launches the Logger for debugging and checks for Launch arguments.
         /// </summary>
         /// <param name="e">Holds all of the launch Arguemnts as e.Args</param>
@@ -334,6 +395,7 @@ namespace The_Ezio_Trilogy_Launcher
                 await FindNumberOfCores();
                 await FindSupportedResolutions();
                 await FindRefreshRate();
+                await CheckForUpdates();
             }
         }
 
