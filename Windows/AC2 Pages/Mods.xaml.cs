@@ -117,6 +117,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
                     }
                 }
                 MessageBox.Show("Saving done.");
+                GC.Collect();
                 await Task.Delay(1);
             }
             catch (Exception ex)
@@ -162,6 +163,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
                     }
                 }
                 Log.Information(modPath);
+                GC.Collect();
                 await Task.Delay(1);
             }
             catch (Exception ex)
@@ -203,6 +205,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
                     InstalledDisabledMods.Remove(DisabledModsList.SelectedItem.ToString());
                     DisabledMods.Remove(DisabledModsList.SelectedItem.ToString());
                 }
+                GC.Collect();
                 await Task.Delay(1);
             }
             catch (Exception ex)
@@ -237,6 +240,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
                         }
                         break;
                 }
+                GC.Collect();
                 await Task.Delay(1);
             }
             catch (Exception ex)

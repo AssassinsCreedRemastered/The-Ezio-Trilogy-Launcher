@@ -189,6 +189,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows
                         }
                         break;
 				}
+                GC.Collect();
 				await Task.Delay(1);
 			}
 			catch (Exception ex)
@@ -252,6 +253,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows
         private void Exit_Click(object sender, RoutedEventArgs e)
 		{
 			Log.Information("Closing Assassin's Creed 2 Launcher");
+            GC.Collect();
 			this.Close();
 		}
 
@@ -289,7 +291,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows
                         await Task.Delay(1000);
                         foreach (Process process in Game)
                         {
-                            process.PriorityClass = ProcessPriorityClass.High;
+                            process.PriorityClass = ProcessPriorityClass.AboveNormal;
                             await SetProcessAffinity();
                         }
                         Log.Information("Game started");
@@ -326,7 +328,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows
                         }
                         foreach (Process process in Game)
                         {
-                            process.PriorityClass = ProcessPriorityClass.High;
+                            process.PriorityClass = ProcessPriorityClass.AboveNormal;
                             await SetProcessAffinity();
                         }
                         Log.Information("Game started");
@@ -338,6 +340,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows
                     Log.Information("Game is already running");
                     System.Windows.MessageBox.Show("Game is already running.");
                 }
+                GC.Collect();
             }
 			catch (Exception ex)
 			{

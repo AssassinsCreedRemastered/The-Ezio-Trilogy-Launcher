@@ -602,6 +602,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
                         }
                     }
                 }
+                GC.Collect();
                 await Task.Delay(1);
             }
             catch (Exception ex)
@@ -669,6 +670,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
                     AssassinsCreed2.uModStatus = false;
                     Log.Information("uMod is disabled");
                 }
+                GC.Collect();
                 await Task.Delay(1);
             }
             catch (Exception ex)
@@ -710,6 +712,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
                 Log.Information("Saving done");
                 System.Windows.MessageBox.Show("Saving done.");
             }
+            GC.Collect();
         }
 
         /// <summary>
@@ -783,11 +786,13 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
                                 }
                             }
                         };
+                        GC.Collect();
                         System.Windows.MessageBox.Show("Bonus Content unlocked.");
                     }
                     else
                     {
                         Log.Information("Uninstallation cancelled");
+                        GC.Collect();
                         System.Windows.MessageBox.Show("Unninstallation cancelled");
                         return;
                     }

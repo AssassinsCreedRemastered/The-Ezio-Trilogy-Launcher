@@ -34,7 +34,7 @@
                 <ImageBrush ImageSource="/Assets/ACB Background.jpg" Stretch="UniformToFill"/>
             </Border.Background>
             <Border.Effect>
-                <BlurEffect Radius="10"/>
+                <BlurEffect Radius="5"/>
             </Border.Effect>
         </Border>
         <ScrollViewer Style="{StaticResource NoScrollViewerStyle}" VerticalScrollBarVisibility="Auto">

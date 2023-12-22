@@ -214,7 +214,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows
                     }
                     foreach (Process process in Game)
                     {
-                        process.PriorityClass = ProcessPriorityClass.High;
+                        process.PriorityClass = ProcessPriorityClass.AboveNormal;
                         await SetProcessAffinity();
                     }
                     Log.Information("Game started");
