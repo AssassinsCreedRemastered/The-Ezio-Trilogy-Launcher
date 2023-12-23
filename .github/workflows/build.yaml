@@ -73,14 +73,24 @@ jobs:
           fi
         shell: bash
 
-      - name: Update release asset
-        id: update_release
-        uses: softprops/action-gh-release@v1
+      - name: Create new release
+        id: create_release
+        uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          files: ./Launcher.zip
           tag_name: beta
-          target_commitish: ${{ github.sha }}
+          release_name: Beta Release
           prerelease: true
-          draft: false
+          files: ./Launcher.zip
+
+      - name: Upload release asset
+        id: upload_asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./Launcher.zip
+          asset_name: Launcher.zip
+          asset_content_type: application/zip
