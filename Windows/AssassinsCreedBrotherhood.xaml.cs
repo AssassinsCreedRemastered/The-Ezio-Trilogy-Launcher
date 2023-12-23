@@ -211,7 +211,10 @@ namespace The_Ezio_Trilogy_Launcher.Windows
                 */
                 if (System.Windows.Application.Current is App app)
                 {
+                    App.discordRPCManager.UpdateStateAndIcon("acb1", "Assassin's Creed: Brotherhood - In Game", "Idle");
+                    App.discordRPCManager.InitializeInGamePresence();
                     await app.StartGame("ACBSP", App.ACBPath, App.ACBuModStatus);
+                    App.discordRPCManager.UpdateStateAndIcon("acb1", "Assassin's Creed: Brotherhood", "Idle");
                 }
                 GC.Collect();
             }

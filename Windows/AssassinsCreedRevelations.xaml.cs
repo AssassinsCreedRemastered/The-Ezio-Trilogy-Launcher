@@ -147,7 +147,10 @@ namespace The_Ezio_Trilogy_Launcher.Windows
                 */
                 if (System.Windows.Application.Current is App app)
                 {
+                    App.discordRPCManager.UpdateStateAndIcon("acr2", "Assassin's Creed: Revelations - In Game", "Idle");
+                    App.discordRPCManager.InitializeInGamePresence();
                     await app.StartGame("ACRSP", App.ACRPath, false);
+                    App.discordRPCManager.UpdateStateAndIcon("acr2", "Assassin's Creed: Revelations", "Idle");
                 }
             }
             catch (Exception ex)

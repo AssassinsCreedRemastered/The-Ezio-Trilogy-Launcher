@@ -128,6 +128,11 @@ namespace The_Ezio_Trilogy_Launcher
         /// </summary>
         public static AffinityManager ProcessAffinityManager { get; } = new AffinityManager();
 
+        /// <summary>
+        /// Used for DiscordRPC
+        /// </summary>
+        public static DiscordRPCManager discordRPCManager = new DiscordRPCManager();
+
         public App()
         {
             InitializeComponent();
@@ -433,11 +438,14 @@ namespace The_Ezio_Trilogy_Launcher
                         await ProcessAffinityManager.SetProcessAffinity(process.ProcessName);
                     }
                     Log.Information("Game started");
+                    Log.Information("Waiting for game to be closed");
+                    await Task.Delay(10000);
                     while (gameProcesses.Length > 0)
                     {
                         await Task.Delay(1000);
                         gameProcesses = Process.GetProcessesByName(executableName);
                     }
+                    Log.Information("Game Closed");
                     if (uMod)
                     {
                         try
@@ -445,7 +453,6 @@ namespace The_Ezio_Trilogy_Launcher
                             if (Process.GetProcessById(uModProcess.Id) != null)
                             {
                                 uModProcess.CloseMainWindow();
-                                Log.Information("Game Closed");
                             }
                         }
                         catch (Exception)
@@ -474,7 +481,6 @@ namespace The_Ezio_Trilogy_Launcher
                 return;
             }
         }
-
 
         /// <summary>
         /// At startup it launches the Logger for debugging and checks for Launch arguments.
@@ -515,21 +521,32 @@ namespace The_Ezio_Trilogy_Launcher
                 await FindSupportedResolutions();
                 await FindRefreshRate();
                 await uModStatus();
+                discordRPCManager.InitializePresence("Idle");
+                App.discordRPCManager.UpdateStateAndIcon("icon", "Main Window", "Idle");
                 foreach (var argument in e.Args)
                 {
                     switch (argument)
                     {
                         case "-AC2":
                             MainWindow.Visibility = Visibility.Hidden;
-                            await StartGame("AssassinsCreedIIGame", AC2Path, AC2uModStatus, true);
+                            discordRPCManager.UpdateStateAndIcon("acii1", "Assassin's Creed 2 - In Game", "Idle");
+                            discordRPCManager.InitializeInGamePresence();
+                            await StartGame("AssassinsCreedIIGame", App.AC2Path, App.AC2uModStatus, true);
+                            discordRPCManager.UpdateStateAndIcon("acii1", "Assassin's Creed 2", "Idle");
                             break;
                         case "-ACB":
                             MainWindow.Visibility = Visibility.Hidden;
-                            await StartGame("ACBSP", ACBPath, ACBuModStatus, true);
+                            discordRPCManager.UpdateStateAndIcon("acb1", "Assassin's Creed: Brotherhood - In Game", "Idle");
+                            discordRPCManager.InitializeInGamePresence();
+                            await StartGame("ACBSP", App.ACBPath, App.ACBuModStatus, true);
+                            discordRPCManager.UpdateStateAndIcon("acb1", "Assassin's Creed: Brotherhood", "Idle");
                             break;
                         case "-ACR":
                             MainWindow.Visibility = Visibility.Hidden;
-                            await StartGame("ACRSP", ACRPath, false, true);
+                            discordRPCManager.UpdateStateAndIcon("acr2", "Assassin's Creed: Revelations - In Game", "Idle");
+                            discordRPCManager.InitializeInGamePresence();
+                            await StartGame("ACRSP", App.ACRPath, false, true);
+                            discordRPCManager.UpdateStateAndIcon("acr2", "Assassin's Creed: Revelations", "Idle");
                             break;
                         default:
                             break;

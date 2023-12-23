@@ -226,7 +226,10 @@ namespace The_Ezio_Trilogy_Launcher.Windows
                 */
                 if (System.Windows.Application.Current is App app)
                 {
+                    App.discordRPCManager.UpdateStateAndIcon("acii1", "Assassin's Creed 2 - In Game", "Idle");
+                    App.discordRPCManager.InitializeInGamePresence();
                     await app.StartGame("AssassinsCreedIIGame", App.AC2Path, App.AC2uModStatus);
+                    App.discordRPCManager.UpdateStateAndIcon("acii1", "Assassin's Creed 2", "Idle");
                 }
                 GC.Collect();
             }

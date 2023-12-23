@@ -66,7 +66,7 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <!--Update Button-->
-                <Button x:Name="Update" Grid.Row="0" Grid.Column="0" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0,0,0,0" Cursor="Hand" Margin="0,0,5,0" HorizontalAlignment="Right" Height="40" Width="40" Click="Update_Click">
+                <Button x:Name="Update" Grid.Row="0" Grid.Column="0" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0,0,0,0" Cursor="Hand" Margin="0,0,5,0" HorizontalAlignment="Right" Height="40" Width="40" Visibility="Hidden" Click="Update_Click">
                     <Button.Content>
                         <Image Source="/Assets/Icons/Update.png"></Image>
                     </Button.Content>
