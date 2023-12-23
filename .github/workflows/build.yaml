@@ -56,5 +56,5 @@ jobs:
         with:
           files: ./Launcher.zip
           tag_name: beta
-          ref: ${{ github.event.before }}
+          target_commitish: ${{ github.event.before }}
           prerelease: true
