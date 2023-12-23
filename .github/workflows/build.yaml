@@ -21,6 +21,11 @@ jobs:
         ChannelName: [Release]
 
     steps:
+      - name: Print Repository Name
+        run: |
+          $repo = $env:GITHUB_REPOSITORY
+          Write-Host "GitHub Repository: $repo"
+
       - name: Checkout Repository
         uses: actions/checkout@v2
 
@@ -83,5 +88,13 @@ jobs:
           git push origin :refs/tags/$tag || true
 
       - name: Create New Release
-        run: |
-          gh release create $tag ./Launcher.zip -t "Beta Release" -n "Beta Release Notes" --notes "This is built on commits" --prerelease
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          files: ./Launcher.zip
+          tag_name: beta
+          target_commitish: ${{ github.event.before }}
+          prerelease: true
+          draft: false
