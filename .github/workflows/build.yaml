@@ -83,3 +83,4 @@ jobs:
           tag_name: beta
           target_commitish: ${{ github.sha }}
           prerelease: true
+          draft: false
