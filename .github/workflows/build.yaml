@@ -55,15 +55,26 @@ jobs:
 
           Write-Host "GitHub Repository: $repo"
 
-          # Delete existing release
-          try {
-              Invoke-RestMethod -Uri "https://api.github.com/repos/$repo/releases/tags/$tag" -Method Delete -Headers @{
-                  "Authorization"="Bearer ${{ secrets.GITHUB_TOKEN }}"
+          # Check if the release exists
+          $existingRelease = Invoke-RestMethod -Uri "https://api.github.com/repos/$repo/releases/tags/$tag" -Method Get -Headers @{
+              "Authorization"="Bearer ${{ secrets.GITHUB_TOKEN }}"
+          }
+
+          if ($existingRelease) {
+              Write-Host "Existing release found. Deleting..."
+
+              # Delete existing release
+              try {
+                  Invoke-RestMethod -Uri "https://api.github.com/repos/$repo/releases/$($existingRelease.id)" -Method Delete -Headers @{
+                      "Authorization"="Bearer ${{ secrets.GITHUB_TOKEN }}"
+                  }
+                  Write-Host "Existing release deleted successfully."
+              } catch {
+                  Write-Host "Error deleting existing release: $_"
+                  throw $_
               }
-              Write-Host "Existing release deleted successfully."
-          } catch {
-              Write-Host "Error deleting existing release: $_"
-              throw $_
+          } else {
+              Write-Host "No existing release found."
           }
 
           # Delete existing tag locally and push deletion
