@@ -50,12 +50,16 @@ jobs:
 
       - name: Delete Existing Release and Tag
         run: |
-          curl -X DELETE \
-            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-            "https://api.github.com/repos/${{ github.repository }}/releases/tags/beta"
+          $token = $env:GITHUB_TOKEN
+          $repo = $env:GITHUB_REPOSITORY
+          $tag = "beta"
 
-          git tag -d beta || true
-          git push origin :refs/tags/beta || true
+          # Delete existing release
+          Invoke-RestMethod -Uri "https://api.github.com/repos/$repo/releases/tags/$tag" -Method Delete -Headers @{"Authorization"="Bearer $token"}
+
+          # Delete existing tag locally and push deletion
+          git tag -d $tag || true
+          git push origin :refs/tags/$tag || true
 
       - name: Create New Release
         id: create_release
