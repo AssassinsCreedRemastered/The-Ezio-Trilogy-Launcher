@@ -48,21 +48,17 @@ jobs:
       - name: Package
         run: Compress-Archive -Path .\publish\* -DestinationPath .\Launcher.zip
 
-      - name: Check for existing release
-        id: check_release
+      - name: Delete Existing Release and Tag
         run: |
-          exists=$(curl -s -o /dev/null -w "%{http_code}" -H 'Authorization:***' https://api.github.com/repos/AssassinsCreedRemastered/The-Ezio-Trilogy-Launcher/releases/tags/beta)
-          echo "exists=$exists" >> $GITHUB_ENV
-          
-      - name: Delete existing release
-        if: steps.check_release.outputs.exists == '200'
-        run: |
-          release_id=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/${{ github.repository }}/releases/tags/beta | jq -r .id)
-          curl -X DELETE -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/releases/${release_id}"
-          git push origin --delete beta
+          curl -X DELETE \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/releases/tags/beta"
 
-      - name: Update release asset
-        id: update_release
+          git tag -d beta || true
+          git push origin :refs/tags/beta || true
+
+      - name: Create New Release
+        id: create_release
         uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
