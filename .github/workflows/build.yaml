@@ -91,3 +91,4 @@ jobs:
           tag_name: beta
           target_commitish: ${{ github.event.before }}
           prerelease: true
+          draft: false
