@@ -9,6 +9,7 @@ on:
   pull_request:
     branches:
       - dev
+      - main
 
 jobs:
   build:
@@ -82,13 +83,5 @@ jobs:
           git push origin :refs/tags/$tag || true
 
       - name: Create New Release
-        id: create_release
-        uses: softprops/action-gh-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          files: ./Launcher.zip
-          tag_name: beta
-          target_commitish: ${{ github.event.before }}
-          prerelease: true
-          draft: false
+        run: |
+          gh release create $tag ./Launcher.zip -t "Beta Release" -n "Beta Release Notes" --notes "This is built on commits" --prerelease
