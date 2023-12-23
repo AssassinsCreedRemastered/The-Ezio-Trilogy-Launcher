@@ -64,8 +64,13 @@ jobs:
         id: delete_tag
         run: |
           TAG_NAME="beta"
-          git tag -d $TAG_NAME
-          git push --delete origin $TAG_NAME
+          git fetch --tags
+          if git rev-parse --quiet --verify "$TAG_NAME"; then
+            git tag -d $TAG_NAME
+            git push --delete origin $TAG_NAME
+          else
+            echo "Tag '$TAG_NAME' not found locally."
+          fi
         shell: bash
 
       - name: Update release asset
@@ -78,4 +83,3 @@ jobs:
           tag_name: beta
           target_commitish: ${{ github.sha }}
           prerelease: true
-          draft: false
