@@ -3,16 +3,18 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Management;
+using System.Net;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Media;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using The_Ezio_Trilogy_Launcher.Classes;
 
 namespace The_Ezio_Trilogy_Launcher
 {
@@ -26,6 +28,8 @@ namespace The_Ezio_Trilogy_Launcher
         public static extern void AllocConsole();
         [DllImport("Kernel32")]
         public static extern void FreeConsole();
+
+        private bool logging = false;
 
         // Used to detect refresh Rate
         [DllImport("user32.dll")]
@@ -93,6 +97,18 @@ namespace The_Ezio_Trilogy_Launcher
         public static string? ACRPath { get; set; }
 
         /// <summary>
+        /// True if uMod is enabled
+        /// False if uMod is disabled
+        /// </summary>
+        public static bool AC2uModStatus = false;
+
+        /// <summary>
+        /// True if uMod is enabled
+        /// False if uMod is disabled
+        /// </summary>
+        public static bool ACBuModStatus = false;
+
+        /// <summary>
         /// List of supported Resolutions by users Monitor
         /// </summary>
         public static List<Resolution> compatibleResolutions = new List<Resolution>();
@@ -107,17 +123,22 @@ namespace The_Ezio_Trilogy_Launcher
         /// </summary>
         public static double RefreshRate { get; set; }
 
+        /// <summary>
+        /// Sets the process affinity according to the number of cores/threads in the PC
+        /// </summary>
+        public static AffinityManager ProcessAffinityManager { get; } = new AffinityManager();
+
+        /// <summary>
+        /// Used for DiscordRPC
+        /// </summary>
+        public static DiscordRPCManager discordRPCManager = new DiscordRPCManager();
+
         public App()
         {
             InitializeComponent();
-            // Creating Logger Configuration
-            Log.Logger = new LoggerConfiguration()
-            .WriteTo.Console(
-                outputTemplate: "{Timestamp:dd-MM-yyyy HH:mm:ss}|{Level}|{Message}{NewLine}{Exception}")
-            .WriteTo.File("Logs.txt", rollingInterval: RollingInterval.Day)
-            .CreateLogger();
         }
 
+        // Misc
         /// <summary>
         /// Grabs all of the game installations paths
         /// </summary>
@@ -308,6 +329,160 @@ namespace The_Ezio_Trilogy_Launcher
         }
 
         /// <summary>
+        /// Checks if uMod is enabled or disabled.
+        /// </summary>
+        private async Task uModStatus()
+        {
+            try
+            {
+                // AC2
+                Log.Information("Checking if uMod is enabled for Assassin's Creed 2");
+                if (System.IO.File.Exists(AC2Path + @"\uMod\Status.txt"))
+                {
+                    string[] statusFile = File.ReadAllLines(AC2Path + @"\uMod\Status.txt");
+                    foreach (string status in statusFile)
+                    {
+                        if (status.StartsWith("Enabled"))
+                        {
+                            string[] splitLine = status.Split('=');
+                            if (int.Parse(splitLine[1]) == 1)
+                            {
+                                Log.Information("uMod is enabled for Assassin's Creed 2");
+                                AC2uModStatus = true;
+                            }
+                            else
+                            {
+                                Log.Information("uMod is disabled for Assassin's Creed 2");
+                                AC2uModStatus = false;
+                            }
+                        }
+                    }
+                }
+                // ACB
+                Log.Information("Checking if uMod is enabled for Assassin's Creed Brotherhood");
+                if (System.IO.File.Exists(ACBPath + @"\uMod\Status.txt"))
+                {
+                    string[] statusFile = System.IO.File.ReadAllLines(ACBPath + @"\uMod\Status.txt");
+                    foreach (string status in statusFile)
+                    {
+                        if (status.StartsWith("Enabled"))
+                        {
+                            string[] splitLine = status.Split('=');
+                            if (int.Parse(splitLine[1]) == 1)
+                            {
+                                Log.Information("uMod is enabled for Assassin's Creed Brotherhood");
+                                ACBuModStatus = true;
+                            }
+                            else
+                            {
+                                Log.Information("uMod is disabled for Assassin's Creed Brotherhood");
+                                ACBuModStatus = false;
+                            }
+                        }
+                    }
+                }
+                GC.Collect();
+                await Task.Delay(1);
+            }
+            catch (Exception ex)
+            {
+                Log.Information(ex, "");
+                System.Windows.MessageBox.Show(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Starts the game
+        /// </summary>
+        /// <param name="executableName">Name of the executable</param>
+        /// <param name="workingDirectory">Directory where the game is</param>
+        /// <param name="uMod">Does the game use uMod</param>
+        /// <returns></returns>
+        public async Task StartGame(string executableName, string? workingDirectory, bool uMod, bool skipLauncher=false)
+        {
+            try
+            {
+                Process[] gameProcesses = Process.GetProcessesByName(executableName);
+                if (gameProcesses.Length <= 0)
+                {
+                    Process gameProcess = new Process();
+                    gameProcess.StartInfo.WorkingDirectory = workingDirectory;
+                    gameProcess.StartInfo.FileName = $"{executableName}.exe";
+                    gameProcess.StartInfo.UseShellExecute = true;
+                    Process uModProcess = new Process();
+                    if (uMod)
+                    {
+                        uModProcess.StartInfo.WorkingDirectory = $"{workingDirectory}\\uMod";
+                        uModProcess.StartInfo.FileName = "uMod.exe";
+                        uModProcess.StartInfo.UseShellExecute = true;
+                        uModProcess.Start();
+                        gameProcess.Start();
+                        Log.Information("Game is starting");
+                        await Task.Delay(5000);
+                    }
+                    else
+                    {
+                        gameProcess.Start();
+                        Log.Information("Game is starting");
+                    }
+                    Log.Information("Setting game affinity based on CPU Core/Thread Count");
+                    gameProcesses = Process.GetProcessesByName(executableName);
+                    while (gameProcesses.Length <= 0)
+                    {
+                        await Task.Delay(1000);
+                        gameProcesses = Process.GetProcessesByName(executableName);
+                    }
+                    foreach (Process process in gameProcesses)
+                    {
+                        process.PriorityClass = ProcessPriorityClass.AboveNormal;
+                        await ProcessAffinityManager.SetProcessAffinity(process.ProcessName);
+                    }
+                    Log.Information("Game started");
+                    Log.Information("Waiting for game to be closed");
+                    await Task.Delay(10000);
+                    while (gameProcesses.Length > 0)
+                    {
+                        await Task.Delay(1000);
+                        gameProcesses = Process.GetProcessesByName(executableName);
+                    }
+                    Log.Information("Game Closed");
+                    if (uMod)
+                    {
+                        try
+                        {
+                            if (Process.GetProcessById(uModProcess.Id) != null)
+                            {
+                                uModProcess.CloseMainWindow();
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            Log.Information("uMod is already closed.");
+                        }
+                    }
+                    GC.Collect();
+                    await Task.Delay(1);
+                    if (skipLauncher)
+                    {
+                        Environment.Exit(0);
+                    }
+                }
+                else
+                {
+                    Log.Information($"Game {executableName} is already running");
+                    System.Windows.MessageBox.Show($"Game {executableName} is already running.");
+                }
+
+                GC.Collect();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "");
+                return;
+            }
+        }
+
+        /// <summary>
         /// At startup it launches the Logger for debugging and checks for Launch arguments.
         /// </summary>
         /// <param name="e">Holds all of the launch Arguemnts as e.Args</param>
@@ -319,21 +494,64 @@ namespace The_Ezio_Trilogy_Launcher
                 start = false;
                 Serilog.Log.Logger = Log.Logger; // Initializing Logger
                 // Checks for all of the Launch Arguments
-                foreach (var argument in e.Args)
+                if (e.Args.Contains("-console"))
                 {
-                    switch (argument)
-                    {
-                        case "-console":
-                            AllocConsole();
-                            break;
-                        default:
-                            break;
-                    }
+                    AllocConsole();
+                    logging = true;
+                }
+                // Creating Logger Configuration
+                if (logging)
+                {
+                    Log.Logger = new LoggerConfiguration()
+                    .WriteTo.Console(
+                        outputTemplate: "{Timestamp:dd-MM-yyyy HH:mm:ss}|{Level}|{Message}{NewLine}{Exception}")
+                    .WriteTo.File("Logs.txt", rollingInterval: RollingInterval.Day)
+                    .CreateLogger();
+                }
+                else
+                {
+                    Log.Logger = new LoggerConfiguration()
+                    .WriteTo.Console(
+                        outputTemplate: "{Timestamp:dd-MM-yyyy HH:mm:ss}|{Level}|{Message}{NewLine}{Exception}")
+                    //.WriteTo.File("Logs.txt", rollingInterval: RollingInterval.Day)
+                    .CreateLogger();
                 }
                 await FindGameInstallations();
                 await FindNumberOfCores();
                 await FindSupportedResolutions();
                 await FindRefreshRate();
+                await uModStatus();
+                discordRPCManager.InitializePresence("Idle");
+                App.discordRPCManager.UpdateStateAndIcon("icon", "Main Window", "Idle");
+                foreach (var argument in e.Args)
+                {
+                    switch (argument)
+                    {
+                        case "-AC2":
+                            MainWindow.Visibility = Visibility.Hidden;
+                            discordRPCManager.UpdateStateAndIcon("acii1", "Assassin's Creed 2 - In Game", "Idle");
+                            discordRPCManager.InitializeInGamePresence();
+                            await StartGame("AssassinsCreedIIGame", App.AC2Path, App.AC2uModStatus, true);
+                            discordRPCManager.UpdateStateAndIcon("acii1", "Assassin's Creed 2", "Idle");
+                            break;
+                        case "-ACB":
+                            MainWindow.Visibility = Visibility.Hidden;
+                            discordRPCManager.UpdateStateAndIcon("acb1", "Assassin's Creed: Brotherhood - In Game", "Idle");
+                            discordRPCManager.InitializeInGamePresence();
+                            await StartGame("ACBSP", App.ACBPath, App.ACBuModStatus, true);
+                            discordRPCManager.UpdateStateAndIcon("acb1", "Assassin's Creed: Brotherhood", "Idle");
+                            break;
+                        case "-ACR":
+                            MainWindow.Visibility = Visibility.Hidden;
+                            discordRPCManager.UpdateStateAndIcon("acr2", "Assassin's Creed: Revelations - In Game", "Idle");
+                            discordRPCManager.InitializeInGamePresence();
+                            await StartGame("ACRSP", App.ACRPath, false, true);
+                            discordRPCManager.UpdateStateAndIcon("acr2", "Assassin's Creed: Revelations", "Idle");
+                            break;
+                        default:
+                            break;
+                    }
+                }
             }
         }
 

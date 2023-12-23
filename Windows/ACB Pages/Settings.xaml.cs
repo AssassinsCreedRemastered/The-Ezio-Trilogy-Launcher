@@ -17,6 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using The_Ezio_Trilogy_Launcher.Classes;
 
 namespace The_Ezio_Trilogy_Launcher.Windows.ACB_Pages
 {
@@ -291,13 +292,13 @@ namespace The_Ezio_Trilogy_Launcher.Windows.ACB_Pages
                             {
                                 Log.Information("uMod is enabled");
                                 uMod.IsChecked = true;
-                                AssassinsCreedBrotherhood.uModStatus = true;
+                                App.ACBuModStatus = true;
                             }
                             else
                             {
                                 Log.Information("uMod is disabled");
                                 uMod.IsChecked = false;
-                                AssassinsCreedBrotherhood.uModStatus = false;
+                                App.ACBuModStatus = false;
                             }
                         }
                     }
@@ -310,7 +311,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows.ACB_Pages
                         sw.Write("Enabled=1");
                     }
                     uMod.IsChecked = true;
-                    AssassinsCreedBrotherhood.uModStatus = true;
+                    App.ACBuModStatus = true;
                 }
                 GC.Collect();
                 await Task.Delay(1);
@@ -511,7 +512,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows.ACB_Pages
                     {
                         sw.Write("Enabled=1");
                     }
-                    AssassinsCreedBrotherhood.uModStatus = true;
+                    App.ACBuModStatus = true;
                     Log.Information("uMod is enabled");
                 }
                 else
@@ -520,7 +521,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows.ACB_Pages
                     {
                         sw.Write("Enabled=0");
                     }
-                    AssassinsCreedBrotherhood.uModStatus = false;
+                    App.ACBuModStatus = false;
                     Log.Information("uMod is disabled");
                 }
                 GC.Collect();

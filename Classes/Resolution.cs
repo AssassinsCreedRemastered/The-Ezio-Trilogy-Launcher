@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace The_Ezio_Trilogy_Launcher
+namespace The_Ezio_Trilogy_Launcher.Classes
 {
     public class Resolution
     {

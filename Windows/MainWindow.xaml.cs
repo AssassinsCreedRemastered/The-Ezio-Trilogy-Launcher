@@ -17,7 +17,11 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using The_Ezio_Trilogy_Launcher.Windows;
 using Microsoft.Win32;
-
+using System.Reflection;
+using System.Net;
+using System.Diagnostics;
+using System.Net.NetworkInformation;
+using The_Ezio_Trilogy_Launcher.Classes;
 
 namespace The_Ezio_Trilogy_Launcher
 {
@@ -89,6 +93,101 @@ namespace The_Ezio_Trilogy_Launcher
             }
         }
 
+        /// <summary>
+        /// This is a function to test if there's Internet Connection
+        /// </summary>
+        /// <returns></returns>
+        private bool IsInternetAvailable()
+        {
+            try
+            {
+                using (var ping = new Ping())
+                {
+                    var reply = ping.Send("www.google.com", 3000);
+
+                    if (reply != null && reply.Status == IPStatus.Success)
+                    {
+                        return true;
+                    }
+                }
+            }
+            catch (PingException)
+            {
+
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Checks for updates on Launch
+        /// </summary>
+        private async Task CheckForUpdates()
+        {
+            try
+            {
+                if (IsInternetAvailable()) // Checks for internet first
+                {
+                    Log.Information("Checking for updates");
+                    string currentVersion = "";
+                    string newestVersion = "";
+                    using (StreamReader sr = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("The_Ezio_Trilogy_Launcher.Assets.Version.txt")))
+                    {
+                        string? line = sr.ReadLine();
+                        while (line != null)
+                        {
+                            if (line != "")
+                            {
+                                Log.Information("Current Version: " + line);
+                                currentVersion = line;
+                            }
+                            line = sr.ReadLine();
+                        }
+                    }
+                    HttpWebRequest SourceText = (HttpWebRequest)WebRequest.Create("https://raw.githubusercontent.com/AssassinsCreedRemastered/The-Ezio-Trilogy-Launcher/Version/Version.txt");
+                    SourceText.UserAgent = "Mozilla/5.0";
+                    var response = SourceText.GetResponse();
+                    var content = response.GetResponseStream();
+                    using (var reader = new StreamReader(content))
+                    {
+                        string fileContent = reader.ReadToEnd();
+                        string[] lines = fileContent.Split(new char[] { '\n' });
+                        foreach (string line in lines)
+                        {
+                            if (line != "")
+                            {
+                                Log.Information("Newest Version: " + line);
+                                newestVersion = line;
+                            }
+                        }
+                    }
+                    if (currentVersion == newestVersion)
+                    {
+                        Log.Information("Newest version of the launcher is already installed");
+                        GC.Collect();
+                        await Task.Delay(1);
+                        return;
+                    }
+                    else
+                    {
+                        Log.Information("New version found.");
+                        if (this.Visibility == Visibility.Visible)
+                        {
+                            Update.Visibility = Visibility.Visible;
+                            System.Windows.MessageBox.Show("New version of the launcher found. Click on the Update button to update the launcher.");
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "");
+                if (this.Visibility == Visibility.Visible)
+                {
+                    System.Windows.MessageBox.Show($"Error: {ex.Message}{Environment.NewLine}Possibly no internet connection");
+                }
+            }
+        }
+
         // Events/Buttons
         /// <summary>
         /// This is executed when the Credits button is clicked.
@@ -99,12 +198,95 @@ namespace The_Ezio_Trilogy_Launcher
             Log.Information("Opening Main Credits tab");
             try
             {
+                App.discordRPCManager.UpdateStateAndIcon("icon", "Main Window - Credits", "Idle");
                 MainCredits mainCredits = new MainCredits();
                 mainCredits.ShowDialog();
+                App.discordRPCManager.UpdateStateAndIcon("icon", "Main Window", "Idle");
             }
             catch (Exception ex)
             {
                 Log.Information(ex, "");
+                MessageBox.Show(ex.Message);
+                return;
+            }
+        }
+
+        /// <summary>
+        /// Checks for updates and asks user to update if there are any new updates
+        /// </summary>
+        private async void Update_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Log.Information("Checking for updates");
+                string currentVersion = "";
+                string newestVersion = "";
+                using (StreamReader sr = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("The_Ezio_Trilogy_Launcher.Assets.Version.txt")))
+                {
+                    string? line = sr.ReadLine();
+                    while (line != null)
+                    {
+                        if (line != "")
+                        {
+                            Log.Information("Current Version: " + line);
+                            currentVersion = line;
+                        }
+                        line = sr.ReadLine();
+                    }
+                }
+                HttpWebRequest SourceText = (HttpWebRequest)WebRequest.Create("https://raw.githubusercontent.com/AssassinsCreedRemastered/The-Ezio-Trilogy-Launcher/Version/Version.txt");
+                SourceText.UserAgent = "Mozilla/5.0";
+                var response = SourceText.GetResponse();
+                var content = response.GetResponseStream();
+                using (var reader = new StreamReader(content))
+                {
+                    string fileContent = reader.ReadToEnd();
+                    string[] lines = fileContent.Split(new char[] { '\n' });
+                    foreach (string line in lines)
+                    {
+                        if (line != "")
+                        {
+                            Log.Information("Newest Version: " + line);
+                            newestVersion = line;
+                        }
+                    }
+                }
+                if (currentVersion == newestVersion)
+                {
+                    Log.Information("Newest version is already installed");
+                    MessageBox.Show("Newest version is already installed.");
+                    GC.Collect();
+                    await Task.Delay(1);
+                    return;
+                }
+                else
+                {
+                    Log.Information("New version found.");
+                    MessageBoxResult result = MessageBox.Show("New version of the launcher found. Do you want to update?", "Confirmation", MessageBoxButton.YesNo);
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        Process updater = new Process();
+                        updater.StartInfo.FileName = "The Ezio Trilogy Launcher Updater.exe";
+                        updater.StartInfo.WorkingDirectory = Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments) + @"\Assassin's Creed - The Ezio Trilogy Remastered\";
+                        updater.StartInfo.UseShellExecute = true;
+                        Log.Information("Starting the Launcher Updater");
+                        updater.Start();
+                        Log.Information("Closing the Launcher to perform the update");
+                        Environment.Exit(0);
+                    }
+                    else
+                    {
+                        GC.Collect();
+                        await Task.Delay(1);
+                        return;
+                    }
+                }
+                GC.Collect();
+                await Task.Delay(1);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "");
                 MessageBox.Show(ex.Message);
                 return;
             }
@@ -135,10 +317,12 @@ namespace The_Ezio_Trilogy_Launcher
                     // Checks if there's something in AC2Path
                     if (System.IO.File.Exists(App.AC2Path + @"\AssassinsCreedIIGame.exe"))
                     {
+                        App.discordRPCManager.UpdateStateAndIcon("acii1", "Assassin's Creed 2", "Idle");
                         AssassinsCreed2 ac2 = new AssassinsCreed2();
                         this.Visibility = Visibility.Hidden;
                         ac2.ShowDialog();
                         this.Visibility = Visibility.Visible;
+                        App.discordRPCManager.UpdateStateAndIcon("icon", "Main Window", "Idle");
                     }
                     else
                     {
@@ -172,10 +356,12 @@ namespace The_Ezio_Trilogy_Launcher
                     // Checks if there's something in ACBPath
                     if (System.IO.File.Exists(App.ACBPath + @"\ACBSP.exe"))
                     {
+                        App.discordRPCManager.UpdateStateAndIcon("acb1", "Assassin's Creed: Brotherhood", "Idle");
                         AssassinsCreedBrotherhood acb = new AssassinsCreedBrotherhood();
                         this.Visibility = Visibility.Hidden;
                         acb.ShowDialog();
                         this.Visibility = Visibility.Visible;
+                        App.discordRPCManager.UpdateStateAndIcon("icon", "Main Window", "Idle");
                     }
                     else
                     {
@@ -208,10 +394,12 @@ namespace The_Ezio_Trilogy_Launcher
                 {
                     if (System.IO.File.Exists(App.ACRPath + @"\ACRSP.exe"))
                     {
+                        App.discordRPCManager.UpdateStateAndIcon("acr2", "Assassin's Creed: Revelations", "Idle");
                         AssassinsCreedRevelations acr = new AssassinsCreedRevelations();
                         this.Visibility = Visibility.Hidden;
                         acr.ShowDialog();
                         this.Visibility = Visibility.Visible;
+                        App.discordRPCManager.UpdateStateAndIcon("icon", "Main Window", "Idle");
                     }
                     else
                     {
@@ -222,7 +410,6 @@ namespace The_Ezio_Trilogy_Launcher
                 else
                 {
                     MessageBox.Show("Assassin's Creed Revelations Remaster is not installed.");
-                    await MissingGame("ACRSP");
                 }
             }
             catch (Exception ex)
@@ -230,6 +417,23 @@ namespace The_Ezio_Trilogy_Launcher
                 Log.Error(ex, "Error:");
                 MessageBox.Show(ex.Message);
                 return;
+            }
+        }
+
+        /// <summary>
+        /// When window loads, checks for updates after 1 second
+        /// </summary>
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                await Task.Delay(1000);
+                await CheckForUpdates();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "");
+                System.Windows.MessageBox.Show(ex.Message);
             }
         }
     }

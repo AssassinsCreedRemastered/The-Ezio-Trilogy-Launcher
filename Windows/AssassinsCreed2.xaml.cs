@@ -38,15 +38,9 @@ namespace The_Ezio_Trilogy_Launcher.Windows
         /// </summary>
         private Dictionary<string, Page> pageCache = new Dictionary<string, Page>();
 
-        /// <summary>
-        /// Used to check if uMod is enabled or not
-        /// </summary>
-        public static bool uModStatus { get; set; }
-
 		public AssassinsCreed2()
 		{
 			InitializeComponent();
-            ReaduModStatus();
 		}
 
         /// <summary>
@@ -119,124 +113,6 @@ namespace The_Ezio_Trilogy_Launcher.Windows
 		}
 
         /// <summary>
-        /// Sets Process Affinity based on the amount of cores. Can help with stutters and tearing.
-        /// <param name="gameProcessID">ID of the game process needed so we can change it's CPU affinity</param>
-        /// </summary>
-        private async Task SetProcessAffinity()
-		{
-			try
-			{
-				Log.Information("Grabbing game process by ID to change affinity.");
-				Process[] processes = Process.GetProcessesByName("AssassinsCreedIIGame");
-				while (processes.Length <= 0)
-				{
-                    processes = Process.GetProcessesByName("AssassinsCreedIIGame");
-					await Task.Delay(1000);
-				}
-				Log.Information($"Game process found.");
-				int affinity;
-				switch (true)
-				{
-					case bool when App.NumberOfCores >= 8 && App.NumberOfThreads >= 16:
-						Log.Information("8 Cores/16 Threads or greater affinity");;
-						foreach (Process gameProcess in processes)
-						{
-                            Log.Information($"Game Process: {gameProcess.ProcessName}, ID: {gameProcess.Id}");
-                            gameProcess.ProcessorAffinity = new IntPtr(0xFFFF);
-                        }
-						break;
-					case bool when App.NumberOfCores == 6 && App.NumberOfThreads == 12:
-						Log.Information("6 Cores/12 Threads affinity");
-                        foreach (Process gameProcess in processes)
-                        {
-                            Log.Information($"Game Process: {gameProcess.ProcessName}, ID: {gameProcess.Id}");
-							gameProcess.ProcessorAffinity = new IntPtr(0x7F);
-                        }
-                        break;
-					case bool when App.NumberOfCores == 6 && App.NumberOfThreads == 6:
-						Log.Information("6 Cores/6 Threads affinity");
-                        foreach (Process gameProcess in processes)
-                        {
-                            Log.Information($"Game Process: {gameProcess.ProcessName}, ID: {gameProcess.Id}");
-                            gameProcess.ProcessorAffinity = new IntPtr(0x3F);
-                        }
-                        break;
-					case bool when App.NumberOfCores == 8 && App.NumberOfThreads == 8:
-					case bool when App.NumberOfCores == 4 && App.NumberOfThreads == 8:
-						Log.Information("4 Cores/8 Threads or 8 Cores/8 Threads affinity");
-                        foreach (Process gameProcess in processes)
-                        {
-                            Log.Information($"Game Process: {gameProcess.ProcessName}, ID: {gameProcess.Id}");
-                            gameProcess.ProcessorAffinity = new IntPtr(0xFF);
-                        }
-                        break;
-					case bool when App.NumberOfCores == 4 && App.NumberOfThreads == 4:
-						Log.Information("4 Cores/4 Threads affinity");
-                        foreach (Process gameProcess in processes)
-                        {
-                            Log.Information($"Game Process: {gameProcess.ProcessName}, ID: {gameProcess.Id}");
-                            gameProcess.ProcessorAffinity = new IntPtr(0x0F);
-                        }
-                        break;
-					default:
-						Log.Information("Default preset");
-						affinity = (1 << App.NumberOfThreads) - 1;
-						Log.Information($"Affinity Bitmask: 0x{affinity.ToString("X")}");
-                        foreach (Process gameProcess in processes)
-                        {
-                            Log.Information($"Game Process: {gameProcess.ProcessName}, ID: {gameProcess.Id}");
-                            gameProcess.ProcessorAffinity = new IntPtr(affinity);
-                        }
-                        break;
-				}
-                GC.Collect();
-				await Task.Delay(1);
-			}
-			catch (Exception ex)
-			{
-				Log.Information(ex, "Error:");
-				return;
-			}
-		}
-
-        /// <summary>
-        /// Checks if uMod is enabled or disabled.
-        /// </summary>
-        private void ReaduModStatus()
-        {
-            try
-            {
-                Log.Information("Checking if uMod is enabled");
-                if (System.IO.File.Exists(App.AC2Path + @"\uMod\Status.txt"))
-                {
-                    string[] statusFile = File.ReadAllLines(App.AC2Path + @"\uMod\Status.txt");
-                    foreach (string status in statusFile)
-                    {
-                        if (status.StartsWith("Enabled"))
-                        {
-                            string[] splitLine = status.Split('=');
-                            if (int.Parse(splitLine[1]) == 1)
-                            {
-                                Log.Information("uMod is enabled");
-                                uModStatus = true;
-                            }
-                            else
-                            {
-                                Log.Information("uMod is disabled");
-                                uModStatus = false;
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Information(ex, "");
-                System.Windows.MessageBox.Show(ex.Message);
-            }
-        }
-
-        /// <summary>
         /// This is used for Window Dragging. Needed when disabling Window stuff in XAML
         /// </summary>
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -264,6 +140,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows
 		{
 			try
 			{
+                /*
                 Process[] GameRunning = Process.GetProcessesByName("AssassinsCreedIIGame");
                 if (GameRunning.Length <= 0)
                 {
@@ -272,7 +149,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows
                     gameProcess.StartInfo.WorkingDirectory = App.AC2Path;
                     gameProcess.StartInfo.FileName = "AssassinsCreedIIGame.exe";
                     gameProcess.StartInfo.UseShellExecute = true;
-                    if (uModStatus)
+                    if (App.AC2uModStatus)
                     {
                         Process uModProcess = new Process();
                         uModProcess.StartInfo.WorkingDirectory = App.AC2Path + @"\uMod";
@@ -292,7 +169,10 @@ namespace The_Ezio_Trilogy_Launcher.Windows
                         foreach (Process process in Game)
                         {
                             process.PriorityClass = ProcessPriorityClass.AboveNormal;
-                            await SetProcessAffinity();
+                            if (System.Windows.Application.Current is App app)
+                            {
+                                await App.ProcessAffinityManager.SetProcessAffinity(process.ProcessName);
+                            }
                         }
                         Log.Information("Game started");
                         Log.Information($"Waiting for game to be closed.");
@@ -329,7 +209,10 @@ namespace The_Ezio_Trilogy_Launcher.Windows
                         foreach (Process process in Game)
                         {
                             process.PriorityClass = ProcessPriorityClass.AboveNormal;
-                            await SetProcessAffinity();
+                            if (System.Windows.Application.Current is App app)
+                            {
+                                await App.ProcessAffinityManager.SetProcessAffinity(process.ProcessName);
+                            }
                         }
                         Log.Information("Game started");
                         await Task.Delay(1);
@@ -339,6 +222,14 @@ namespace The_Ezio_Trilogy_Launcher.Windows
                 {
                     Log.Information("Game is already running");
                     System.Windows.MessageBox.Show("Game is already running.");
+                }
+                */
+                if (System.Windows.Application.Current is App app)
+                {
+                    App.discordRPCManager.UpdateStateAndIcon("acii1", "Assassin's Creed 2 - In Game", "Idle");
+                    App.discordRPCManager.InitializeInGamePresence();
+                    await app.StartGame("AssassinsCreedIIGame", App.AC2Path, App.AC2uModStatus);
+                    App.discordRPCManager.UpdateStateAndIcon("acii1", "Assassin's Creed 2", "Idle");
                 }
                 GC.Collect();
             }

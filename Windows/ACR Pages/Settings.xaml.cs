@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using The_Ezio_Trilogy_Launcher.Classes;
 
 namespace The_Ezio_Trilogy_Launcher.Windows.ACR_Pages
 {
