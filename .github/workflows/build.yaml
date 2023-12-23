@@ -54,16 +54,28 @@ jobs:
           $repo = $env:GITHUB_REPOSITORY
           $tag = "beta"
 
+          Write-Host "GitHub Repository: $repo"
+          Write-Host "GitHub Token: $token"
+
           # Convert the token to Base64
           $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes((":$token")))
 
+          Write-Host "Base64 Auth Info: $base64AuthInfo"
+
           # Delete existing release
-          Invoke-RestMethod -Uri "https://api.github.com/repos/$repo/releases/tags/$tag" -Method Delete -Headers @{"Authorization"="Basic $base64AuthInfo"}
+          try {
+              Invoke-RestMethod -Uri "https://api.github.com/repos/$repo/releases/tags/$tag" -Method Delete -Headers @{
+                  "Authorization"="Basic $base64AuthInfo"
+              }
+              Write-Host "Existing release deleted successfully."
+          } catch {
+              Write-Host "Error deleting existing release: $_"
+              throw $_
+          }
 
           # Delete existing tag locally and push deletion
           git tag -d $tag || true
           git push origin :refs/tags/$tag || true
-
 
       - name: Create New Release
         id: create_release
