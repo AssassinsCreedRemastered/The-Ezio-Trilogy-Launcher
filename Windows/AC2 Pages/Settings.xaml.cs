@@ -19,6 +19,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using The_Ezio_Trilogy_Launcher.Classes;
 
 namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
 {
@@ -299,13 +300,13 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
                             {
                                 Log.Information("uMod is enabled");
                                 uMod.IsChecked = true;
-                                AssassinsCreed2.uModStatus = true;
+                                App.AC2uModStatus = true;
                             }
                             else
                             {
                                 Log.Information("uMod is disabled");
                                 uMod.IsChecked = false;
-                                AssassinsCreed2.uModStatus = false;
+                                App.AC2uModStatus = false;
                             }
                         }
                     }
@@ -318,7 +319,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
                         sw.Write("Enabled=1");
                     }
                     uMod.IsChecked = true;
-                    AssassinsCreed2.uModStatus = true;
+                    App.AC2uModStatus = true;
                 }
                 GC.Collect();
                 await Task.Delay(1);
@@ -658,7 +659,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
                     {
                         sw.Write("Enabled=1");
                     }
-                    AssassinsCreed2.uModStatus = true;
+                    App.AC2uModStatus = true;
                     Log.Information("uMod is enabled");
                 }
                 else
@@ -667,7 +668,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows.AC2_Pages
                     {
                         sw.Write("Enabled=0");
                     }
-                    AssassinsCreed2.uModStatus = false;
+                    App.AC2uModStatus = false;
                     Log.Information("uMod is disabled");
                 }
                 GC.Collect();

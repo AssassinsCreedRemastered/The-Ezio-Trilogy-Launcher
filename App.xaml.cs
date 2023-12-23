@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Media;
+using The_Ezio_Trilogy_Launcher.Classes;
 
 namespace The_Ezio_Trilogy_Launcher
 {
@@ -96,6 +97,18 @@ namespace The_Ezio_Trilogy_Launcher
         public static string? ACRPath { get; set; }
 
         /// <summary>
+        /// True if uMod is enabled
+        /// False if uMod is disabled
+        /// </summary>
+        public static bool AC2uModStatus = false;
+
+        /// <summary>
+        /// True if uMod is enabled
+        /// False if uMod is disabled
+        /// </summary>
+        public static bool ACBuModStatus = false;
+
+        /// <summary>
         /// List of supported Resolutions by users Monitor
         /// </summary>
         public static List<Resolution> compatibleResolutions = new List<Resolution>();
@@ -110,11 +123,17 @@ namespace The_Ezio_Trilogy_Launcher
         /// </summary>
         public static double RefreshRate { get; set; }
 
+        /// <summary>
+        /// Sets the process affinity according to the number of cores/threads in the PC
+        /// </summary>
+        public static AffinityManager ProcessAffinityManager { get; } = new AffinityManager();
+
         public App()
         {
             InitializeComponent();
         }
 
+        // Misc
         /// <summary>
         /// Grabs all of the game installations paths
         /// </summary>
@@ -305,64 +324,157 @@ namespace The_Ezio_Trilogy_Launcher
         }
 
         /// <summary>
-        /// Checks for updates on Launch
+        /// Checks if uMod is enabled or disabled.
         /// </summary>
-        private async Task CheckForUpdates()
+        private async Task uModStatus()
         {
             try
             {
-                Log.Information("Checking for updates");
-                string currentVersion = "";
-                string newestVersion = "";
-                using (StreamReader sr = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("The_Ezio_Trilogy_Launcher.Assets.Version.txt")))
+                // AC2
+                Log.Information("Checking if uMod is enabled for Assassin's Creed 2");
+                if (System.IO.File.Exists(AC2Path + @"\uMod\Status.txt"))
                 {
-                    string? line = sr.ReadLine();
-                    while (line != null)
+                    string[] statusFile = File.ReadAllLines(AC2Path + @"\uMod\Status.txt");
+                    foreach (string status in statusFile)
                     {
-                        if (line != "")
+                        if (status.StartsWith("Enabled"))
                         {
-                            Log.Information("Current Version: " + line);
-                            currentVersion = line;
-                        }
-                        line = sr.ReadLine();
-                    }
-                }
-                HttpWebRequest SourceText = (HttpWebRequest)WebRequest.Create("https://raw.githubusercontent.com/AssassinsCreedRemastered/The-Ezio-Trilogy-Launcher/Version/Version.txt");
-                SourceText.UserAgent = "Mozilla/5.0";
-                var response = SourceText.GetResponse();
-                var content = response.GetResponseStream();
-                using (var reader = new StreamReader(content))
-                {
-                    string fileContent = reader.ReadToEnd();
-                    string[] lines = fileContent.Split(new char[] { '\n' });
-                    foreach (string line in lines)
-                    {
-                        if (line != "")
-                        {
-                            Log.Information("Newest Version: " + line);
-                            newestVersion = line;
+                            string[] splitLine = status.Split('=');
+                            if (int.Parse(splitLine[1]) == 1)
+                            {
+                                Log.Information("uMod is enabled for Assassin's Creed 2");
+                                AC2uModStatus = true;
+                            }
+                            else
+                            {
+                                Log.Information("uMod is disabled for Assassin's Creed 2");
+                                AC2uModStatus = false;
+                            }
                         }
                     }
                 }
-                if (currentVersion == newestVersion)
+                // ACB
+                Log.Information("Checking if uMod is enabled for Assassin's Creed Brotherhood");
+                if (System.IO.File.Exists(ACBPath + @"\uMod\Status.txt"))
                 {
-                    Log.Information("Newest version of the launcher is already installed");
+                    string[] statusFile = System.IO.File.ReadAllLines(ACBPath + @"\uMod\Status.txt");
+                    foreach (string status in statusFile)
+                    {
+                        if (status.StartsWith("Enabled"))
+                        {
+                            string[] splitLine = status.Split('=');
+                            if (int.Parse(splitLine[1]) == 1)
+                            {
+                                Log.Information("uMod is enabled for Assassin's Creed Brotherhood");
+                                ACBuModStatus = true;
+                            }
+                            else
+                            {
+                                Log.Information("uMod is disabled for Assassin's Creed Brotherhood");
+                                ACBuModStatus = false;
+                            }
+                        }
+                    }
+                }
+                GC.Collect();
+                await Task.Delay(1);
+            }
+            catch (Exception ex)
+            {
+                Log.Information(ex, "");
+                System.Windows.MessageBox.Show(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Starts the game
+        /// </summary>
+        /// <param name="executableName">Name of the executable</param>
+        /// <param name="workingDirectory">Directory where the game is</param>
+        /// <param name="uMod">Does the game use uMod</param>
+        /// <returns></returns>
+        public async Task StartGame(string executableName, string? workingDirectory, bool uMod, bool skipLauncher=false)
+        {
+            try
+            {
+                Process[] gameProcesses = Process.GetProcessesByName(executableName);
+                if (gameProcesses.Length <= 0)
+                {
+                    Process gameProcess = new Process();
+                    gameProcess.StartInfo.WorkingDirectory = workingDirectory;
+                    gameProcess.StartInfo.FileName = $"{executableName}.exe";
+                    gameProcess.StartInfo.UseShellExecute = true;
+                    Process uModProcess = new Process();
+                    if (uMod)
+                    {
+                        uModProcess.StartInfo.WorkingDirectory = $"{workingDirectory}\\uMod";
+                        uModProcess.StartInfo.FileName = "uMod.exe";
+                        uModProcess.StartInfo.UseShellExecute = true;
+                        uModProcess.Start();
+                        gameProcess.Start();
+                        Log.Information("Game is starting");
+                        await Task.Delay(5000);
+                    }
+                    else
+                    {
+                        gameProcess.Start();
+                        Log.Information("Game is starting");
+                    }
+                    Log.Information("Setting game affinity based on CPU Core/Thread Count");
+                    gameProcesses = Process.GetProcessesByName(executableName);
+                    while (gameProcesses.Length <= 0)
+                    {
+                        await Task.Delay(1000);
+                        gameProcesses = Process.GetProcessesByName(executableName);
+                    }
+                    foreach (Process process in gameProcesses)
+                    {
+                        process.PriorityClass = ProcessPriorityClass.AboveNormal;
+                        await ProcessAffinityManager.SetProcessAffinity(process.ProcessName);
+                    }
+                    Log.Information("Game started");
+                    while (gameProcesses.Length > 0)
+                    {
+                        await Task.Delay(1000);
+                        gameProcesses = Process.GetProcessesByName(executableName);
+                    }
+                    if (uMod)
+                    {
+                        try
+                        {
+                            if (Process.GetProcessById(uModProcess.Id) != null)
+                            {
+                                uModProcess.CloseMainWindow();
+                                Log.Information("Game Closed");
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            Log.Information("uMod is already closed.");
+                        }
+                    }
                     GC.Collect();
                     await Task.Delay(1);
-                    return;
+                    if (skipLauncher)
+                    {
+                        Environment.Exit(0);
+                    }
                 }
                 else
                 {
-                    Log.Information("New version found.");
-                    System.Windows.MessageBox.Show("New version of the launcher found. Click on the Update button to update the launcher.");
+                    Log.Information($"Game {executableName} is already running");
+                    System.Windows.MessageBox.Show($"Game {executableName} is already running.");
                 }
+
+                GC.Collect();
             }
             catch (Exception ex)
             {
                 Log.Error(ex, "");
-                System.Windows.MessageBox.Show($"Error: {ex.Message}{Environment.NewLine}Possibly no internet connection");
+                return;
             }
         }
+
 
         /// <summary>
         /// At startup it launches the Logger for debugging and checks for Launch arguments.
@@ -376,17 +488,10 @@ namespace The_Ezio_Trilogy_Launcher
                 start = false;
                 Serilog.Log.Logger = Log.Logger; // Initializing Logger
                 // Checks for all of the Launch Arguments
-                foreach (var argument in e.Args)
+                if (e.Args.Contains("-console"))
                 {
-                    switch (argument)
-                    {
-                        case "-console":
-                            AllocConsole();
-                            logging = true;
-                            break;
-                        default:
-                            break;
-                    }
+                    AllocConsole();
+                    logging = true;
                 }
                 // Creating Logger Configuration
                 if (logging)
@@ -409,7 +514,27 @@ namespace The_Ezio_Trilogy_Launcher
                 await FindNumberOfCores();
                 await FindSupportedResolutions();
                 await FindRefreshRate();
-                await CheckForUpdates();
+                await uModStatus();
+                foreach (var argument in e.Args)
+                {
+                    switch (argument)
+                    {
+                        case "-AC2":
+                            MainWindow.Visibility = Visibility.Hidden;
+                            await StartGame("AssassinsCreedIIGame", AC2Path, AC2uModStatus, true);
+                            break;
+                        case "-ACB":
+                            MainWindow.Visibility = Visibility.Hidden;
+                            await StartGame("ACBSP", ACBPath, ACBuModStatus, true);
+                            break;
+                        case "-ACR":
+                            MainWindow.Visibility = Visibility.Hidden;
+                            await StartGame("ACRSP", ACRPath, false, true);
+                            break;
+                        default:
+                            break;
+                    }
+                }
             }
         }
 

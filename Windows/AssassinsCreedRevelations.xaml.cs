@@ -89,86 +89,6 @@ namespace The_Ezio_Trilogy_Launcher.Windows
         }
 
         /// <summary>
-        /// Sets Process Affinity based on the amount of cores. Can help with stutters and tearing.
-        /// <param name="gameProcessID">ID of the game process needed so we can change it's CPU affinity</param>
-        /// </summary>
-        private async Task SetProcessAffinity()
-        {
-            try
-            {
-                Log.Information("Grabbing game process by ID to change affinity.");
-                Process[] processes = Process.GetProcessesByName("ACRSP");
-                while (processes.Length <= 0)
-                {
-                    processes = Process.GetProcessesByName("ACRSP");
-                    await Task.Delay(1000);
-                }
-                Log.Information($"Game process found.");
-                int affinity;
-                switch (true)
-                {
-                    case bool when App.NumberOfCores >= 8 && App.NumberOfThreads >= 16:
-                        Log.Information("8 Cores/16 Threads or greater affinity"); ;
-                        foreach (Process gameProcess in processes)
-                        {
-                            Log.Information($"Game Process: {gameProcess.ProcessName}, ID: {gameProcess.Id}");
-                            gameProcess.ProcessorAffinity = new IntPtr(0xFFFF);
-                        }
-                        break;
-                    case bool when App.NumberOfCores == 6 && App.NumberOfThreads == 12:
-                        Log.Information("6 Cores/12 Threads affinity");
-                        foreach (Process gameProcess in processes)
-                        {
-                            Log.Information($"Game Process: {gameProcess.ProcessName}, ID: {gameProcess.Id}");
-                            gameProcess.ProcessorAffinity = new IntPtr(0x7F);
-                        }
-                        break;
-                    case bool when App.NumberOfCores == 6 && App.NumberOfThreads == 6:
-                        Log.Information("6 Cores/6 Threads affinity");
-                        foreach (Process gameProcess in processes)
-                        {
-                            Log.Information($"Game Process: {gameProcess.ProcessName}, ID: {gameProcess.Id}");
-                            gameProcess.ProcessorAffinity = new IntPtr(0x3F);
-                        }
-                        break;
-                    case bool when App.NumberOfCores == 8 && App.NumberOfThreads == 8:
-                    case bool when App.NumberOfCores == 4 && App.NumberOfThreads == 8:
-                        Log.Information("4 Cores/8 Threads or 8 Cores/8 Threads affinity");
-                        foreach (Process gameProcess in processes)
-                        {
-                            Log.Information($"Game Process: {gameProcess.ProcessName}, ID: {gameProcess.Id}");
-                            gameProcess.ProcessorAffinity = new IntPtr(0xFF);
-                        }
-                        break;
-                    case bool when App.NumberOfCores == 4 && App.NumberOfThreads == 4:
-                        Log.Information("4 Cores/4 Threads affinity");
-                        foreach (Process gameProcess in processes)
-                        {
-                            Log.Information($"Game Process: {gameProcess.ProcessName}, ID: {gameProcess.Id}");
-                            gameProcess.ProcessorAffinity = new IntPtr(0x0F);
-                        }
-                        break;
-                    default:
-                        Log.Information("Default preset");
-                        affinity = (1 << App.NumberOfThreads) - 1;
-                        Log.Information($"Affinity Bitmask: 0x{affinity.ToString("X")}");
-                        foreach (Process gameProcess in processes)
-                        {
-                            Log.Information($"Game Process: {gameProcess.ProcessName}, ID: {gameProcess.Id}");
-                            gameProcess.ProcessorAffinity = new IntPtr(affinity);
-                        }
-                        break;
-                }
-                await Task.Delay(1);
-            }
-            catch (Exception ex)
-            {
-                Log.Information(ex, "Error:");
-                return;
-            }
-        }
-
-        /// <summary>
         /// This is used for Window Dragging. Needed when disabling Window stuff in XAML
         /// </summary>
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -196,6 +116,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows
         {
             try
             {
+                /*
                 Process[] Game = Process.GetProcessesByName("ACRSP");
                 if (Game.Length <= 0)
                 {
@@ -215,10 +136,18 @@ namespace The_Ezio_Trilogy_Launcher.Windows
                     foreach (Process process in Game)
                     {
                         process.PriorityClass = ProcessPriorityClass.AboveNormal;
-                        await SetProcessAffinity();
+                        if (System.Windows.Application.Current is App app)
+                        {
+                            await App.ProcessAffinityManager.SetProcessAffinity(process.ProcessName);
+                        }
                     }
                     Log.Information("Game started");
                     await Task.Delay(1);
+                }
+                */
+                if (System.Windows.Application.Current is App app)
+                {
+                    await app.StartGame("ACRSP", App.ACRPath, false);
                 }
             }
             catch (Exception ex)
