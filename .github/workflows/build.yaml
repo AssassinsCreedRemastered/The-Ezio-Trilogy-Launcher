@@ -21,6 +21,11 @@ jobs:
         ChannelName: [Release]
 
     steps:
+      - name: Print Repository Name
+        run: |
+          $repo = "AssassinsCreedRemastered/The-Ezio-Trilogy-Launcher"
+          Write-Host "GitHub Repository: $repo"
+
       - name: Checkout Repository
         uses: actions/checkout@v2
 
