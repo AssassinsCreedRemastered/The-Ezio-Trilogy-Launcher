@@ -82,7 +82,6 @@ jobs:
           tag_name: beta
           release_name: Beta Release
           prerelease: true
-          files: ./Launcher.zip
 
       - name: Upload release asset
         id: upload_asset
