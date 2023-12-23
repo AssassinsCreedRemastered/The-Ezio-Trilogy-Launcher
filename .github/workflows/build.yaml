@@ -23,7 +23,7 @@ jobs:
     steps:
       - name: Print Repository Name
         run: |
-          $repo = $env:GITHUB_REPOSITORY
+          $repo = $(gh repo view --json name --template '{{.Name}}')
           Write-Host "GitHub Repository: $repo"
 
       - name: Checkout Repository
@@ -56,7 +56,7 @@ jobs:
 
       - name: Delete Existing Release and Tag
         run: |
-          $repo = $env:GITHUB_REPOSITORY
+          $repo = $(gh repo view --json name --template '{{.Name}}')
           $tag = "beta"
 
           Write-Host "GitHub Repository: $repo"
