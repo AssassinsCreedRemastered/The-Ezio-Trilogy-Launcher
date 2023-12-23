@@ -16,7 +16,7 @@ namespace The_Ezio_Trilogy_Launcher.Classes
 
         public DiscordRPCManager()
         {
-            client = new DiscordRpcClient(""); // DELETE THIS ID BEFORE COMMITING
+            client = new DiscordRpcClient("1188096756756529192");
             stopwatch = new Stopwatch();
             IconKey = "icon";
         }
