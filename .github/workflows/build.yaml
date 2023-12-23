@@ -9,7 +9,6 @@ on:
   pull_request:
     branches:
       - dev
-      - main
 
 jobs:
   build:
@@ -21,11 +20,6 @@ jobs:
         ChannelName: [Release]
 
     steps:
-      - name: Print Repository Name
-        run: |
-          $repo = "AssassinsCreedRemastered/The-Ezio-Trilogy-Launcher"
-          Write-Host "GitHub Repository: $repo"
-
       - name: Checkout Repository
         uses: actions/checkout@v2
 
@@ -54,47 +48,34 @@ jobs:
       - name: Package
         run: Compress-Archive -Path .\publish\* -DestinationPath .\Launcher.zip
 
-      - name: Delete Existing Release and Tag
+      - name: Delete existing release
+        id: delete_release
         run: |
-          $repo = "AssassinsCreedRemastered/The-Ezio-Trilogy-Launcher"
-          $tag = "beta"
+          TAG_NAME="beta"
+          API_URL="https://api.github.com/repos/${{ github.repository }}/releases/tags/${TAG_NAME}"
+          RESPONSE=$(curl -X GET -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" "$API_URL")
+          RELEASE_ID=$(echo "$RESPONSE" | jq -r '.id')
+          if [ "$RELEASE_ID" != "null" ]; then
+            curl -X DELETE -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" "$API_URL"
+          fi
+        shell: bash
 
-          Write-Host "GitHub Repository: $repo"
+      - name: Delete existing tag
+        id: delete_tag
+        run: |
+          TAG_NAME="beta"
+          git tag -d $TAG_NAME
+          git push --delete origin $TAG_NAME
+        shell: bash
 
-          # Check if the release exists
-          $existingRelease = Invoke-RestMethod -Uri "https://api.github.com/repos/$repo/releases/tags/$tag" -Method Get -Headers @{
-              "Authorization"="Bearer ${{ secrets.GITHUB_TOKEN }}"
-          }
-
-          if ($existingRelease) {
-              Write-Host "Existing release found. Deleting..."
-
-              # Delete existing release
-              try {
-                  Invoke-RestMethod -Uri "https://api.github.com/repos/$repo/releases/$($existingRelease.id)" -Method Delete -Headers @{
-                      "Authorization"="Bearer ${{ secrets.GITHUB_TOKEN }}"
-                  }
-                  Write-Host "Existing release deleted successfully."
-              } catch {
-                  Write-Host "Error deleting existing release: $_"
-                  throw $_
-              }
-          } else {
-              Write-Host "No existing release found."
-          }
-
-          # Delete existing tag locally and push deletion
-          git tag -d $tag || true
-          git push origin :refs/tags/$tag || true
-
-      - name: Create New Release
-        id: create_release
+      - name: Update release asset
+        id: update_release
         uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           files: ./Launcher.zip
           tag_name: beta
-          target_commitish: ${{ github.event.before }}
+          target_commitish: ${{ github.sha }}
           prerelease: true
           draft: false
