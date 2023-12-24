@@ -273,7 +273,17 @@ namespace The_Ezio_Trilogy_Launcher.Windows.ACR_Pages
                 {
                     Log.Information("SystemDetectionFix is disabled");
                 }
-                
+                // ReShade
+                Log.Information("Checking if ReShade is enabled");
+                if (System.IO.File.Exists(App.ACRPath + @"\scripts\d3d9.asi"))
+                {
+                    Log.Information("ReShade is enabled");
+                    ReShade.IsChecked = true;
+                }
+                else
+                {
+                    Log.Information("ReShade is disabled");
+                }
                 GC.Collect();
                 await Task.Delay(1);
             }
@@ -468,6 +478,23 @@ namespace The_Ezio_Trilogy_Launcher.Windows.ACR_Pages
                     {
                         System.IO.File.Move(App.ACRPath + @"\systemdetection.dll.disabled", App.ACRPath + @"\systemdetection.dll");
                         Log.Information("systemdetection.dll is enabled");
+                    }
+                }
+                // ReShade check
+                if (ReShade.IsChecked == true)
+                {
+                    if (System.IO.File.Exists(App.ACRPath + @"\scripts\d3d9.asi.disabled"))
+                    {
+                        System.IO.File.Move(App.ACRPath + @"\scripts\d3d9.asi.disabled", App.ACRPath + @"\scripts\d3d9.asi");
+                        Log.Information("ReShade is enabled");
+                    }
+                }
+                else
+                {
+                    if (System.IO.File.Exists(App.ACRPath + @"\scripts\d3d9.asi"))
+                    {
+                        System.IO.File.Move(App.ACRPath + @"\scripts\d3d9.asi", App.ACRPath + @"\scripts\d3d9.asi.disabled");
+                        Log.Information("ReShade is disabled");
                     }
                 }
                 GC.Collect();

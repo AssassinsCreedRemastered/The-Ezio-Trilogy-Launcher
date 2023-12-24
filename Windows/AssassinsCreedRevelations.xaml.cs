@@ -147,7 +147,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows
                 */
                 if (System.Windows.Application.Current is App app)
                 {
-                    App.discordRPCManager.UpdateStateAndIcon("acr2", "Assassin's Creed: Revelations - In Game", "Idle");
+                    App.discordRPCManager.UpdateStateAndIcon("acr2", "Assassin's Creed: Revelations", "Idle");
                     App.discordRPCManager.InitializeInGamePresence();
                     await app.StartGame("ACRSP", App.ACRPath, false);
                     App.discordRPCManager.UpdateStateAndIcon("acr2", "Assassin's Creed: Revelations", "Idle");
@@ -165,6 +165,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows
         /// </summary>
         private void Credits_Click(object sender, RoutedEventArgs e)
         {
+            App.discordRPCManager.UpdateStateAndIcon("acr2", "Assassin's Creed: Revelations", "Credits");
             NavigateToPage("Credits");
         }
 
@@ -177,6 +178,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows
             {
                 if (System.IO.File.Exists(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"Assassin's Creed Revelations\ACRevelations.ini")))
                 {
+                    App.discordRPCManager.UpdateStateAndIcon("acr2", "Assassin's Creed: Revelations", "Settings");
                     NavigateToPage("Settings");
                 }
                 else

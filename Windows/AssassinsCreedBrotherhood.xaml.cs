@@ -211,7 +211,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows
                 */
                 if (System.Windows.Application.Current is App app)
                 {
-                    App.discordRPCManager.UpdateStateAndIcon("acb1", "Assassin's Creed: Brotherhood - In Game", "Idle");
+                    App.discordRPCManager.UpdateStateAndIcon("acb1", "Assassin's Creed: Brotherhood", "Idle");
                     App.discordRPCManager.InitializeInGamePresence();
                     await app.StartGame("ACBSP", App.ACBPath, App.ACBuModStatus);
                     App.discordRPCManager.UpdateStateAndIcon("acb1", "Assassin's Creed: Brotherhood", "Idle");
@@ -230,6 +230,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows
         /// </summary>
         private void Credits_Click(object sender, RoutedEventArgs e)
         {
+            App.discordRPCManager.UpdateStateAndIcon("acb1", "Assassin's Creed: Brotherhood", "Credits");
             NavigateToPage("Credits");
         }
 
@@ -242,7 +243,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows
             {
                 if (System.IO.File.Exists(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)), @"Saved Games\Assassin's Creed Brotherhood\ACBrotherhood.ini")))
                 {
-                    
+                    App.discordRPCManager.UpdateStateAndIcon("acb1", "Assassin's Creed: Brotherhood", "Settings");
                     NavigateToPage("Settings");
                 }
                 else
@@ -264,6 +265,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows
         {
             if (App.ACBuModStatus)
             {
+                App.discordRPCManager.UpdateStateAndIcon("acb1", "Assassin's Creed: Brotherhood", "uMod Mods");
                 NavigateToPage("Mods");
             }
             else
