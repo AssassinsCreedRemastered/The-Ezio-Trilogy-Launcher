@@ -1,4 +1,4 @@
-name: Build and Push as Prerelease
+name: Build dev branch and push as Prerelease
 
 on:
   workflow_dispatch:
