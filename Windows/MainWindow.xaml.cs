@@ -436,5 +436,16 @@ namespace The_Ezio_Trilogy_Launcher
                 System.Windows.MessageBox.Show(ex.Message);
             }
         }
+
+        /// <summary>
+        /// This is used for Window Dragging. Needed when disabling Window stuff in XAML
+        /// </summary>
+        private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ButtonState == MouseButtonState.Pressed)
+            {
+                DragMove();
+            }
+        }
     }
 }

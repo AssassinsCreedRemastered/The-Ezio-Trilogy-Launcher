@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:The_Ezio_Trilogy_Launcher"
         mc:Ignorable="d"
-        Title="The Ezio Trilogy Remastered (Community Edition) - Main Menu" Width="1400" Height="620" Background="Transparent" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowStyle="None" AllowsTransparency="True" Loaded="Window_Loaded">
+        Title="The Ezio Trilogy Remastered (Community Edition) - Main Menu" Width="1400" Height="620" Background="Transparent" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowStyle="None" AllowsTransparency="True" Loaded="Window_Loaded" MouseLeftButtonDown="Window_MouseLeftButtonDown">
     <Window.Triggers>
         <EventTrigger RoutedEvent="Loaded">
             <BeginStoryboard>

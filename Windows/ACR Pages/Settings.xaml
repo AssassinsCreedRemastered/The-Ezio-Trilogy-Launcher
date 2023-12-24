@@ -363,7 +363,7 @@
                 </Border>
 
                 <!--ReShade-->
-                <Border BorderBrush="WhiteSmoke" BorderThickness="1.5" Margin="5,2,5,2" CornerRadius="5" Visibility="Collapsed">
+                <Border BorderBrush="WhiteSmoke" BorderThickness="1.5" Margin="5,2,5,2" CornerRadius="5">
                     <Grid Height="50" Background="#80585858">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="340"/>

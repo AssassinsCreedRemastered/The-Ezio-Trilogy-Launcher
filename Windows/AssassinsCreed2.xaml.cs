@@ -226,7 +226,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows
                 */
                 if (System.Windows.Application.Current is App app)
                 {
-                    App.discordRPCManager.UpdateStateAndIcon("acii1", "Assassin's Creed 2 - In Game", "Idle");
+                    App.discordRPCManager.UpdateStateAndIcon("acii1", "Assassin's Creed 2", "Idle");
                     App.discordRPCManager.InitializeInGamePresence();
                     await app.StartGame("AssassinsCreedIIGame", App.AC2Path, App.AC2uModStatus);
                     App.discordRPCManager.UpdateStateAndIcon("acii1", "Assassin's Creed 2", "Idle");
@@ -245,7 +245,8 @@ namespace The_Ezio_Trilogy_Launcher.Windows
         /// </summary>
         private void Credits_Click(object sender, RoutedEventArgs e)
 		{
-			NavigateToPage("Credits");
+            App.discordRPCManager.UpdateStateAndIcon("acii1", "Assassin's Creed 2", "Credits");
+            NavigateToPage("Credits");
 		}
 
         /// <summary>
@@ -256,6 +257,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows
 			if (System.IO.File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed 2\Assassin2.ini"))
 			{
 				Log.Information("Game configuration file found");
+                App.discordRPCManager.UpdateStateAndIcon("acii1", "Assassin's Creed 2", "Settings");
                 NavigateToPage("Settings");
             }
 			else
@@ -271,7 +273,8 @@ namespace The_Ezio_Trilogy_Launcher.Windows
         /// </summary>
         private void uMod_Click(object sender, RoutedEventArgs e)
         {
-			NavigateToPage("Mods");
+            App.discordRPCManager.UpdateStateAndIcon("acii1", "Assassin's Creed 2", "uMod Mods");
+            NavigateToPage("Mods");
         }
     }
 }
