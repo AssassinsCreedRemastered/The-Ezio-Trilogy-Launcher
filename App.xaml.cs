@@ -349,7 +349,7 @@ namespace The_Ezio_Trilogy_Launcher
             {
                 IntPtr pathPtr;
                 int result = SHGetKnownFolderPath(new Guid("4C5C32FF-BB9D-43b0-B5B4-2D72E54EAAA4"), 0, IntPtr.Zero, out pathPtr);
-                if (result < 0)
+                if (result >= 0)
                 {
                     SavedGamesFolderPath = Marshal.PtrToStringUni(pathPtr);
                     Marshal.FreeCoTaskMem(pathPtr);
@@ -384,6 +384,10 @@ namespace The_Ezio_Trilogy_Launcher
                             }
                         }
                     }
+                }
+                if (SavedGamesFolderPath != null)
+                {
+                    SavedGamesFolderPath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)), @"Saved Games\");
                 }
                 await Task.Delay(1);
             }
