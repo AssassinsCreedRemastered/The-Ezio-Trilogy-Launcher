@@ -241,7 +241,8 @@ namespace The_Ezio_Trilogy_Launcher.Windows
         {
             try
             {
-                if (System.IO.File.Exists(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)), @"Saved Games\Assassin's Creed Brotherhood\ACBrotherhood.ini")))
+                //System.IO.File.Exists(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)), @"Saved Games\Assassin's Creed Brotherhood\ACBrotherhood.ini"))
+                if (System.IO.File.Exists(System.IO.Path.Combine(App.SavedGamesFolderPath, @"Assassin's Creed Brotherhood\ACBrotherhood.ini")))
                 {
                     App.discordRPCManager.UpdateStateAndIcon("acb1", "Assassin's Creed: Brotherhood", "Settings");
                     NavigateToPage("Settings");
