@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Media;
+using Microsoft.Win32;
 using The_Ezio_Trilogy_Launcher.Classes;
 
 namespace The_Ezio_Trilogy_Launcher
@@ -34,6 +35,11 @@ namespace The_Ezio_Trilogy_Launcher
         // Used to detect refresh Rate
         [DllImport("user32.dll")]
         private static extern int EnumDisplaySettings(string? deviceName, int modeNum, ref DEVMODE devMode);
+
+        // Used to detect "Saved Games" Folder
+        [DllImport("shell32.dll")]
+        private static extern int SHGetKnownFolderPath([MarshalAs(UnmanagedType.LPStruct)] Guid rfid, uint dwFlags, IntPtr hToken, out IntPtr pszPath);
+
 
         [StructLayout(LayoutKind.Sequential)]
         private struct DEVMODE
@@ -132,6 +138,11 @@ namespace The_Ezio_Trilogy_Launcher
         /// Used for DiscordRPC
         /// </summary>
         public static DiscordRPCManager discordRPCManager = new DiscordRPCManager();
+
+        /// <summary>
+        /// Stores Saved Games Path
+        /// </summary>
+        public static string? SavedGamesFolderPath { get; set; }
 
         public App()
         {
@@ -329,6 +340,65 @@ namespace The_Ezio_Trilogy_Launcher
         }
 
         /// <summary>
+        /// Finds Saved Games Folder
+        /// </summary>
+        /// <returns></returns>
+        private async Task FindSavedGamesFolder()
+        {
+            try
+            {
+                IntPtr pathPtr;
+                int result = SHGetKnownFolderPath(new Guid("4C5C32FF-BB9D-43b0-B5B4-2D72E54EAAA4"), 0, IntPtr.Zero, out pathPtr);
+                if (result >= 0)
+                {
+                    SavedGamesFolderPath = Marshal.PtrToStringUni(pathPtr);
+                    Marshal.FreeCoTaskMem(pathPtr);
+                    Log.Information("Saved Games folder path: " + SavedGamesFolderPath);
+                }
+                else
+                {
+                    Log.Information("Failed to retrieve the Saved Games folder path.");
+                    Log.Information("Using alternative method");
+                    if ((string)Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders", "{4C5C32FF-BB9D-43B0-B5B4-2D72E54EAAA4}", null) != null)
+                    {
+                        SavedGamesFolderPath = (string)Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders", "{4C5C32FF-BB9D-43B0-B5B4-2D72E54EAAA4}", null);
+                        Log.Information("Saved Games folder path: " + SavedGamesFolderPath);
+                    }
+                    else
+                    {
+                        using (RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders"))
+                        {
+                            if (key != null)
+                            {
+                                string[] valueNames = key.GetValueNames();
+
+                                foreach (string valueName in valueNames)
+                                {
+                                    string value = (string)key.GetValue(valueName);
+                                    if (value != null && value.EndsWith("Saved Games", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        SavedGamesFolderPath = (string)key.GetValue(valueName);
+                                        Log.Information("Saved Games folder path: " + SavedGamesFolderPath);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (SavedGamesFolderPath != null)
+                {
+                    SavedGamesFolderPath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)), @"Saved Games\");
+                }
+                await Task.Delay(1);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "");
+                System.Windows.MessageBox.Show(ex.Message);
+            }
+        }
+
+        /// <summary>
         /// Checks if uMod is enabled or disabled.
         /// </summary>
         private async Task uModStatus()
@@ -386,7 +456,7 @@ namespace The_Ezio_Trilogy_Launcher
             }
             catch (Exception ex)
             {
-                Log.Information(ex, "");
+                Log.Error(ex, "");
                 System.Windows.MessageBox.Show(ex.Message);
             }
         }
@@ -520,6 +590,7 @@ namespace The_Ezio_Trilogy_Launcher
                 await FindNumberOfCores();
                 await FindSupportedResolutions();
                 await FindRefreshRate();
+                await FindSavedGamesFolder();
                 await uModStatus();
                 discordRPCManager.InitializePresence("Idle");
                 App.discordRPCManager.UpdateStateAndIcon("icon", "Main Window", "Idle");

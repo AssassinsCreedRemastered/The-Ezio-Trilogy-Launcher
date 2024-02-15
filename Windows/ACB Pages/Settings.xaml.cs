@@ -142,11 +142,11 @@ namespace The_Ezio_Trilogy_Launcher.Windows.ACB_Pages
             {
                 Log.Information("Reading game configuration file");
                 //System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)), @"Saved Games\Assassin's Creed Brotherhood\ACBrotherhood.ini"))
-                if (System.IO.File.Exists(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)), @"Saved Games\Assassin's Creed Brotherhood\ACBrotherhood.ini")))
+                if (System.IO.File.Exists(System.IO.Path.Combine(App.SavedGamesFolderPath, @"Assassin's Creed Brotherhood\ACBrotherhood.ini")))
                 {
-                    Log.Information(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)), @"Saved Games\Assassin's Creed Brotherhood\ACBrotherhood.ini"));
+                    Log.Information(System.IO.Path.Combine(App.SavedGamesFolderPath, @"Assassin's Creed Brotherhood\ACBrotherhood.ini"));
                     string currentResolution = "";
-                    string[] gameConfig = System.IO.File.ReadAllLines(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)), @"Saved Games\Assassin's Creed Brotherhood\ACBrotherhood.ini"));
+                    string[] gameConfig = System.IO.File.ReadAllLines(System.IO.Path.Combine(App.SavedGamesFolderPath, @"Assassin's Creed Brotherhood\ACBrotherhood.ini"));
                     foreach (string line in gameConfig)
                     {
                         List<string> splitLine = new List<string>();
@@ -373,8 +373,8 @@ namespace The_Ezio_Trilogy_Launcher.Windows.ACB_Pages
         {
             try
             {
-                string[] gameConfig = File.ReadAllLines(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)), @"Saved Games\Assassin's Creed Brotherhood\ACBrotherhood.ini"));
-                using (StreamWriter sw = new StreamWriter(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)), @"Saved Games\Assassin's Creed Brotherhood\ACBrotherhood.ini")))
+                string[] gameConfig = File.ReadAllLines(System.IO.Path.Combine(App.SavedGamesFolderPath, @"Assassin's Creed Brotherhood\ACBrotherhood.ini"));
+                using (StreamWriter sw = new StreamWriter(System.IO.Path.Combine(App.SavedGamesFolderPath, @"Assassin's Creed Brotherhood\ACBrotherhood.ini")))
                 {
                     foreach (string line in gameConfig)
                     {
@@ -588,8 +588,6 @@ namespace The_Ezio_Trilogy_Launcher.Windows.ACB_Pages
             }
         }
 
-
-
         /// <summary>
         /// Downloads DLC Unlocker
         /// </summary>
@@ -604,7 +602,7 @@ namespace The_Ezio_Trilogy_Launcher.Windows.ACB_Pages
                     {
                         response.EnsureSuccessStatusCode();
                         using (var stream = await response.Content.ReadAsStreamAsync())
-                        using (var fileStream = new FileStream(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)), @"Saved Games\Assassin's Creed Brotherhood\SAVES\OPTIONS"), FileMode.Create, FileAccess.Write, FileShare.None))
+                        using (var fileStream = new FileStream(System.IO.Path.Combine(App.SavedGamesFolderPath, @"Assassin's Creed Brotherhood\SAVES\OPTIONS"), FileMode.Create, FileAccess.Write, FileShare.None))
                         {
                             var totalBytes = response.Content.Headers.ContentLength ?? -1;
                             var buffer = new byte[8192];
@@ -687,9 +685,9 @@ namespace The_Ezio_Trilogy_Launcher.Windows.ACB_Pages
                 if (result == MessageBoxResult.Yes)
                 {
                     Log.Information("Unlocking bonus content");
-                    if (System.IO.File.Exists(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)), @"Saved Games\Assassin's Creed Brotherhood\SAVES\OPTIONS")))
+                    if (System.IO.File.Exists(System.IO.Path.Combine(App.SavedGamesFolderPath, @"Assassin's Creed Brotherhood\SAVES\OPTIONS")))
                     {
-                        System.IO.File.Move(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)), @"Saved Games\Assassin's Creed Brotherhood\SAVES\OPTIONS"), System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)), @"Saved Games\Assassin's Creed Brotherhood\SAVES\OPTIONS Backup"),true);
+                        System.IO.File.Move(System.IO.Path.Combine(App.SavedGamesFolderPath, @"Assassin's Creed Brotherhood\SAVES\OPTIONS"), System.IO.Path.Combine(App.SavedGamesFolderPath, @"Assassin's Creed Brotherhood\SAVES\OPTIONS Backup"),true);
                     }
                     await DownloadDLCUnlocker();
                 }
