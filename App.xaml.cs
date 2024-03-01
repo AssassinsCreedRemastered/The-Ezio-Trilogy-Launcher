@@ -385,7 +385,7 @@ namespace The_Ezio_Trilogy_Launcher
                         }
                     }
                 }
-                if (SavedGamesFolderPath != null)
+                if (SavedGamesFolderPath == null)
                 {
                     SavedGamesFolderPath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)), @"Saved Games\");
                 }
