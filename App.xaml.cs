@@ -509,7 +509,7 @@ namespace The_Ezio_Trilogy_Launcher
                     }
                     Log.Information("Game started");
                     Log.Information("Waiting for game to be closed");
-                    await Task.Delay(10000);
+                    await Task.Delay(50000);
                     while (gameProcesses.Length > 0)
                     {
                         await Task.Delay(1000);
